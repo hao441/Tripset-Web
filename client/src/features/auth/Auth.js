@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   logout,
   login,
-  loginAsync,
   selectAuthentication,
 } from './authSlice';
 import { store } from '../../app/store';
@@ -27,17 +26,9 @@ export function Auth() {
         <button
           className={styles.button}
           aria-label="Increment value"
-          onClick={() => dispatch(login())}
+          onClick={() => dispatch(login({loggedIn: true, token: '', tokenExpiry: '', username: ''}))}
         >
           Login
-        </button>
-      </div>
-      <div className={styles.row}>
-        <button
-          className={styles.asyncButton}
-          onClick={() => dispatch(loginAsync())}
-        >
-          Add Async
         </button>
       </div>
     </div>

@@ -1,15 +1,12 @@
-import { Navigate, redirect } from "react-router";
-import { login } from "./features/auth/authSlice";
-    
-export let loginToken = document.cookie === '' ? '' : document.cookie.match(/token=(\S+)/)[0].replace('token=','');
+import { redirect } from "react-router-dom";
+import { sessionData } from "./sessionData";
 
-export async function sessionData() {
+export const loader = async () => {
+    let loginToken = document.cookie === '' ? '' : document.cookie.match(/token=(\S+)/)[0].replace('token=','');
 
     if (loginToken === '') return false && console.log('token is empty.')
 
-    console.log(loginToken)
-
-    await fetch('http://localhost:9000/verifyuser', {
+    let user = await fetch('http://localhost:9000/verifyuser', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({"token": loginToken})
@@ -28,4 +25,10 @@ export async function sessionData() {
                 console.log(err);
                 return false;
             });
-}
+
+  console.log(user)
+  !user && redirect('/welcome')
+  if (!user) {
+    return redirect('/welcome')
+  }
+};

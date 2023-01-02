@@ -13,7 +13,7 @@ import { useState } from "react";
 export default function Trip () {
     //redux selector
     const sessionToken = useSelector(selectSessionToken);
-    
+
     //Use States
         const [trips, setTrips] = useState([]);
         const [count, setCount] = useState(0);

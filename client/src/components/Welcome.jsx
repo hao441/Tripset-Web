@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, redirect } from 'react-router-dom';
 
 //Redux
+import { store } from '../app/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { login, selectSessionToken } from '../features/auth/authSlice';
+import { login, selectAuthentication, selectSessionToken } from '../features/auth/authSlice';
+
+//Other
+import { loginToken } from '../sessionData';
 
 import '../App.css'
 
@@ -11,6 +15,7 @@ export default function Welcome() {
     //redux
     const dispatch = useDispatch();
     const sessionToken = useSelector(selectSessionToken);
+    const sessionAuth = useSelector(selectAuthentication);
 
     //useStates
     const [email, setEmail] = useState('');
@@ -21,13 +26,12 @@ export default function Welcome() {
     const [message, setMessage] = useState('')
 
     //useEffects
-    useEffect(() => {
-        console.log('hi')
+    useEffect(() => {   
         //test API
         callAPI()
         //check login
-        setTimeout((checkUserSignIn()), '300')
-    });
+        checkUserSignIn()
+    }, []);
 
     //Functions
     function callAPI() {
@@ -36,6 +40,8 @@ export default function Welcome() {
         .then(res => setMsg(res))
     }
 
+    console.log(store.getState().auth)
+
     function checkUserSignIn() {
 
         if (sessionToken == '') return
@@ -43,13 +49,13 @@ export default function Welcome() {
         fetch('http://localhost:9000/verifyuser', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({"token": sessionToken})
+            body: JSON.stringify({"token": loginToken})
             })
             .then(res => res.json())
             .then (res => {
                 if (res.result) {
                     console.log('User logged in.')
-                    return <Navigate to='/home' />
+                    window.location.href = '/home'
                 } else {
                     return
                 }
@@ -61,16 +67,34 @@ export default function Welcome() {
         e.preventDefault();
         fetch('http://localhost:9000/signin', {
             method: 'POST',
+            redirect: 'manual',
             headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({"email": email, "password": password})
+            body: JSON.stringify({"email": email, "password": password}),
+            
             })
             .then(res => res.json())
             .then(res => {
                 if (res.result && res.token) {
-                    document.cookie = `token=${res.token};expires=${Date(res.tokenExpiry)}`
-                    setMessage(res.token.toString())
-                    console.log(`Token added to cookies: ${res.token}`);
-                    setNavigate(true);
+                    //set date
+                    // Parse the ISO 8601 timestamp string
+                    const expiry = new Date(res.tokenExpiry);
+                    const expiryString = expiry.toUTCString();
+
+                    console.log(expiryString)
+                    
+                    //cookie
+                    document.cookie = `path=/;`;
+                    document.cookie = `expires=${expiryString};`;
+                    document.cookie = `token=${res.token};`;
+                    console.log(`Updated cookie: ${document.cookie}`);
+                    setMessage(document.cookie)
+
+                    //redux dispatch
+                    console.log(dispatch(login({loggedIn: true, token: res.token, tokenExpiry: expiryString, username: res.username})))
+                    dispatch(login({loggedIn: true, token: res.token, tokenExpiry: expiryString, username: res.username}))
+
+                    //navigate
+                    window.location = "/home"
                 } else {
                     setMessage(res.message)
                 }
@@ -80,7 +104,6 @@ export default function Welcome() {
 
     return (
         <div className="page">
-            {checkUserSignIn()}
             <h1>{msg}</h1>
             <form onSubmit={handleSignIn}>
                 <label>Email: </label>

@@ -3,10 +3,6 @@ import logo from '../logo.svg';
 import { Auth } from '../features/auth/Auth';
 import '../App.css';
 
-//Redux
-import { selectSessionToken } from '../features/auth/authSlice';
-import { useSelector } from 'react-redux';
-
 function App() {
   return (
     <div className="App">

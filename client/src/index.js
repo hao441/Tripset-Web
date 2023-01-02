@@ -8,10 +8,9 @@ import { createBrowserRouter, RouterProvider, Navigate, Route, redirect} from 'r
 import { Provider } from 'react-redux';
 import { store } from './app/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { loginAsync } from './features/auth/authSlice';
+import { loginAsync, selectSessionTokenExpiry, selectSessionToken } from './features/auth/authSlice';
 
 //Components
-import App from './App'
 import SignUp from './components/SignUp';
 import Welcome from './components/Welcome';
 import Home from './components/Home';
@@ -28,20 +27,21 @@ import Counter from './components/Counter';
 import reportWebVitals from './reportWebVitals';
 
 //CSS
-import './index.css';
-import { checkJWT } from './sessionData';
+import './index.css'
 
-let authenticated = store.getState().auth.loggedIn;
+let sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=(\S+)/)[0].replace('token=','')
+let sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[0].replace('expires=','')
 
-console.log(`is authenticated: ${authenticated}`);
+let currentDate = new Date(Date.now());
+let expiryDate = new Date(sessionJWTExpiry);
 
 let router = createBrowserRouter([
-    { path: '/', element: <Counter />, errorElement: <Welcome />}, //Current working route
-    { path: 'signup',element: <SignUp /> }
+  { path: '/', element: <Counter />, errorElement: <Welcome />}, //Current working route
+  { path: 'welcome', element: <Welcome /> },
+  { path: 'signup',element: <SignUp /> }
 ]);
 
-
-if (authenticated) {
+if (sessionJWT !== '' && sessionJWTExpiry !== '' && currentDate < expiryDate) {
   router = createBrowserRouter([
     { path: '/', element: <Counter />, errorElement: <Welcome />}, //Current working route
     { path: 'signup',element: <SignUp /> },
@@ -51,7 +51,7 @@ if (authenticated) {
     { path: 'tripcreation', element: <TripCreation /> },
     { path: 'itinerary', element: <Itinerary /> },
     { path: 'itineraryCreation', element: <ItineraryCreation /> },
-    { path: 'account', element: <Account /> },
+    { path: 'account', element: <Account /> },  
     { path: 'welcome', element: <Welcome /> }
   ])
 }

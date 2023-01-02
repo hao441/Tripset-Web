@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import autocomplete from '../autoComplete';
+import autocomplete from '../autoComplete.js'
 import cities from '../listOfCities.json'
 import countryLookUp from  '../countryLookUp.json';
 import cityLookup from '../cityLookUp.json'

@@ -46,12 +46,12 @@ app.get('/testSignUp', (req, res) => {
 app.post('/signin', (req, res) => {
 
     User.find({email: req.body.email}, (err,data) => {
-        if (err) return console.log(err)
+        if (err) return console.log(err) && res.json({result: false, token: '', username: '', message: err})
 
-        if (data[0] == null) return console.log('User doesn\'t exist.');
+        if (data[0] == null) return console.log('User doesn\'t exist.') && res.json({result: false, token: '', username: '', message: 'User doesn\'t exist.'});
 
         bcrypt.compare(req.body.password, data[0].password, (err,result) => {
-            if (err) return console.log(err)
+            if (err) return res.json({result: false, token: '', username: '', message: err})
 
             if (result) {
                 console.log(`Password correct: ${result}`);
@@ -62,10 +62,10 @@ app.post('/signin', (req, res) => {
                
                 console.log(`expiry datetime: ${expiryDate}`)
 
-               res.json({result: true, token: newToken, tokenExpiry: expiryDate})
+               res.json({result: true, token: newToken, username: data, tokenExpiry: expiryDate})
             } else {
                 console.log(`Password incorrect: ${result}`);
-                res.json({result: false, message: 'Incorrect password.'})
+                res.json({result: false, token: '', username: '', message: 'Incorrect password.'})
             }
         })
 
@@ -114,7 +114,7 @@ app.post('/verifyuser', (req, res) => {
     jwt.verify(req.body.token, process.env.JWT_PRIVATE_KEY, (err, result) => {
         if (err) return console.log(err)
 
-        result ? res.json({result: true}) : res.json({result: false});
+        result ? res.json({result: true, token: req.body.token, username: result}) : res.json({result: false, token: '', username: ''});
     })
 });
 
