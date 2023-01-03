@@ -15,6 +15,7 @@ import SignUp from './components/SignUp';
 import Welcome from './components/Welcome';
 import Home from './components/Home';
 import City from './components/City';
+import Trips from './components/Trips';
 import Trip from './components/Trip';
 import TripCreation from './components/TripCreation';
 import Itinerary from './components/Itinerary';
@@ -35,12 +36,15 @@ const router = createBrowserRouter([
   { path: 'signup',element: <SignUp /> },
   { path: 'home', element: <Home />},
   { path: 'city', element: <City /> },
-  { path: 'trip', element: <Trip /> },
   { path: 'tripcreation', element: <TripCreation /> },
   { path: 'itinerary', element: <Itinerary /> },
   { path: 'itineraryCreation', element: <ItineraryCreation /> },
   { path: 'account', element: <Account /> },  
-  { path: 'welcome', element: <Welcome /> }
+  { path: 'welcome', element: <Welcome /> },
+  //trips
+  { path: 'trip', element: <Trips />},
+  {path: 'trip/:trip', element: <Trip />},
+  {path: 'trip/:trip/itinerary/:itinerary'}
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
