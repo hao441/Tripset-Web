@@ -2,13 +2,16 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { sessionData } from '../../sessionData';
 import { useSelector } from 'react-redux';
 
-
+const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=(\S+)/)[0].replace('token=','')
+const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[0].replace('expires=','')
+const sessionUsername = document.cookie == '' ? '' : document.cookie.match(/username=(\S+)/)[0].replace('username=','')
 
 const initialState = {
   loggedIn: false,
-  sessionToken: '',
-  sessionTokenExpiry: '',
-  username: '',
+  sessionToken: sessionJWT,
+  sessionTokenExpiry: sessionJWTExpiry,
+  username: sessionUsername,
+  errorMessage: '',
   trips: '',
   status: 'idle',
 };
@@ -23,13 +26,16 @@ export const authSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      state.loggedIn = action.payload.loggedIn;
-      state.sessionToken = action.payload.token;
-      state.sessionTokenExpiry = action.payload.tokenExpiry;
-      state.username = action.payload.username;
+      if (action.payload.loggedIn) state.loggedIn = action.payload.loggedIn
+      if (action.payload.token) state.sessionToken = action.payload.token
+      if (action.payload.tokenExpiry) state.sessionTokenExpiry = action.payload.tokenExpiry
+      if (action.payload.username) state.username = action.payload.username
+      if (action.payload.errorMessage) state.errorMessage = action.payload.errorMessage
     },
     logout: (state) => {
       state.loggedIn = false;
+      state.sessionToken = '';
+      state.sessionTokenExpiry = '';
     }
   }
 });
@@ -40,9 +46,11 @@ export const { login, logout } = authSlice.actions;
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const selectAuthentication = (state) => state.auth.loggedIn;
-export const selectSessionToken = (state) => state.auth.sessionToken
-export const selectSessionTokenExpiry = (state) => state.auth.sessionTokenExpiry
-export const selectUserName = (state) => state.auth.username
+export const selectSessionToken = (state) => state.auth.sessionToken;
+export const selectSessionTokenExpiry = (state) => state.auth.sessionTokenExpiry;
+export const selectUserName = (state) => state.auth.username;
+export const selectErrorMessage = (state) => state.auth.errorMessage;
+export const selectUsername = (state) => state.auth.username;
 
 
 // We can also write thunks by hand, which may contain both sync and async logic.

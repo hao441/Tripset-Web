@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Link, redirect, BrowserRouter, Navigate } from 'react-router-dom';
-import {Route, Routes, BrowserRouter as Router} from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import Home from './Home.jsx';
 
 //Redux
-import { useSelector } from 'react-redux';
-import { selectSessionToken } from '../features/auth/authSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { login, selectAuthentication, selectErrorMessage, selectSessionToken, selectSessionTokenExpiry, selectUserName } from '../features/auth/authSlice';
 
 import '../App.css'
 
 export default function SignUp() {
 
-    //redux selector
+    //redux
+    const dispatch = useDispatch()
+
     const sessionToken = useSelector(selectSessionToken);
+    const sessionTokenExpiry = useSelector(selectSessionTokenExpiry);
+    const sessionAuth = useSelector(selectAuthentication);
+    const sessionErrorMessage = useSelector(selectErrorMessage);
+    const sessionUsername = useSelector(selectUserName)
 
     //useStates
 
@@ -37,11 +42,7 @@ export default function SignUp() {
 
         //check login
         console.log()
-        setTimeout((checkUserSignIn()), /*'300000'*/ '300')
-
-        //Password Validation
-        let pci = document.getElementById('passwordConfirm');
-        password !== passwordConfirm ? pci.setCustomValidity('Passwords do not match.') : pci.setCustomValidity('')
+        // setTimeout((checkUserSignIn()), /*'300000'*/ '300')
     });
 
     //API calls
@@ -54,11 +55,8 @@ export default function SignUp() {
 
     //check login
     function checkUserSignIn() {
-        <BrowserRouter>
-        <Routes>
-            <Route path="/home" element={<Home />} />
-        </Routes>
-        </BrowserRouter>
+        if (sessionToken === '' || sessionTokenExpiry === '') return dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: 'Not logged in.'}))
+        
         fetch('http://localhost:9000/verifyuser', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
@@ -68,16 +66,19 @@ export default function SignUp() {
             .then (res => {
                 if (res.result) {
                     console.log('User logged in.')
-                    setNavigate(true);
+                    return dispatch(login({loggedIn: true, token: res.token, tokenExpiry: sessionTokenExpiry, username: res.username, errorMessage: ''}))
                 } else {
-                    console.log('User not logged in.')
+                    return dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: 'Not logged in.'}))
                 }
             })
             .catch(err => console.log(err));
-    };
+    }
 
     const handleSignUp = (e) => {
         e.preventDefault();
+
+        if (password !== passwordConfirm) return dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: 'Passwords don\'t match.'}))
+
         fetch('http://localhost:9000/signup', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
@@ -85,28 +86,39 @@ export default function SignUp() {
             })
             .then(res => res.json())
             .then(res => {
-                if (res.token) {
-                    document.cookie = `token=${res.token}`
-                    document.cookie =  `tokenExpiry=${res.tokenExpiry}`
-                    setMessage(res.token.toString())
-                    console.log(res.token)
-                    setNavigate(true);
+                console.log(res)
+                if (res.result) {
+                    // Parse the ISO 8601 timestamp string
+                    const expiry = new Date(res.tokenExpiry);
+                    const expiryString = expiry.toUTCString();
+
+                    //cookie
+                    document.cookie = `path=/;`;
+                    document.cookie = `expires=${expiryString};`;
+                    document.cookie = `token=${res.token};`;
+                    document.cookie = `username=${res.username}`
+                    console.log(`Updated cookie: ${document.cookie}`);
+
+                    setNewUser(true);
+                    console.log('worked')
+                    return dispatch(login({loggedIn: true, token: res.token, tokenExpiry: expiryString, username: res.username, errorMessage: res.errorMessage}))
                 } else {
-                    setMessage(res.message.toString())
+                    console.log('didn\'t work.')
+                    return dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: res.errorMessage}))
                 }
             })
-            .then()
             .catch(err => console.log(err));
     };
 
-        let tokenCookie = ('; '+document.cookie).split(`; token=`).pop().split(';')[0]
+    //checkAuth
+    const checkAuth = async () => { let isAuth = await sessionAuth; return isAuth}
+     if (checkAuth === true) {dispatch(login({loggedIn: true})) ;return <Navigate replace to={`/`} />}
 
     return (
         <div className="page">
-            {newUser && <Navigate replace to="/city" />}
-            {navigate && <Navigate replace to="/home" />}
+            {newUser && <Navigate replace to={`/city`} />}
             <h1>{title}</h1>
-            <form onSubmit={handleSignUp} action='home'>
+            <form onSubmit={handleSignUp}>
                 <label>Email: </label>
                 <input id='email' type='email' value={email} onChange={e => setEmail(e.target.value)} required />
                 <br />
@@ -121,6 +133,9 @@ export default function SignUp() {
                 <br />
                 <input type='submit' value='Submit' />
             </form>
+            <br />
+            <b>{sessionErrorMessage}</b>
+            <br />
             <br />
             <Link to='/'>Login</Link>
         </div>
