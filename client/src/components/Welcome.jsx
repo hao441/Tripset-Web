@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { login, selectAuthentication, selectSessionToken, selectErrorMessage, selectSessionTokenExpiry } from '../features/auth/authSlice';
 
 //Other
-import { sessionJWT } from '../sessionData';
+import { sessionData, sessionJWT } from '../sessionData';
 
 import '../App.css'
 
@@ -19,14 +19,12 @@ export default function Welcome() {
     const sessionAuth = useSelector(selectAuthentication);
     const sessionErrorMessage = useSelector(selectErrorMessage);
 
-    const checkAuth = async () => { let isAuth = await sessionAuth; return isAuth}
-
     //useStates
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [msg, setMsg] = useState('');
 
-    const [navigate, setNavigate] = useState(false);
+    const [logged, setLogged] = useState(false);
     const [message, setMessage] = useState('')
 
 
@@ -34,8 +32,14 @@ export default function Welcome() {
     useEffect(() => {   
         //test API
         callAPI()
-        //check login
-        checkUserSignIn()
+
+        //check redux state
+        if (sessionAuth === '') sessionData()
+
+        //set
+        setLogged(sessionAuth)
+
+
     }, []);
 
     //Functions
@@ -43,27 +47,6 @@ export default function Welcome() {
         fetch('http://localhost:9000/testAPI')
         .then(res => res.text())
         .then(res => setMsg(res))
-    }
-
-    function checkUserSignIn() {
-
-        if (sessionToken === '' || sessionTokenExpiry === '') return dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: 'Not logged in.'}))
-
-        fetch('http://localhost:9000/verifyuser', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({"token": sessionToken})
-            })
-            .then(res => res.json())
-            .then (res => {
-                if (res.result) {
-                    console.log('User logged in.')
-                    return dispatch(login({loggedIn: true, token: res.token, tokenExpiry: sessionTokenExpiry, username: res.username, errorMessage: ''}))
-                } else {
-                    return dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: 'Not logged in.'}))
-                }
-            })
-            .catch(err => console.log(err));
     }
 
     const handleSignIn = (e) => {
@@ -107,9 +90,9 @@ export default function Welcome() {
             })
             .catch(err => console.log(err));
         }
-    
-    if (checkAuth) {return <Navigate replace to='/home' />}
 
+    if (logged) return ( <Navigate replace to='/home' />)
+    
     return (
         <div className="page">
             <h1>{msg}</h1>

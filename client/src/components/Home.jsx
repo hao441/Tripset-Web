@@ -12,7 +12,6 @@ export default function Home () {
         const dispatch = useDispatch();
 
         let auth = useSelector(selectAuthentication);
-        console.log(auth)
 
         return (
             <div className="page">

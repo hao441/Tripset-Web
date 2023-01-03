@@ -1,8 +1,6 @@
-import { Navigate, redirect,  } from "react-router";
+import { Navigate, redirect, useNavigate  } from "react-router";
 import { login } from "./features/auth/authSlice";
 import { store } from "./app/store";
-
-
 
 export async function sessionData() {
     const sessionJWT = store.getState().auth.sessionToken
@@ -10,7 +8,7 @@ export async function sessionData() {
 
     if (sessionJWT === '' || sessionJWTExpiry === '') {
         store.dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: ''}))
-        return redirect('signup')
+        return ('signup')
     }
 
     await fetch('http://localhost:9000/verifyuser', {

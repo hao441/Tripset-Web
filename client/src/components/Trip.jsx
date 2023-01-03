@@ -18,9 +18,6 @@ export default function Trip () {
         const [trips, setTrips] = useState([]);
         const [count, setCount] = useState(0);
 
-        const [result, setResult] = useState('');
-        const [errorMsg, setErrorMsg] = useState('');
-
     //Use Effects
         useEffect(() => {
             findTrips()
@@ -36,8 +33,6 @@ export default function Trip () {
                 })
                 .then(res => res.json())
                 .then(res => {
-                    setResult(res.result);
-                    setErrorMsg(res.errorMessage);
                     if (res.result) {
                         const tripTitles = [];
 
@@ -55,11 +50,14 @@ export default function Trip () {
     //Functions
 
     const showTrips = trips.map((trip) => {
-        return <div key={trip.toString()}>
-                <h2>{trip}</h2>
-               </div>
+        return <div key={trip.toString()}><div className=""><h2>{trip}</h2></div></div>
     })
+
     //Find trips
+    if (trips[0] === null) return (
+        <div>
+        </div>
+    )
 
     //find trips
     if (trips[0] != null) {
@@ -75,9 +73,6 @@ export default function Trip () {
         <div className="page">
             <h1>Trips</h1>
             {trips[0] == null && <CreateTrip />}
-            {`${result}`}
-            <br />
-            {`${JSON.stringify(errorMsg)}`}
         </div>
     )
 }

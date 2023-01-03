@@ -86,9 +86,7 @@ app.post('/signup', (req, res) => {
                 let newUser = new User({
                     name: '',
                     email: req.body.email,
-                    password: hash.toString(),
-                    homeCity: {city: '', country: '', lat: '', lng: ''},
-                    trips: {tripName: {tripName: '', fromDate: '', toDate: '', itinerary: []}}
+                    password: hash.toString()
                 });
                 
                newUser.save((err,user) => {
@@ -129,20 +127,19 @@ app.post('/usercity', (req, res) => {
             
 
             if (data) {
+                data['homeCity'] = {}
                 data['homeCity']['city'] = req.body.city
                 data['homeCity']['country'] = req.body.country
                 data['homeCity']['lat'] = req.body.lat
                 data['homeCity']['lng'] = req.body.lng
-
 
                 data.save((err,user) => {
                     
                     if (err) return res.json({result: false, errorMessage: err})
                     
                     if (user !== null) {
-                        console.log(req.body.city)
+                        console.log(`Updated user data is: ${user}`)
                         return res.json({result: true});
-                        console.log(req.body.city)
                     } else {
                         return res.json({result: false, errorMessage: "User returned null."})
                     }
@@ -153,6 +150,24 @@ app.post('/usercity', (req, res) => {
         })
 })
 
+//Find Trips
+app.post('/findtrips', (req, res) => {
+    jwt.verify(req.body.token, process.env.JWT_PRIVATE_KEY, (err, result) => {
+        if (err) return res.json({result: false, errorMessage: err})
+        if (!result) return res.json({result: false, errorMessage: 'Invalid JWT.'})
+
+
+        User.findOne({ email: result.email }, (err, data) => {
+
+            if (err) return res.json({result: false, errorMessage: err})
+            if (data === null) return res.json({result: false, errorMessage: 'User not found.'})
+            if (!data.trips) return res.json({result: false, errorMessage: 'No trips found.'})
+
+            res.json({result: true, message: 'Trips found', trips: data.trips});
+        })
+    })
+})
+
 //tripCreation
 app.post('/tripcreation', (req, res) => {
     jwt.verify(req.body.token, process.env.JWT_PRIVATE_KEY, (err, result) => {
@@ -161,42 +176,26 @@ app.post('/tripcreation', (req, res) => {
         if (!result) return res.json({result: false, message: 'Invalid JWT'});
 
         User.findOne({ email: result.email }, (err, data) => {
+            //user error handling
             if (err) return console.log(err);
+            if (data == null) return res.json({result: false, errorMessage: 'User not found.'})
 
-            if (data == null) return res.json({result: false})
+            //data.trips creation if necessary
+            if (data.trips == null) data.trips = {}
 
-            console.log('Document updated successfully');
-            data.trips.push({tripName: req.body.tripName});
+            //trip creation
+            data.trips[req.body.tripName] = {location: req.body.location, startDate: req.body.startDate, endDate: req.body.endDate};
 
+            //trip save
             data.save((err, data) => {
-                if (err) return console.log(err);
+                if (err) return res.json({result: false, errorMessage: err})
 
+                if (!data) return res.json({result: false, errorMessage: 'Unable to save.'}) 
+                res.json({result: true, message: 'Trip created'});
                 console.log('Document updated successfully');
             });
 
-            res.json({result: true, message: 'Trip created'});
-        })
-    })
-})
-
-//Find Trips
-app.post('/findtrips', (req, res) => {
-    jwt.verify(req.body.token, process.env.JWT_PRIVATE_KEY, (err, result) => {
-        if (err) return res.json({result: false, errorMessage: err})
-        if (!result) return res.json({result: false, errorMessage: 'Invalid JWT.'})
-        console.log('hi')
-
-
-        User.findOne({ email: result.email }, (err, data) => {
-            if (err) return res.json({result: false, errorMessage: err})
-
-            if (data === null) return res.json({result: false, errorMessage: 'User not found.'})
-            console.log(data.trips)
-            let arr = []
-            arr.push(data.trips)
-            console.log(arr)
-
-            res.json({result: true, message: 'Trip created', trips: data.trips});
+            
         })
     })
 })

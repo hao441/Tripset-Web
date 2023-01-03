@@ -9,7 +9,7 @@ import { selectSessionToken } from '../features/auth/authSlice';
 
 
 import autocomplete from '../autoComplete';
-import cities from '../listOfCities.json'
+import countries from '../countriesArray.json'
 import countryLookUp from  '../countryLookUp.json';
 import cityLookup from '../cityLookUp.json'
 
@@ -24,7 +24,7 @@ export default function TripCreation () {
     
     //Use Effects
     useEffect(() => {
-        autocomplete(document.getElementById("myInput"), cities);
+        autocomplete(document.getElementById("myInput"), countries);
 
         setTimeout((checkUserSignIn()), /*'300000'*/ '300')
     });
