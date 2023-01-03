@@ -4,12 +4,15 @@ import {
   logout,
   login,
   selectAuthentication,
+  selectSessionToken,
+  selectUserName
 } from './authSlice';
 import { store } from '../../app/store';
 import styles from './Auth.module.css';
 
 export function Auth() {
   const auth = useSelector(selectAuthentication);
+  
   const dispatch = useDispatch();
 
   return (

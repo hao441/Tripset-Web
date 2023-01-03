@@ -12,8 +12,7 @@ export default function Account () {
     })
 
     //Functions
-
-
+    
     return(
         <div className="page">
         </div>

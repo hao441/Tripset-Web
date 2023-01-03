@@ -1,5 +1,6 @@
 * { box-sizing: border-box; }
 body {
+  margin: auto;
   font: 16px Arial; 
 }
 .autocomplete {
@@ -15,7 +16,8 @@ input {
 }
 input[type=text] {
   background-color: #f1f1f1;
-  width: 100%;
+  width: 300px;
+  text-align: center;
 }
 input[type=submit] {
   background-color: DodgerBlue;

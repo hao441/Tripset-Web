@@ -1,28 +1,27 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 
 //Redux
 import { selectSessionToken } from '../features/auth/authSlice';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectAuthentication, login } from '../features/auth/authSlice';
 
 import '../App.css'
 
-class Home extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: '',
-            password: ''
-        };
-    }
+export default function Home () {
+        const dispatch = useDispatch();
 
-    render () {
+        let auth = useSelector(selectAuthentication);
+        console.log(auth)
+
         return (
             <div className="page">
+                <h1>Auth is: {`${auth}`}</h1>
+
+                <button onClick={(() => dispatch(login({loggedIn: true, token: '', tokenExpiry: '', username: ''})))}></button>
+
+                <Link to={`/`}>Go to Counter</Link>
                <h1>Home Page</h1>
            </div>
         );
     }
-};
-
-export default Home

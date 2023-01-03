@@ -18,9 +18,12 @@ export default function Trip () {
         const [trips, setTrips] = useState([]);
         const [count, setCount] = useState(0);
 
+        const [result, setResult] = useState('');
+        const [errorMsg, setErrorMsg] = useState('');
+
     //Use Effects
         useEffect(() => {
-            setTimeout((findTrips()), '10000')
+            findTrips()
         }, []);
 
         //[find trips function: return object and set it to a useState, no trips, set up text and button component]
@@ -33,26 +36,37 @@ export default function Trip () {
                 })
                 .then(res => res.json())
                 .then(res => {
-                    console.log(res.result)
+                    setResult(res.result);
+                    setErrorMsg(res.errorMessage);
                     if (res.result) {
-                        setTrips([...res.trips]);
-                        console.log(trips[0])
+                        const tripTitles = [];
+
+                        for (const key in res.trips) {
+                            tripTitles.push(key);
+                        }
+                        setTrips(tripTitles)
                     } else {
                         console.log('No trips.')
-                        console.log(res.message)
                     }
                 })
                 .catch(error => {console.log(error)
                 })
             }
     //Functions
+
+    const showTrips = trips.map((trip) => {
+        return <div key={trip.toString()}>
+                <h2>{trip}</h2>
+               </div>
+    })
     //Find trips
 
     //find trips
     if (trips[0] != null) {
         return (
-        <div>
+        <div className="page">
             <h1>There are trips</h1>
+            {showTrips}
         </div>
         )
     }
@@ -61,6 +75,9 @@ export default function Trip () {
         <div className="page">
             <h1>Trips</h1>
             {trips[0] == null && <CreateTrip />}
+            {`${result}`}
+            <br />
+            {`${JSON.stringify(errorMsg)}`}
         </div>
     )
 }

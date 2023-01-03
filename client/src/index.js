@@ -28,33 +28,20 @@ import reportWebVitals from './reportWebVitals';
 
 //CSS
 import './index.css'
+import { sessionData } from './sessionData';
 
-let sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=(\S+)/)[0].replace('token=','')
-let sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[0].replace('expires=','')
-
-let currentDate = new Date(Date.now());
-let expiryDate = new Date(sessionJWTExpiry);
-
-let router = createBrowserRouter([
-  { path: '/', element: <Counter />, errorElement: <Welcome />}, //Current working route
-  { path: 'welcome', element: <Welcome /> },
-  { path: 'signup',element: <SignUp /> }
-]);
-
-if (sessionJWT !== '' && sessionJWTExpiry !== '' && currentDate < expiryDate) {
-  router = createBrowserRouter([
-    { path: '/', element: <Counter />, errorElement: <Welcome />}, //Current working route
-    { path: 'signup',element: <SignUp /> },
-    { path: 'home', element: <Home />},
-    { path: 'city', element: <City /> },
-    { path: 'trip', element: <Trip /> },
-    { path: 'tripcreation', element: <TripCreation /> },
-    { path: 'itinerary', element: <Itinerary /> },
-    { path: 'itineraryCreation', element: <ItineraryCreation /> },
-    { path: 'account', element: <Account /> },  
-    { path: 'welcome', element: <Welcome /> }
-  ])
-}
+const router = createBrowserRouter([
+  { path: '/', element: <Counter />}, //Current working route
+  { path: 'signup',element: <SignUp /> },
+  { path: 'home', element: <Home />},
+  { path: 'city', element: <City /> },
+  { path: 'trip', element: <Trip /> },
+  { path: 'tripcreation', element: <TripCreation /> },
+  { path: 'itinerary', element: <Itinerary /> },
+  { path: 'itineraryCreation', element: <ItineraryCreation /> },
+  { path: 'account', element: <Account /> },  
+  { path: 'welcome', element: <Welcome /> }
+])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

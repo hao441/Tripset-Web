@@ -96,7 +96,7 @@ export default function SignUp() {
                     document.cookie = `path=/;`;
                     document.cookie = `expires=${expiryString};`;
                     document.cookie = `token=${res.token};`;
-                    document.cookie = `username=${res.username}`
+                    document.cookie = `username=${res.username};`
                     console.log(`Updated cookie: ${document.cookie}`);
 
                     setNewUser(true);

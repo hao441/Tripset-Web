@@ -1,9 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import logo from '../logo.svg';
 import { Auth } from '../features/auth/Auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, selectAuthentication } from '../features/auth/authSlice';
+import { sessionData } from '../sessionData';
 import '../App.css';
+import { Navigate } from 'react-router-dom';
+import Welcome from './Welcome';
 
 function App() {
+
+  let auth = useSelector(selectAuthentication)
+
+
+  useEffect(() => {
+    if (auth === '') sessionData()
+  }, [])
+
+  //checkAuth
+  const checkAuth = async () => { let isAuth = await auth; return isAuth}
+  if (!checkAuth) { return <Navigate replace to={`/welcome`} /> }
+
+
   return (
     <div className="App">
       <header className="App-header">

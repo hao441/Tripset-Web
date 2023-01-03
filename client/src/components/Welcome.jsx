@@ -4,10 +4,10 @@ import { Link, Navigate, redirect } from 'react-router-dom';
 //Redux
 import { store } from '../app/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { login, selectAuthentication, selectSessionToken } from '../features/auth/authSlice';
+import { login, selectAuthentication, selectSessionToken, selectErrorMessage, selectSessionTokenExpiry } from '../features/auth/authSlice';
 
 //Other
-import { loginToken } from '../sessionData';
+import { sessionJWT } from '../sessionData';
 
 import '../App.css'
 
@@ -15,7 +15,11 @@ export default function Welcome() {
     //redux
     const dispatch = useDispatch();
     const sessionToken = useSelector(selectSessionToken);
+    const sessionTokenExpiry = useSelector(selectSessionTokenExpiry);
     const sessionAuth = useSelector(selectAuthentication);
+    const sessionErrorMessage = useSelector(selectErrorMessage);
+
+    const checkAuth = async () => { let isAuth = await sessionAuth; return isAuth}
 
     //useStates
     const [email, setEmail] = useState('');
@@ -24,6 +28,7 @@ export default function Welcome() {
 
     const [navigate, setNavigate] = useState(false);
     const [message, setMessage] = useState('')
+
 
     //useEffects
     useEffect(() => {   
@@ -40,24 +45,22 @@ export default function Welcome() {
         .then(res => setMsg(res))
     }
 
-    console.log(store.getState().auth)
-
     function checkUserSignIn() {
 
-        if (sessionToken == '') return
+        if (sessionToken === '' || sessionTokenExpiry === '') return dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: 'Not logged in.'}))
 
         fetch('http://localhost:9000/verifyuser', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({"token": loginToken})
+            body: JSON.stringify({"token": sessionToken})
             })
             .then(res => res.json())
             .then (res => {
                 if (res.result) {
                     console.log('User logged in.')
-                    window.location.href = '/home'
+                    return dispatch(login({loggedIn: true, token: res.token, tokenExpiry: sessionTokenExpiry, username: res.username, errorMessage: ''}))
                 } else {
-                    return
+                    return dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: 'Not logged in.'}))
                 }
             })
             .catch(err => console.log(err));
@@ -86,32 +89,40 @@ export default function Welcome() {
                     document.cookie = `path=/;`;
                     document.cookie = `expires=${expiryString};`;
                     document.cookie = `token=${res.token};`;
+                    document.cookie = `username=${res.username}`
                     console.log(`Updated cookie: ${document.cookie}`);
                     setMessage(document.cookie)
 
                     //redux dispatch
-                    console.log(dispatch(login({loggedIn: true, token: res.token, tokenExpiry: expiryString, username: res.username})))
-                    dispatch(login({loggedIn: true, token: res.token, tokenExpiry: expiryString, username: res.username}))
+                    console.log(dispatch(login({loggedIn: true, token: res.token, tokenExpiry: expiryString, username: res.username, errorMessage: ''})))
+                    dispatch(login({loggedIn: true, token: res.token, tokenExpiry: expiryString, username: res.username, errorMessage: ''}))
 
-                    //navigate
-                    window.location = "/home"
+                    setEmail('')
+                    setPassword('')
                 } else {
-                    setMessage(res.message)
+                    dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: res.errorMessage}))
+                    setEmail('')
+                    setPassword('')
                 }
             })
             .catch(err => console.log(err));
         }
+    
+    if (checkAuth) {return <Navigate replace to='/home' />}
 
     return (
         <div className="page">
             <h1>{msg}</h1>
-            <form onSubmit={handleSignIn}>
+            <form action='' onSubmit={handleSignIn}>
                 <label>Email: </label>
-                <input type='text' value={email} onChange={e => setEmail(e.target.value)} />
+                <input type='email' value={email} onChange={e => setEmail(e.target.value)} formTarget="username" required />
                 <label>Password: </label>
-                <input type='password' value={password}  onChange={e => setPassword(e.target.value)} />
+                <input type='password' value={password}  onChange={e => setPassword(e.target.value)} formTarget="password" required />
                 <input type='submit' value='Submit' />
             </form>
+            <br />
+            <b>{sessionErrorMessage}</b>
+            <br />
             <br />
             <Link to='/signup'>Sign Up</Link>
         </div>

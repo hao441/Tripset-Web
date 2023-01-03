@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { sessionData } from '../../sessionData';
 import { useSelector } from 'react-redux';
 
-const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=(\S+)/)[0].replace('token=','')
-const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[0].replace('expires=','')
-const sessionUsername = document.cookie == '' ? '' : document.cookie.match(/username=(\S+)/)[0].replace('username=','')
+const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
+const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
+const sessionUsername = document.cookie == '' ? '' : document.cookie.match(/username=([^;]+)/)[1]
 
 const initialState = {
   loggedIn: false,
