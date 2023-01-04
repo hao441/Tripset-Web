@@ -26,15 +26,11 @@ function App() {
   }, [])
   
   //testing
-  
 
-  //checkAuth
-  // console.log(checkAuth())
-  // if (!checkAuth()) { return <Navigate replace to={`/welcome`} /> }
+  
   if (!logged) return (
     <Navigate replace to='/welcome' />
   )
-
 
   return (
     <div className="App">

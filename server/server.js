@@ -199,4 +199,32 @@ app.post('/tripcreation', (req, res) => {
         })
     })
 })
-    
+
+
+//Find Itinerary
+app.post('/finditinerary', (req, res) => {
+    User.findOne({ email: req.body.username }, (err, data) => {
+        //error handling
+        if (err) return res.json({result: false, errorMessage: err})
+        if (data === null) return res.json({result: false, message: 'User not found.'})
+        if (data.trips[req.body.trip] == null) return res.json({result: false, message: 'Trip not found.', code: 1})
+
+        if (Object.keys(data.trips[req.body.trip]) == '') return res.json({result: false, message: 'No Itinerary found.', code: 2})
+
+        res.json({result: true, message: 'Itinerary found', trips: data.trips[req.body.trip]});
+    })
+})
+
+//Find Trip
+app.post('/findtripv2', (req, res) => {
+    console.log('start')
+    User.findOne({ email: req.body.username }, (err, data) => {
+        if (err) return res.json({result: false, errorMessage: err})
+
+        if (data === null) return res.json({result: false, message: 'User not found.'})
+
+        if (!data.trips[req.body.tripName]) return res.json({result: false, message: 'This trip doesn\'t exist  .'})
+
+        res.json({result: true, message: 'Trips found', trips: data.trips});
+    })
+})

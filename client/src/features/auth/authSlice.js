@@ -13,6 +13,7 @@ const initialState = {
   username: sessionUsername,
   errorMessage: '',
   trips: '',
+  tripNames: [],
   status: 'idle',
 };
 
@@ -36,11 +37,15 @@ export const authSlice = createSlice({
       state.loggedIn = false;
       state.sessionToken = '';
       state.sessionTokenExpiry = '';
+    },
+    setTrips: (state, action) => {
+      state.tripNames = action.payload
     }
-  }
+  },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, setTrips } = authSlice.actions;
+
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
@@ -51,6 +56,7 @@ export const selectSessionTokenExpiry = (state) => state.auth.sessionTokenExpiry
 export const selectUserName = (state) => state.auth.username;
 export const selectErrorMessage = (state) => state.auth.errorMessage;
 export const selectUsername = (state) => state.auth.username;
+export const selectTripNames = (state) => state.auth.tripNames;
 
 
 // We can also write thunks by hand, which may contain both sync and async logic.

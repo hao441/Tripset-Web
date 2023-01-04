@@ -16,7 +16,6 @@ import Welcome from './components/Welcome';
 import Home from './components/Home';
 import City from './components/City';
 import Trips from './components/Trips';
-import Trip from './components/Trip';
 import TripCreation from './components/TripCreation';
 import Itinerary from './components/Itinerary';
 import ItineraryCreation from './components/ItineraryCreation';
@@ -29,7 +28,6 @@ import reportWebVitals from './reportWebVitals';
 
 //CSS
 import './index.css'
-import { sessionData } from './sessionData';
 
 const router = createBrowserRouter([
   { path: '/', element: <Counter />}, //Current working route
@@ -38,13 +36,13 @@ const router = createBrowserRouter([
   { path: 'city', element: <City /> },
   { path: 'tripcreation', element: <TripCreation /> },
   { path: 'itinerary', element: <Itinerary /> },
-  { path: 'itineraryCreation', element: <ItineraryCreation /> },
+  { path: 'itinerarycreation', element: <ItineraryCreation /> },
   { path: 'account', element: <Account /> },  
   { path: 'welcome', element: <Welcome /> },
   //trips
   { path: 'trip', element: <Trips />},
-  {path: 'trip/:trip', element: <Trip />},
-  {path: 'trip/:trip/itinerary/:itinerary'}
+  {path: 'trip/:trip', element: <Itinerary />},
+  // {path: 'trip/:trip/itinerary/:itinerary'}
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

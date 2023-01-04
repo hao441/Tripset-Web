@@ -3,8 +3,9 @@ import { login } from "./features/auth/authSlice";
 import { store } from "./app/store";
 
 export async function sessionData() {
-    const sessionJWT = store.getState().auth.sessionToken
-    const sessionJWTExpiry = store.getState().auth.sessionTokenExpiry
+    const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
+    const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
+    const sessionUsername = document.cookie == '' ? '' : document.cookie.match(/username=([^;]+)/)[1]
 
     if (sessionJWT === '' || sessionJWTExpiry === '') {
         store.dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: ''}))
@@ -25,7 +26,4 @@ export async function sessionData() {
                 store.dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: ''}))
                 return redirect('signup')
             });
-
-
-    console.log(`store state: ${store.getState().auth.loggedIn}`)
 }

@@ -4,12 +4,12 @@ import { Link, Navigate, redirect, useNavigate } from 'react-router-dom';
 import CreateTrip from "./sub-components/CreateTrip";
 
 //Redux
-import { useSelector } from 'react-redux';
-import { selectSessionToken } from '../features/auth/authSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectSessionToken, setTrips } from '../features/auth/authSlice';
 
 //css
 import '../App.css'
-import './css/trips.css'
+import './css/trip.css'
 
 export default function Trip () {
     //redux selector
@@ -17,7 +17,7 @@ export default function Trip () {
 
     //Use States
         const [trips, setTrips] = useState([]);
-        const [count, setCount] = useState(0);
+        const [empty, setEmpty] = useState(false);
 
     //Use Effects
         useEffect(() => {
@@ -44,8 +44,10 @@ export default function Trip () {
                             tripTitles.push(key);
                         }
                         setTrips(tripTitles)
+                        setEmpty(false)
                     } else {
                         console.log('No trips.')
+                        setEmpty(true)
                     }
                 })
                 .catch(error => {console.log(error)
@@ -54,17 +56,17 @@ export default function Trip () {
     //Functions
 
     const showTrips = trips.map((trip) => {
-        return <button key={trip.toString} className='trip' onClick={() => navigate(`${trip}`)}>{trip}</button>
+        return <button key={trip.toString} className='page' onClick={() => navigate(`${trip}`)}>{trip}</button>
     })
 
     //Find trips
-    if (trips[0] === null) return (
+    if (empty === null) return (
         <div>
         </div>
     )
 
     //find trips
-    if (trips[0] != null) {
+    if (empty === false) {
         return (
         <div className="page">
             <h1>There are trips</h1>
@@ -72,10 +74,10 @@ export default function Trip () {
         </div>
         )
     }
-    
     return(
         <div className="page">
             <h1>Trips</h1>
+            <h1>{`showtrips: ${showTrips == ''}`}</h1>
             {trips[0] == null && <CreateTrip />}
         </div>
     )

@@ -72,7 +72,7 @@ export default function Welcome() {
                     document.cookie = `path=/;`;
                     document.cookie = `expires=${expiryString};`;
                     document.cookie = `token=${res.token};`;
-                    document.cookie = `username=${res.username}`
+                    document.cookie = `username=${res.username};`
                     console.log(`Updated cookie: ${document.cookie}`);
                     setMessage(document.cookie)
 
