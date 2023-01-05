@@ -85,12 +85,12 @@ app.post('/signin', (req, res) => {
 app.post('/signup', (req, res) => {
 
     User.find({email: req.body.email}, (err,data) => {
-        if (err) return res.json({result: false, token: '', username: '', errorMessage: err})
+        if (err) return res.json({result: false, token: '', tokenExpiry: '', username: '', message: err})
 
-        if (data[0] != null) return res.json({result: false, token: '', username: '', errorMessage: 'A user account with that email address already exists.'})
+        if (data[0] != null) return res.json({result: false, token: '', tokenExpiry: '', username: '', message: 'A user account with that email address already exists.'})
 
         bcrypt.hash(req.body.password, 10, (err,hash) => {
-            if (err) return res.json({result: false, token: '', username: '', errorMessage: err})
+            if (err) return res.json({result: false, token: '', tokenExpiry: '', username: '', message: err})
 
             if (hash) {
                 let newUser = new User({
@@ -100,18 +100,18 @@ app.post('/signup', (req, res) => {
                 });
                 
                newUser.save((err,user) => {
-                if (err) return res.json({result: false, token: '', username: '', errorMessage: err});
+                if (err) return res.json({result: false, token: '', tokenExpiry: '', username: '', message: err});
 
                 console.log(user)
 
                 let newToken = jwt.sign({email : req.body.email}, process.env.JWT_PRIVATE_KEY, {expiresIn: '1hr'})
                 const expiryDate = new Date(Date.now() + 3600000);
                 
-                res.json({result: true, token: newToken, username: user.email, tokenExpiry: expiryDate, errorMessage: ''})
+                res.json({result: true, token: newToken, username: user.email, tokenExpiry: expiryDate, message: 'Success!'})
                })
 
             } else {
-                res.json({result: false, token: '', username: '', errorMessage: 'Failed to hash password.'})
+                res.json({result: false, token: '', username: '', token: '', tokenExpiry: '', message: 'Failed to hash password.'})
             }
         })
 
@@ -119,11 +119,17 @@ app.post('/signup', (req, res) => {
 });
 
 //verify user
-app.post('/verifyuser', (req, res) => {
+app.post('/loadUser', (req, res) => {
     jwt.verify(req.body.token, process.env.JWT_PRIVATE_KEY, (err, result) => {
-        if (err) return res.json({result: false, token: '', username: ''})
+        if (err) return res.json({result: false, username: '', homeCity: '', trips: '', message: "Error in token validation."})
+        if (!result) return json({result: false, username: '', homeCity: '', trips: '', message: "Invalid token."})
 
-        result ? res.json({result: true, token: req.body.token, username: result}) : res.json({result: false, token: '', username: ''});
+        User.findOne({email: result.email}, (err,data) => {
+            if (err) return res.json({result: false, username: '', homeCity: '', trips: '', message: "Error in token validation."})
+            if (!data) return res.json({result: false, username: '', homeCity: '', trips: '', message: "Invalid token."})
+            
+            res.json({result: true, username: data.email, homeCity: data.homeCity, trips: data.trips,  message: "Success!"})
+        })
     })
 });
 
@@ -133,7 +139,7 @@ app.post('/usercity', (req, res) => {
         User.findOne({email: req.body.email}, (err,data) => {
             
 
-            if (err) return res.json({result: false, errorMessage: err})
+            if (err) return res.json({result: false, homeCity: '', message: err})
             
 
             if (data) {
@@ -145,17 +151,17 @@ app.post('/usercity', (req, res) => {
 
                 data.save((err,user) => {
                     
-                    if (err) return res.json({result: false, errorMessage: err})
+                    if (err) return res.json({result: false, homeCity: '', message: err})
                     
                     if (user !== null) {
                         console.log(`Updated user data is: ${user}`)
-                        return res.json({result: true});
+                        return res.json({result: true, homeCity: {city: req.body.city, country: req.body.country, lat: req.body.lat, lng: req.body.lng}, message: 'Success!'});
                     } else {
-                        return res.json({result: false, errorMessage: "User returned null."})
+                        return res.json({result: false, homeCity: '', message: "User returned null."})
                     }
                 })
             } else {
-                return res.json({result: false, errorMessage: 'User account doesn\'t exist.'})
+                return res.json({result: false, homeCity: '', message: 'User account doesn\'t exist.'})
             }
         })
 })

@@ -1,14 +1,10 @@
-//React
-import React, { useEffect, useState } from 'react';
+//React/Router/Redux
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, Navigate, Route, redirect} from 'react-router-dom';
-
-
-//Redux
+import { createBrowserRouter, RouterProvider} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
-import { useSelector, useDispatch } from 'react-redux';
-import { login, selectSessionTokenExpiry, selectSessionToken } from './features/auth/authSlice';
+import reportWebVitals from './reportWebVitals';
 
 //Components
 import SignUp from './components/SignUp';
@@ -21,17 +17,14 @@ import Itinerary from './components/Itinerary';
 import ItineraryCreation from './components/ItineraryCreation';
 import Account from './components/Account';
 import Counter from './components/Counter';
-import MapsLocationSearch from './components/MapsLocationSearch'
-
-
-//Reports
-import reportWebVitals from './reportWebVitals';
-
-//CSS
-import './index.css'
+import MapsLocationSearch from './components/MapsLocationSearch';
 
 //Other
-import { sessionAuth, sessionData } from './sessionData'
+import { sessionData } from './sessionData';
+import './index.css';
+
+//set cookies
+sessionData();
 
 const router = createBrowserRouter([
   { path: '/', element: <Counter />}, //Current working route
@@ -59,22 +52,11 @@ root.render(
   </React.StrictMode>
 );
 
-let logged = store.getState().auth.loggedIn
-let token = store.getState().auth.sessionToken
-let tokenExpiry = store.getState().auth.sessionTokenExpiry
-
-let currentTime = new Date().getTime()
-let expiryTime = new Date(tokenExpiry).getTime()
 
 // if (sessionAuth === '') sessionData()
 
 // store.getState().auth.loggedIn === ''
 
-isNaN(expiryTime) || currentTime > expiryTime
-  ? store.dispatch(login({loggedIn: false, username:'', token:'', tokenExpiry:''})) 
-  : store.dispatch(login({loggedIn: true}))
-
-if (logged === '') sessionData()
 
 
 

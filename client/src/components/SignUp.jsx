@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import Home from './Home.jsx';
 
 //Redux
@@ -7,117 +7,41 @@ import { useSelector, useDispatch } from 'react-redux';
 import { login, selectAuthentication, selectMessage, selectSessionToken, selectSessionTokenExpiry, selectUserName } from '../features/auth/authSlice';
 
 import '../App.css'
+import { signupAsync } from '../features/auth/authThunk.js';
 
 export default function SignUp() {
 
     //redux
     const dispatch = useDispatch()
+    const navigate = useNavigate();
+    const auth = useSelector(selectAuthentication);
+    const message = useSelector(selectMessage);
 
-    const sessionToken = useSelector(selectSessionToken);
-    const sessionTokenExpiry = useSelector(selectSessionTokenExpiry);
-    const sessionAuth = useSelector(selectAuthentication);
-    const sessionMessage = useSelector(selectMessage);
-    const sessionUsername = useSelector(selectUserName)
-
-    //useStates
-
-        //login
-        const [email, setEmail] = useState('');
-        const [password, setPassword] = useState('');
-        const [passwordConfirm, setPasswordConfirm] = useState('');
-
-        //messages
-        const [title, setTitle] = useState('');
-
-        //API logs
-        const [result, setResult] = useState([]);
-        const [navigate, setNavigate] = useState(false);
-        const [newUser, setNewUser] = useState(false);
-        const [message, setMessage] = useState('');
+    //login variables
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
 
     //useEffects
     useEffect(() => {
-        //test API
-        callSignUp()
-
-        //check login
-        console.log()
-        // setTimeout((checkUserSignIn()), /*'300000'*/ '300')
+        //navigate
+        if (auth) navigate('/home');
     });
-
-    //API calls
-    function callSignUp() {
-        fetch('http://localhost:9000/testSignUp')
-        .then(res => res.text())
-        .then(res => setTitle(res))
-        .catch(err => console.log(err))
-    }
-
-    //check login
-    function checkUserSignIn() {
-        if (sessionToken === '' || sessionTokenExpiry === '') return dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: 'Not logged in.'}))
-        
-        fetch('http://localhost:9000/verifyuser', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({"token": sessionToken})
-            })
-            .then(res => res.json())
-            .then (res => {
-                if (res.result) {
-                    console.log('User logged in.')
-                    return dispatch(login({loggedIn: true, token: res.token, tokenExpiry: sessionTokenExpiry, username: res.username, errorMessage: ''}))
-                } else {
-                    return dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: 'Not logged in.'}))
-                }
-            })
-            .catch(err => console.log(err));
-    }
 
     const handleSignUp = (e) => {
         e.preventDefault();
-
-        if (password !== passwordConfirm) return dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: 'Passwords don\'t match.'}))
-
-        fetch('http://localhost:9000/signup', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({email: email, password: password})
-            })
-            .then(res => res.json())
-            .then(res => {
-                console.log(res)
-                if (res.result) {
-                    // Parse the ISO 8601 timestamp string
-                    const expiry = new Date(res.tokenExpiry);
-                    const expiryString = expiry.toUTCString();
-
-                    //cookie
-                    document.cookie = `path=/;`;
-                    document.cookie = `expires=${expiryString};`;
-                    document.cookie = `token=${res.token};`;
-                    document.cookie = `username=${res.username};`
-                    console.log(`Updated cookie: ${document.cookie}`);
-
-                    setNewUser(true);
-                    console.log('worked')
-                    return dispatch(login({loggedIn: true, token: res.token, tokenExpiry: expiryString, username: res.username, errorMessage: res.errorMessage}))
-                } else {
-                    console.log('didn\'t work.')
-                    return dispatch(login({loggedIn: false, token: '', tokenExpiry: '', username: '', errorMessage: res.errorMessage}))
-                }
-            })
-            .catch(err => console.log(err));
+        setTimeout(() => {
+            dispatch(signupAsync({email: email, password: password, passwordConfirm: passwordConfirm}))
+        }, 1000);
     };
 
-    //checkAuth
-    const checkAuth = async () => { let isAuth = await sessionAuth; return isAuth}
-     if (checkAuth === true) {dispatch(login({loggedIn: true})) ;return <Navigate replace to={`/`} />}
+    if (auth) return (
+        <Navigate replace to='/home' />
+    )
 
     return (
         <div className="page">
-            {newUser && <Navigate replace to={`/city`} />}
-            <h1>{title}</h1>
+            <h1>Sign up</h1>
             <form onSubmit={handleSignUp}>
                 <label>Email: </label>
                 <input id='email' type='email' value={email} onChange={e => setEmail(e.target.value)} required />
@@ -134,7 +58,9 @@ export default function SignUp() {
                 <input type='submit' value='Submit' />
             </form>
             <br />
-            <b>{sessionMessage}</b>
+            <b>{`auth is: ${auth}`}</b>
+            <br />
+            <b>{`message is: ${message}`}</b>
             <br />
             <br />
             <Link to='/'>Login</Link>

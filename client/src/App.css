@@ -44,6 +44,12 @@
 	text-align: center;
 }
 
+.page-100 {
+  margin: auto;
+  width: 80%;
+  text-align: center;
+}
+
 /* button {
 	width: 125px;
 	height: 30px;

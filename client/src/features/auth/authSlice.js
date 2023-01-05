@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { sessionData } from '../../sessionData';
 import { useSelector } from 'react-redux';
-import { signinAsync, signupAsync } from './authThunk';
+import { loadUserAsync, signinAsync, signupAsync } from './authThunk';
+import { setCityAsync, setTripAsync } from './tripThunk';
 
 const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
 const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
@@ -27,8 +28,10 @@ const initialState = {
   sessionTokenExpiry: tokenExpiry,
   username: username,
   message: '',
+  homeCity: '',
   trips: '',
   tripNames: [],
+  res: '',
   status: 'idle',
 };
 
@@ -61,6 +64,22 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+    //loaduser builder
+      .addCase(loadUserAsync.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(loadUserAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.res = action.payload.result;
+        state.username = action.payload.username;
+        state.homeCity = JSON.stringify(action.payload.homeCity);
+        state.trips = JSON.stringify(action.payload.trips);
+        state.message = action.payload.message;
+      })
+      .addCase(loadUserAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.message = action.payload.message;
+      })
     //signin builder
       .addCase(signinAsync.pending, (state, action) => {
         state.status = 'loading';
@@ -107,6 +126,35 @@ export const authSlice = createSlice({
         state.status = 'failed';
         state.message = action.payload.message;
       })
+      //city builder
+      .addCase(setCityAsync.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(setCityAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.res = action.payload.result
+        state.homeCity = action.payload.homeCity;
+        state.message = action.payload.message;
+      })
+      .addCase(setCityAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.message = action.payload.message;
+      })
+      //trip builder
+      .addCase(setTripAsync.pending, (state, action) => {
+        state.status = 'loading';
+      }
+      )
+      .addCase(setTripAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.res = action.payload.result
+        state.trips = action.payload.trips;
+        state.message = action.payload.message;
+      })
+      .addCase(setTripAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.message = action.payload.message;
+      })
   }
 });
 
@@ -121,7 +169,10 @@ export const selectSessionToken = (state) => state.auth.sessionToken;
 export const selectSessionTokenExpiry = (state) => state.auth.sessionTokenExpiry;
 export const selectUserName = (state) => state.auth.username;
 export const selectMessage = (state) => state.auth.message;
+export const selectRes = (state) => state.auth.res;
 export const selectUsername = (state) => state.auth.username;
+export const selectHomeCity = (state) => state.auth.homeCity;
+export const selectTrips = (state) => state.auth.trips;
 export const selectTripNames = (state) => state.auth.tripNames;
 
 

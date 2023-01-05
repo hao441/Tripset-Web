@@ -8,7 +8,7 @@ import countryLookUp from  '../countryLookUp.json';
 import cityLookup from '../cityLookUp.json'
 
 //Redux
-import { selectSessionToken, selectUserName } from '../features/auth/authSlice';
+import { selectSessionToken, selectUserName, selectHomeCity } from '../features/auth/authSlice';
 import { useSelector } from 'react-redux';
 
 //css
@@ -23,6 +23,7 @@ export default function City() {
     //redux selector
     const sessionToken = useSelector(selectSessionToken);
     const sessionUsername = useSelector(selectUserName);
+    const sessionHomeCity = useSelector(selectHomeCity);
 
     //use states
     const [message, setMessage] = useState('');
@@ -55,7 +56,7 @@ export default function City() {
     }
 
     if (toTrip) {return <Navigate replace to='/trip' />}
-
+    
     return (
         <div className="page">
             {toTrip && <Navigate replace to={`/trip`} />}

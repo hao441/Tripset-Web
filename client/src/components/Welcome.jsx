@@ -41,7 +41,9 @@ export default function Welcome() {
 
     const handleSignIn = (e) => {
         e.preventDefault();
+        setTimeout(() => {
         dispatch(signinAsync({email, password}))
+        }, 1000);
     }
 
     //Functions

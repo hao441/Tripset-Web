@@ -1,5 +1,21 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+export const loadUserAsync = createAsyncThunk(
+    'auth/loadUser',
+    async (payload, { rejectWithValue }) => {
+      try {
+      const response = await fetch('http://localhost:9000/loadUser', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({"token": payload})
+      })
+      const data = await response.json()
+      return data
+      } catch (error) {
+        rejectWithValue(error.response.data);
+      }
+    }
+  )
 
 export const signinAsync = createAsyncThunk(
     'auth/signin',
