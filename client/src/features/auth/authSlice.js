@@ -1,17 +1,32 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { sessionData } from '../../sessionData';
 import { useSelector } from 'react-redux';
+import { signinAsync, signupAsync } from './authThunk';
 
 const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
 const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
 const sessionUsername = document.cookie == '' ? '' : document.cookie.match(/username=([^;]+)/)[1]
 
+const nowTime = new Date().getTime()
+const expiryTime = new Date(sessionJWTExpiry).getTime()
+
+let loginStatus;
+let token;
+let tokenExpiry;
+let username;
+
+if (sessionJWT !== '' && sessionJWTExpiry !== '' && sessionUsername !== '') {
+  loginStatus = true; token = sessionJWT; tokenExpiry = sessionJWTExpiry; username = sessionUsername;
+} else {
+  loginStatus = false; token = ''; tokenExpiry = ''; username = '';
+}
+
 const initialState = {
-  loggedIn: false,
-  sessionToken: sessionJWT,
-  sessionTokenExpiry: sessionJWTExpiry,
-  username: sessionUsername,
-  errorMessage: '',
+  loggedIn: loginStatus,
+  sessionToken: token,
+  sessionTokenExpiry: tokenExpiry,
+  username: username,
+  message: '',
   trips: '',
   tripNames: [],
   status: 'idle',
@@ -30,18 +45,69 @@ export const authSlice = createSlice({
       if (action.payload.loggedIn) state.loggedIn = action.payload.loggedIn
       if (action.payload.token) state.sessionToken = action.payload.token
       if (action.payload.tokenExpiry) state.sessionTokenExpiry = action.payload.tokenExpiry
-      if (action.payload.username) state.username = action.payload.username
-      if (action.payload.errorMessage) state.errorMessage = action.payload.errorMessage
+      if (action.payload.email) state.email = action.payload.username
+      if (action.payload.message) state.message = action.payload.message
     },
     logout: (state) => {
       state.loggedIn = false;
       state.sessionToken = '';
       state.sessionTokenExpiry = '';
+      state.sessionUsername = '';
+      state.sessionMessage = '';
     },
     setTrips: (state, action) => {
       state.tripNames = action.payload
     }
   },
+  extraReducers: (builder) => {
+    builder
+    //signin builder
+      .addCase(signinAsync.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(signinAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.loggedIn = action.payload.result;
+        state.sessionToken = action.payload.token;
+        state.sessionTokenExpiry = action.payload.tokenExpiry;
+        state.username = action.payload.email;
+        state.message = action.payload.message;
+
+        if (action.payload.result) {
+          document.cookie = `path=/;`;
+          document.cookie = `expires=${action.payload.tokenExpiry};`;
+          document.cookie = `token=${action.payload.token};`;
+          document.cookie = `username=${action.payload.email};`;
+        }
+      })
+      .addCase(signinAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.message = action.payload.message;
+      })
+      //signout builder
+      .addCase(signupAsync.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(signupAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.loggedIn = action.payload.result;
+        state.sessionToken = action.payload.token;
+        state.sessionTokenExpiry = action.payload.tokenExpiry;
+        state.username = action.payload.email;
+        state.message = action.payload.message;
+
+        if (action.payload.result) {
+          document.cookie = `path=/;`;
+          document.cookie = `expires=${action.payload.tokenExpiry};`;
+          document.cookie = `token=${action.payload.token};`;
+          document.cookie = `username=${action.payload.email};`;
+        }
+      })
+      .addCase(signupAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.message = action.payload.message;
+      })
+  }
 });
 
 export const { login, logout, setTrips } = authSlice.actions;
@@ -54,7 +120,7 @@ export const selectAuthentication = (state) => state.auth.loggedIn;
 export const selectSessionToken = (state) => state.auth.sessionToken;
 export const selectSessionTokenExpiry = (state) => state.auth.sessionTokenExpiry;
 export const selectUserName = (state) => state.auth.username;
-export const selectErrorMessage = (state) => state.auth.errorMessage;
+export const selectMessage = (state) => state.auth.message;
 export const selectUsername = (state) => state.auth.username;
 export const selectTripNames = (state) => state.auth.tripNames;
 

@@ -45,14 +45,23 @@ app.get('/testSignUp', (req, res) => {
 
 //Sign in
 app.post('/signin', (req, res) => {
+    console.log('reached signin route')
+    console.log(`req body email is: ${req.body.email}`)
+    console.log(`req body password is: ${req.body.password}`)
 
-    User.find({email: req.body.email}, (err,data) => {
-        if (err) return res.json({result: false, token: '', username: '', errorMessage: err})
-        if (data[0] == null) return res.json({result: false, token: '', username: '', errorMessage: 'User doesn\'t exist.'});
-        bcrypt.compare(req.body.password, data[0].password, (err,result) => {
-            if (err) res.json({result: false, token: '', username: '', errorMessage: err})
-
+    User.findOne({email: req.body.email}, (err,data) => {
+        console.log('reached findOne')
+        if (err) return res.json({result: false, token: '', tokenExpiry: '', username: '', message: err})
+        console.log('reached findOne 2')
+        console.log(`data is: ${data}`)
+        if (data.email == null) return res.json({result: false, token: '', tokenExpiry: '', username: '', message: 'User doesn\'t exist.'});
+        console.log('reached findOne 3')
+        bcrypt.compare(req.body.password, data.password, (err,result) => {
+            console.log('reached bcrypt compare')
+            if (err) return res.json({result: false, token: '', tokenExpiry: '', username: '', message: err})
+            console.log('reached bcrypt compare 2')
             if (result) {
+                console.log('reached bcrypt compare 3')
                 console.log(`Password correct: ${result}`);
 
                let newToken = jwt.sign({email : req.body.email}, process.env.JWT_PRIVATE_KEY, {expiresIn: '1hr'})
@@ -61,10 +70,11 @@ app.post('/signin', (req, res) => {
                
                 console.log(`expiry datetime: ${expiryDate}`)
 
-               res.json({result: true, token: newToken, username: data, tokenExpiry: expiryDate, errorMessage: ''})
+               res.json({result: true, token: newToken, tokenExpiry: expiryDate,  username: data, message: ''})
             } else {
+                console.log('reached bcrypt compare 4')
                 console.log(`Password incorrect: ${result}`);
-                res.json({result: false, token: '', username: '', errorMessage: 'Incorrect password.'})
+                res.json({result: false, token: '', tokenExpiry: '', username: '', message: 'Incorrect password.'})
             }
         })
 

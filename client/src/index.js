@@ -8,7 +8,7 @@ import { createBrowserRouter, RouterProvider, Navigate, Route, redirect} from 'r
 import { Provider } from 'react-redux';
 import { store } from './app/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { loginAsync, selectSessionTokenExpiry, selectSessionToken } from './features/auth/authSlice';
+import { login, selectSessionTokenExpiry, selectSessionToken } from './features/auth/authSlice';
 
 //Components
 import SignUp from './components/SignUp';
@@ -21,6 +21,7 @@ import Itinerary from './components/Itinerary';
 import ItineraryCreation from './components/ItineraryCreation';
 import Account from './components/Account';
 import Counter from './components/Counter';
+import MapsLocationSearch from './components/MapsLocationSearch'
 
 
 //Reports
@@ -28,6 +29,9 @@ import reportWebVitals from './reportWebVitals';
 
 //CSS
 import './index.css'
+
+//Other
+import { sessionAuth, sessionData } from './sessionData'
 
 const router = createBrowserRouter([
   { path: '/', element: <Counter />}, //Current working route
@@ -39,6 +43,7 @@ const router = createBrowserRouter([
   { path: 'itinerarycreation', element: <ItineraryCreation /> },
   { path: 'account', element: <Account /> },  
   { path: 'welcome', element: <Welcome /> },
+  { path: 'mapslocationsearch', element: <MapsLocationSearch /> },
   //trips
   { path: 'trip', element: <Trips />},
   {path: 'trip/:trip', element: <Itinerary />},
@@ -53,6 +58,25 @@ root.render(
 	</Provider>
   </React.StrictMode>
 );
+
+let logged = store.getState().auth.loggedIn
+let token = store.getState().auth.sessionToken
+let tokenExpiry = store.getState().auth.sessionTokenExpiry
+
+let currentTime = new Date().getTime()
+let expiryTime = new Date(tokenExpiry).getTime()
+
+// if (sessionAuth === '') sessionData()
+
+// store.getState().auth.loggedIn === ''
+
+isNaN(expiryTime) || currentTime > expiryTime
+  ? store.dispatch(login({loggedIn: false, username:'', token:'', tokenExpiry:''})) 
+  : store.dispatch(login({loggedIn: true}))
+
+if (logged === '') sessionData()
+
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

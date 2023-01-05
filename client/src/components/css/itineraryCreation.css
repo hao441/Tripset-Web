@@ -1,0 +1,13 @@
+select {
+    margin: auto;
+    width: 300px;
+    height: 40px;
+    text-align: center;
+    text-align-last: center;
+    -moz-text-align-last: center;
+}
+
+option {
+   padding-left: 100px  ;
+}
+

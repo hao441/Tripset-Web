@@ -22,11 +22,10 @@ export default function Trip() {
 
     async function findI() {let [outcome, code] = await findItinerary(trip); setCode(code) }
 
-     
-
     useEffect(() => {
         findI()
     }, [])
+    
     switch (code) {
         case 0:
             return (<div className="page"><h1>case 0</h1></div>)

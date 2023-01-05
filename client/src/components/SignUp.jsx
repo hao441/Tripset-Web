@@ -4,7 +4,7 @@ import Home from './Home.jsx';
 
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { login, selectAuthentication, selectErrorMessage, selectSessionToken, selectSessionTokenExpiry, selectUserName } from '../features/auth/authSlice';
+import { login, selectAuthentication, selectMessage, selectSessionToken, selectSessionTokenExpiry, selectUserName } from '../features/auth/authSlice';
 
 import '../App.css'
 
@@ -16,7 +16,7 @@ export default function SignUp() {
     const sessionToken = useSelector(selectSessionToken);
     const sessionTokenExpiry = useSelector(selectSessionTokenExpiry);
     const sessionAuth = useSelector(selectAuthentication);
-    const sessionErrorMessage = useSelector(selectErrorMessage);
+    const sessionMessage = useSelector(selectMessage);
     const sessionUsername = useSelector(selectUserName)
 
     //useStates
@@ -134,7 +134,7 @@ export default function SignUp() {
                 <input type='submit' value='Submit' />
             </form>
             <br />
-            <b>{sessionErrorMessage}</b>
+            <b>{sessionMessage}</b>
             <br />
             <br />
             <Link to='/'>Login</Link>

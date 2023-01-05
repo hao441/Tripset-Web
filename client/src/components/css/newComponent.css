@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+/* apply the Lato font to the entire page */
+html {
+  font-family: 'Lato', sans-serif;
+}
+
+/* define the color palette */
+:root {
+  --primary-color: #00b8d4;
+  --secondary-color: #ffffff;
+  --tertiary-color: #212121;
+  --quaternary-color: #bdbdbd;
+}
+
+.my-container {
+    margin: auto;
+  /* apply styles to the container */
+  position: relative; /* set the position to relative */
+  display: flex; /* display the search box and suggestions as a flex container */
+  align-items: center; /* align the items vertically */
+  width: 100%; /* take up the full width of the parent element */
+  max-width: 500px; /* set a maximum width */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* add a subtle box shadow */
+  border-radius: 4px; /* round the corners of the container */
+}
+
+.my-input {
+  /* apply styles to the input element */
+  flex: 1; /* take up all available space within the container */
+  padding: 12px 20px; /* add some padding to the input */
+  font-size: 16px; /* set the font size of the input text */
+  border: none; /* remove the default border */
+  border-radius: 4px; /* round the corners of the input */
+  background: var(--quaternary-color); /* set the background color */
+  color: var(--tertiary-color); /* set the text color */
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* add a subtle inner shadow */
+}
+
+.my-input::placeholder {
+    /* apply styles to the placeholder text */
+    color: var(--quaternary-color); /* set the color of the placeholder text */
+    font-style: italic; /* set the font style to italic */
+  }
+  
+  .my-suggestions {
+    /* apply styles to the suggestions container */
+    position: absolute; /* set the position to absolute */
+    top: calc(100% + 10px); /* position the container 10px below the search box */
+    left: 0; /* align the left edge of the container with the search box */
+    width: 100%; /* take up the full width of the parent element */
+    max-height: 300px; /* set a maximum height */
+    overflow-y: auto; /* add a scrollbar if needed */
+    z-index: 1; /* ensure the container is displayed above other elements */
+    list-style-type: none; /* remove the default list style */
+    padding: 0; /* remove the default padding */
+    margin: 0; /* remove the default margin */
+    border: 1px solid var(--quaternary-color); /* add a border to the container */
+    border-radius: 4px; /* round the corners of the container */
+    background: var(--secondary-color); /* set the background color */
+  }
+  
+  .my-suggestion {
+    /* apply styles to each suggestion item */
+    display: flex; /* display the suggestion as a flex container */
+    align-items: center; /* align the items vertically */
+    padding: 10px 20px; /* add some padding to the suggestion item */
+    cursor: pointer; /* change the cursor to a pointer on hover */
+    font-size: 16px; /* set the font size of the suggestion text */
+    border-bottom: 1px solid var(--quaternary-color); /* add a border to the bottom of the suggestion */
+  }
+  
+  .my-suggestion:last-child {
+    /* remove the bottom border from the last suggestion item */
+    border-bottom: none;
+  }
+  
+  .my-suggestion:hover {
+    /* apply styles to a suggestion item when hovered over */
+    background: var(--primary-color); /* change the background color on hover */
+    color: var(--secondary-color); /* change the text color on hover */
+  }
+  
