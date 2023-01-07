@@ -72,8 +72,9 @@ export const authSlice = createSlice({
         state.status = 'succeeded';
         state.res = action.payload.result;
         state.username = action.payload.username;
-        state.homeCity = JSON.stringify(action.payload.homeCity);
-        state.trips = JSON.stringify(action.payload.trips);
+        state.homeCity = action.payload.homeCity;
+        state.trips = action.payload.trips;
+        state.tripNames = action.payload.tripNames;
         state.message = action.payload.message;
       })
       .addCase(loadUserAsync.rejected, (state, action) => {
@@ -148,7 +149,8 @@ export const authSlice = createSlice({
       .addCase(setTripAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.res = action.payload.result
-        state.trips = action.payload.trips;
+        state.trips = {...state.trips, [action.payload.tripName]: {location: action.payload.location, startDate: action.payload.startDate, endDate: action.payload.endDate}}
+        state.tripNames = [...state.tripNames, action.payload.tripName]
         state.message = action.payload.message;
       })
       .addCase(setTripAsync.rejected, (state, action) => {

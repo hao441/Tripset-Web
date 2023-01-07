@@ -1,11 +1,11 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 //Redux
-import { useSelector } from 'react-redux';
-import { selectSessionToken } from '../features/auth/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectMessage, selectSessionToken, selectUserName } from '../features/auth/authSlice';
 
 
 import autocomplete from '../autoComplete';
@@ -16,17 +16,23 @@ import cityLookup from '../cityLookUp.json'
 
 import '../App.css'
 import './css/tripCreation.css'
+import { setTripAsync } from "../features/auth/tripThunk";
 
 export default function TripCreation () {
 
-    //redux selector
+    //redux/react-router
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    
     const sessionToken = useSelector(selectSessionToken);
+    const sessionUsername = useSelector(selectUserName)
+    const sessionMessage = useSelector(selectMessage)
     
     //Use Effects
     useEffect(() => {
         autocomplete(document.getElementById("myInput"), countries);
 
-        setTimeout((checkUserSignIn()), /*'300000'*/ '300')
+        console.log(sessionUsername)
     });
 
     //Use States
@@ -39,49 +45,29 @@ export default function TripCreation () {
     const [toTrips, setToTrips] = useState(false);
 
     //functions
-    function checkUserSignIn() {
 
-        fetch('http://localhost:9000/verifyuser', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({"token": sessionToken})
-            })
-            .then(res => res.json())
-            .then (res => {
-                if (res.result) {
-                    console.log('User logged in.')
-                } else {
-                    console.log('User not logged in.')
-                    setLoggedIn(false);
-                }
-            })
-            .catch(err => console.log(err));
-    };
-
-    const doSomething = (e) => {
+    const createTrip = (e) => {
         e.preventDefault();
-        fetch('http://localhost:9000/tripcreation', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({"token": sessionToken, "tripName": tripName})
+        dispatch(setTripAsync(
+            {"email": sessionUsername,
+             "tripName": tripName, 
+             "location": document.getElementById('myInput').value, 
+             "startDate": startDate, 
+             "endDate": endDate
             })
-            .then(res => res.json())
-            .then (res => {
-                if (res.result) {
-                    console.log('Trip created.')
-                    setToTrips(true);
-                } else {
-                    console.log('Trip not created.')
-                }
-            })
+        )
+        setTripName(''); setDestination(''); setStartDate(''); setEndDate('');
+        navigate('/trip');
     }
     
-
     return(
         <div className="page">
-            {toTrips && <Navigate replace to="/trip" />}
             <h1>Trip Creation</h1>
-            <form autoComplete="off" onSubmit={doSomething}>
+            <b>Message: {JSON.stringify(sessionMessage)}</b> 
+            {sessionUsername}
+            <br />
+            <br />
+            <form autoComplete="off" onSubmit={createTrip}>
                 <label>Trip Name</label>
                 <br />
                 <input id='tripName' type='text' value={tripName} onChange={((e) => setTripName(e.target.value))} required />

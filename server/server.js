@@ -127,14 +127,18 @@ app.post('/loadUser', (req, res) => {
         User.findOne({email: result.email}, (err,data) => {
             if (err) return res.json({result: false, username: '', homeCity: '', trips: '', message: "Error in token validation."})
             if (!data) return res.json({result: false, username: '', homeCity: '', trips: '', message: "Invalid token."})
+
+            console.log(`trips: ${Object.keys(data.trips)}`)
+
+            const tripNames = !data.trips || data.trips === [] ? '' : Object.keys(data.trips)
             
-            res.json({result: true, username: data.email, homeCity: data.homeCity, trips: data.trips,  message: "Success!"})
+            res.json({result: true, username: data.email, homeCity: data.homeCity, trips: data.trips, tripNames: tripNames,  message: "Success!"})
         })
     })
 });
 
 //setUsercity
-app.post('/usercity', (req, res) => {
+app.post('/setcity', (req, res) => {
 
         User.findOne({email: req.body.email}, (err,data) => {
             
@@ -185,34 +189,33 @@ app.post('/findtrips', (req, res) => {
 })
 
 //tripCreation
-app.post('/tripcreation', (req, res) => {
-    jwt.verify(req.body.token, process.env.JWT_PRIVATE_KEY, (err, result) => {
-        if (err) return console.log(err)
+app.post('/settrip', (req, res) => {
+    console.log(req.body.email)
+    console.log('setTrip started');
+    User.findOne({ email: req.body.email }, (err, data) => {
+        console.log('User.findOne started');
+        //user error handling
+        if (err) return res.json({result: false, location: '', startDate: '', endDate: '', message: err})
+        console.log('User.findOne finished');
+        if (data == null) return res.json({result: false, location: '', startDate: '', endDate: '', message: 'User not found.'})
+        console.log('User found');
 
-        if (!result) return res.json({result: false, message: 'Invalid JWT'});
-
-        User.findOne({ email: result.email }, (err, data) => {
-            //user error handling
-            if (err) return console.log(err);
-            if (data == null) return res.json({result: false, errorMessage: 'User not found.'})
-
-            //data.trips creation if necessary
-            if (data.trips == null) data.trips = {}
-
-            //trip creation
-            data.trips[req.body.tripName] = {location: req.body.location, startDate: req.body.startDate, endDate: req.body.endDate};
-
-            //trip save
-            data.save((err, data) => {
-                if (err) return res.json({result: false, errorMessage: err})
-
-                if (!data) return res.json({result: false, errorMessage: 'Unable to save.'}) 
-                res.json({result: true, message: 'Trip created'});
-                console.log('Document updated successfully');
-            });
-
-            
-        })
+        //data.trips creation if necessary
+        if (data.trips == null) data.trips = {}
+        console.log('data.trips created');
+        //trip creation
+        data.trips[req.body.tripName] = {location: req.body.location, startDate: req.body.startDate, endDate: req.body.endDate};
+        console.log('data.trips[req.body.tripName] created');
+        //trip save
+        data.save((err, data) => {
+            console.log('data.save started');
+            if (err) return res.json({result: false, location: '', startDate: '', endDate: '', message: err})
+            console.log('data.save finished');
+            if (!data) return res.json({result: false, location: '', startDate: '', endDate: '', message: 'Unable to save.'})
+            console
+            res.json({result: true, tripName: req.body.tripName, location: req.body.location, startDate: req.body.startDate, endDate: req.body.endDate, message: 'Trip created'});
+            console.log('Document updated successfully');
+        });        
     })
 })
 

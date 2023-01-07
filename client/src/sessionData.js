@@ -2,6 +2,7 @@ import { store } from './app/store'
 import { loadUserAsync } from './features/auth/authThunk'
 
 export const sessionData = () => {
+
     if (store.getState().auth.username !== '' && store.getState().auth.username !== 'undefined') return
 
     const deleteCookies = () => {
@@ -20,4 +21,6 @@ export const sessionData = () => {
     if (sessionJWT === '' || sessionJWTExpiry === '' || nowTime > expiryTime) return deleteCookies()
 
     store.dispatch(loadUserAsync(sessionJWT))
+
+    return true
 }

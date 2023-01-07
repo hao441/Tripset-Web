@@ -8,22 +8,26 @@ import countryLookUp from  '../countryLookUp.json';
 import cityLookup from '../cityLookUp.json'
 
 //Redux
-import { selectSessionToken, selectUserName, selectHomeCity } from '../features/auth/authSlice';
-import { useSelector } from 'react-redux';
+import { selectSessionToken, selectUserName, selectHomeCity, selectMessage } from '../features/auth/authSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 //css
 import '../App.css'
 import './css/city.css';
+import { setCityAsync } from '../features/auth/tripThunk.js';
 
 export default function City() {
 
     //react router
     const navigate = useNavigate()
     
-    //redux selector
+    //redux
+    const dispatch = useDispatch();
+
     const sessionToken = useSelector(selectSessionToken);
     const sessionUsername = useSelector(selectUserName);
     const sessionHomeCity = useSelector(selectHomeCity);
+    const sessionMessage = useSelector(selectMessage);
 
     //use states
     const [message, setMessage] = useState('');
@@ -33,6 +37,11 @@ export default function City() {
 
     useEffect(() => {
         autocomplete(document.getElementById("myInput"), cities);
+
+        if (sessionHomeCity !== '') return navigate('/trip');
+
+        console.log(sessionHomeCity);
+        console.log(sessionMessage);
     })
     
 
@@ -45,17 +54,13 @@ export default function City() {
 
         if (cityLookup[cityString] == null) return setMessage('Please select an option.')
         
-        fetch('http://localhost:9000/usercity', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({"email": sessionUsername, "city": cityString, "country": countryString, "lat": cityLookup[cityString].lat, "lng": cityLookup[cityString].lng})
-            })
-            .then(res => res.json())
-            .then (res => { res.result == true && navigate('/trip')})
-            .catch(error => console.log(error))
+        dispatch(setCityAsync({"email": sessionUsername, "city": cityString, "country": countryString, "lat": cityLookup[cityString].lat, "lng": cityLookup[cityString].lng}));
+        
     }
 
-    if (toTrip) {return <Navigate replace to='/trip' />}
+    if (sessionHomeCity !== '') return (
+        <Navigate replace to='/trip' />
+    )
     
     return (
         <div className="page">

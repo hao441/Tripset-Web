@@ -1,8 +1,10 @@
 export default function autocomplete(inp, arr) {
 
     var currentFocus;
-
+  
+    if (inp === null) return
     inp.addEventListener("input", function(e) {
+
         var a, b, i, val = this.value;
 
         closeAllLists();

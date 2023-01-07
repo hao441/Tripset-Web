@@ -5,80 +5,34 @@ import CreateTrip from "./sub-components/CreateTrip";
 
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { selectSessionToken, setTrips } from '../features/auth/authSlice';
+import { selectAuthentication, selectSessionToken, selectTripNames, selectTrips, setTrips } from '../features/auth/authSlice';
 
 //css
 import '../App.css'
 import './css/trip.css'
 
 export default function Trip () {
-    //redux selector
-    const sessionToken = useSelector(selectSessionToken);
+    //redux/router
+    const navigate = useNavigate();
 
-    //Use States
-        const [trips, setTrips] = useState([]);
-        const [empty, setEmpty] = useState(false);
+    const auth = useSelector(selectAuthentication)
+    const trips = useSelector(selectTrips);
+    const tripNames = useSelector(selectTripNames)
 
-    //Use Effects
-        useEffect(() => {
-            findTrips()
-        }, []);
+    console.log(tripNames)
 
-    //react router
-    const navigate = useNavigate()
-
-        //[find trips function: return object and set it to a useState, no trips, set up text and button component]
-        const findTrips = () => {
-            
-            fetch('http://localhost:9000/findtrips', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({"token": sessionToken})
-                })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.result) {
-                        const tripTitles = [];
-
-                        for (const key in res.trips) {
-                            tripTitles.push(key);
-                        }
-                        setTrips(tripTitles)
-                        setEmpty(false)
-                    } else {
-                        console.log('No trips.')
-                        setEmpty(true)
-                    }
-                })
-                .catch(error => {console.log(error)
-                })
-            }
-    //Functions
-
-    const showTrips = trips.map((trip) => {
-        return <button key={trip.toString} className='page' onClick={() => navigate(`${trip}`)}>{trip}</button>
+    const hello = tripNames == '' ? <div>'No trips available.'<button onClick={navigate('/tripcreation')}>Create Trip</button></div> : tripNames.map((trip) => {
+        <button key={trip.toString()}>{trip}</button>
     })
 
-    //Find trips
-    if (empty === null) return (
-        <div>
-        </div>
-    )
+    if (!auth) return (
+        <Navigate replace to="/welcome" />
+    );
 
-    //find trips
-    if (empty === false) {
-        return (
-        <div className="page">
-            <h1>There are trips</h1>
-            {showTrips}
-        </div>
-        )
-    }
     return(
         <div className="page">
-            <h1>Trips</h1>
-            <h1>{`showtrips: ${showTrips == ''}`}</h1>
-            {trips[0] == null && <CreateTrip />}
+            {tripNames}
+            {hello}
         </div>
     )
 }
