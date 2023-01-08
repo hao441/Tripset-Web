@@ -1,7 +1,9 @@
 # Welcome #
 
-1. Design
-    * Background
+## Design ##
+
+### Background ###
+### Title ###
     * Title
     * Sub-title
     * Login Form
@@ -10,7 +12,7 @@
         * Email
         * Google
         * Apple
-2. Development
+## Development ##
     * Login Auth
         * Email
         * Google
