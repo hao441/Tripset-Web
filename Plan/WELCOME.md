@@ -4,14 +4,12 @@
 
 ### Background ###
 ### Title ###
-    * Title
-    * Sub-title
-    * Login Form
-    * Login Button
-    * Signup buttons
-        * Email
-        * Google
-        * Apple
+### Sub-title ###
+### Login Form ###
+### Sign up Buttons ###
+* Email
+* Google
+* Apple
 ## Development ##
     * Login Auth
         * Email
