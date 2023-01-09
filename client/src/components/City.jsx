@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import '../App.css'
 import './css/city.css';
 import { setCityAsync } from '../features/auth/tripThunk.js';
+import CityComplete from './CityComplete.jsx';
 
 export default function City() {
 
@@ -58,22 +59,21 @@ export default function City() {
     }
 
     if (sessionHomeCity === '' || sessionHomeCity === undefined) return (
-        <div className="page">
-            <div className='formContainer'>
-                <div id='title'>
-                    <h1>Welcome</h1>
-                </div>
-                <div id='cityForm'>
-                    <h3>Where are you from?</h3>
+        <div className="background">
+            <div className='container'>
+                <h1 className='lessertitle'>Welcome</h1>
+                <div className='former'>
+                    <div id='cityForm'>
+                    <div className='top-margin'><h3>Where are you from?</h3></div>
+                    <br />
                     <form autoComplete="off" onSubmit={userCity}>
-                        <div className="autocomplete">
-                        <input id="myInput" type="text" name="myCountry" placeholder="City" required />
-                        </div>
+                        <CityComplete />
                         <br />
                         <br />
-                        <input type="submit" />
+                        <div><button className='form-item form-button submit'>Submit</button></div>
                         </form>
                         <h5>{message}</h5>
+                    </div>
                 </div>
             </div>
         </div>

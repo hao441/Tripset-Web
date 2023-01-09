@@ -18,6 +18,7 @@ export default function SignUp() {
     const message = useSelector(selectMessage);
 
     //login variables
+    const [firstName, setFirstName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -25,45 +26,35 @@ export default function SignUp() {
     //useEffects
     useEffect(() => {
         //navigate
-        if (auth) navigate('/home');
+        if (auth) navigate('/trip');
     });
 
     const handleSignUp = (e) => {
         e.preventDefault();
         setTimeout(() => {
-            dispatch(signupAsync({email: email, password: password, passwordConfirm: passwordConfirm}))
+            dispatch(signupAsync({firstname: firstName, email: email, password: password, passwordConfirm: passwordConfirm}))
         }, 1000);
     };
 
-    if (auth) return (
-        <Navigate replace to='/home' />
-    )
+    // if (auth) return (
+    //     <Navigate replace to='/home' />
+    // )
 
     return (
-        <div className="page">
-            <h1>Sign up</h1>
-            <form onSubmit={handleSignUp}>
-                <label>Email: </label>
-                <input id='email' type='email' value={email} onChange={e => setEmail(e.target.value)} required />
-                <br />
-                <br />
-                <label>Password: </label>
-                <input type='password' value={password} onChange={e => setPassword(e.target.value)} minLength='8' required />
-                <br />
-                <br />
-                <label>Confirm Password: </label>
-                <input id='passwordConfirm' type='password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} required />
-                <br />
-                <br />
-                <input type='submit' value='Submit' />
-            </form>
-            <br />
-            <b>{`auth is: ${auth}`}</b>
-            <br />
-            <b>{`message is: ${message}`}</b>
-            <br />
-            <br />
-            <Link to='/'>Login</Link>
+        <div className='background-cover'>
+            <div className="container">
+                <div><h1 className='title top-margin'>Sign up</h1></div>
+                {/* Content */}
+                <div className='former'>
+                    <form onSubmit={handleSignUp}>
+                        <div><input className='form-item text-input' id='firstName' type='firstName' value={firstName} onChange={e => setFirstName(e.target.value)} placeholder='first name' required /></div>
+                        <div><input className='form-item text-input' id='email' type='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='email address' required /></div>
+                        <div><input className='form-item text-input' type='password' value={password} onChange={e => setPassword(e.target.value)} minLength='8' placeholder='password' required /></div>
+                        <div><input className='form-item text-input' id='passwordConfirm' type='password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} placeholder='confirm password' required /></div>
+                        <div><button className='form-item form-button-no-shadow'>Sign up</button></div>
+                    </form>
+                </div>
+            </div>
         </div>
     )
 };

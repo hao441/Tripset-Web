@@ -1,0 +1,37 @@
+  .input {
+    margin: auto;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    width: 275px;
+    height: 40px;
+  }
+
+  .parent-buttons {
+    /* position: relative; */
+  }
+  
+  .buttons-container {
+    position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: 250px;
+  }
+  
+  .button {
+    width: 275px;
+    font-size: 15px;
+    padding: 10px 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .button:hover {
+    background-color: #bccec6;
+  }
+  

@@ -32,7 +32,7 @@ export default function Welcome() {
     //useEffects
     useEffect(() => {
         //navigate
-        if (auth) navigate('/home');
+        // if (auth) navigate('/home');
     });
 
     const handleSignIn = (e) => {
@@ -48,9 +48,9 @@ export default function Welcome() {
         }, 1000)
     }
 
-    if (auth) return (
-        <Navigate replace to='/home' />
-    )
+    // if (auth) return (
+    //     <Navigate replace to='/home' />
+    // )
 
     return (
         <div className='background'>
@@ -60,7 +60,7 @@ export default function Welcome() {
                 <div><h3 className='former minortitle'>Login</h3></div>
                 {/* Content */}
                 <div className='former'>
-                    <div><form className='' action='' onSubmit={handleSignIn}>
+                    <div><form action='' onSubmit={handleSignIn}>
                     <div><input className='form-item text-input' type='email' value={email} onChange={e => setEmail(e.target.value)} formTarget="email" placeholder='email address' required /></div>
                     <div><input className='form-item text-input' type='password' value={password}  onChange={e => setPassword(e.target.value)} formTarget="password" placeholder='password' required /></div>
                     <div><button className='form-item form-button' type='submit' value='Submit'>Log in</button></div>

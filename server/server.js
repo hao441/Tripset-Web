@@ -15,6 +15,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 
 //Schema creation
 let userSchema = new mongoose.Schema({
+    name: {type: String, required: true},
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     name: {type: String},
@@ -94,7 +95,7 @@ app.post('/signup', (req, res) => {
 
             if (hash) {
                 let newUser = new User({
-                    name: '',
+                    name: req.body.firstName,
                     email: req.body.email,
                     password: hash.toString()
                 });

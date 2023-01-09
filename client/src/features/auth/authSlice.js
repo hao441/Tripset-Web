@@ -4,8 +4,6 @@ import { useSelector } from 'react-redux';
 import { loadUserAsync, signinAsync, signupAsync } from './authThunk';
 import { setCityAsync, setTripAsync } from './tripThunk';
 
-console.log(document.cookie)
-
 const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
 const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
 const sessionUsername = document.cookie == '' ? '' : document.cookie.match(/username=([^;]+)/)[1]
@@ -68,9 +66,11 @@ export const authSlice = createSlice({
     builder
     //loaduser builder
       .addCase(loadUserAsync.pending, (state, action) => {
+        console.log(`action payload is: ${action.payload}`)
         state.status = 'loading';
       })
       .addCase(loadUserAsync.fulfilled, (state, action) => {
+        console.log(`action payload is: ${action.payload}`)
         state.status = 'succeeded';
         state.res = action.payload.result;
         state.username = action.payload.username;
@@ -80,6 +80,7 @@ export const authSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(loadUserAsync.rejected, (state, action) => {
+        console.log(`action payload is: ${action.payload}`)
         state.status = 'failed';
         state.message = action.payload.message;
       })

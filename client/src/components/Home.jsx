@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectAuthentication, selectSessionToken, selectSessionTokenExpiry, selectMessage, selectRes, selectUserName, selectHomeCity, selectTrips } from '../features/auth/authSlice';
 
 import '../App.css'
+import { store } from '../app/store';
 
 export default function Home () {
         const auth = useSelector(selectAuthentication);
@@ -17,6 +18,7 @@ export default function Home () {
         const homeCity = useSelector(selectHomeCity);
         const trips = useSelector(selectTrips);
         
+        console.log(store.getState().auth)
         
 
         if (!auth) return (
@@ -33,7 +35,7 @@ export default function Home () {
                 <h3>Res is: {`${res}`}</h3>
                 <h3>Username is: {`${username}`}</h3>
                 <h3>Home City is: {`${homeCity}`}</h3>
-                <h3>Trips is: {`${trips}`}</h3>
+                <h3>Trips is: {`${Object.keys(trips)}`}</h3>
                 <Link to={`/`}>Go to Counter</Link>
                
            </div>
