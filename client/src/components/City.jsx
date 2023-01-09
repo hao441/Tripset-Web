@@ -36,12 +36,8 @@ export default function City() {
 
 
     useEffect(() => {
+        console.log(sessionHomeCity)
         autocomplete(document.getElementById("myInput"), cities);
-
-        if (sessionHomeCity !== '') return navigate('/trip');
-
-        console.log(sessionHomeCity);
-        console.log(sessionMessage);
     })
     
 
@@ -56,15 +52,13 @@ export default function City() {
         
         dispatch(setCityAsync({"email": sessionUsername, "city": cityString, "country": countryString, "lat": cityLookup[cityString].lat, "lng": cityLookup[cityString].lng}));
         
+        setMessage('');
+        setToTrip('');
+        setCount('');
     }
 
-    if (sessionHomeCity !== '') return (
-        <Navigate replace to='/trip' />
-    )
-    
-    return (
+    if (sessionHomeCity === '' || sessionHomeCity === undefined) return (
         <div className="page">
-            {toTrip && <Navigate replace to={`/trip`} />}
             <div className='formContainer'>
                 <div id='title'>
                     <h1>Welcome</h1>
@@ -82,6 +76,15 @@ export default function City() {
                         <h5>{message}</h5>
                 </div>
             </div>
+        </div>
+    )
+
+    if (sessionHomeCity !== '' && sessionHomeCity !== undefined) return (
+        <Navigate replace to='/trip' />
+    )
+
+    return (
+        <div>
         </div>
     )
 } 

@@ -11,6 +11,7 @@ import { signinAsync } from '../features/auth/authThunk';
 import { sessionData, sessionJWT } from '../sessionData';
 
 import '../App.css'
+import './css/welcome.css'
 
 export default function Welcome() {
     //redux
@@ -26,15 +27,10 @@ export default function Welcome() {
     //useStates
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
-    const [msg, setMsg] = useState('');
 
 
     //useEffects
-    useEffect(() => {   
-        //test API
-        callAPI();
-        
+    useEffect(() => {
         //navigate
         if (auth) navigate('/home');
     });
@@ -46,36 +42,33 @@ export default function Welcome() {
         }, 1000);
     }
 
-    //Functions
-    function callAPI() {
-        fetch('http://localhost:9000/testAPI')
-        .then(res => res.text())
-        .then(res => setMsg(res))
+    const handleSignUp = () => {
+        setTimeout(() => {
+            navigate('/signup')
+        }, 1000)
     }
-
-    
 
     if (auth) return (
         <Navigate replace to='/home' />
     )
 
     return (
-        <div className="page">
-            <h1>{msg}</h1>
-            <form action='' onSubmit={handleSignIn}>
-                <label>Email: </label>
-                <input type='email' value={email} onChange={e => setEmail(e.target.value)} formTarget="email" required />
-                <label>Password: </label>
-                <input type='password' value={password}  onChange={e => setPassword(e.target.value)} formTarget="password" required />
-                <input type='submit' value='Submit' />
-            </form>
-            <br />
-            <b>{`session message is: ${message}`}</b>
-            <br />
-            <b>{`session auth is: ${auth}`}</b>
-            <br />
-            <br />
-            <Link to='/signup'>Sign Up</Link>
+        <div className='background'>
+            <div className="container">
+                <div><h1 className='title'>Tripset</h1></div>
+                <div><h2 className='former subtitle'>Welcome to the new world of travel.</h2></div>
+                <div><h3 className='former minortitle'>Login</h3></div>
+                {/* Content */}
+                <div className='former'>
+                    <div><form className='' action='' onSubmit={handleSignIn}>
+                    <div><input className='form-item text-input' type='email' value={email} onChange={e => setEmail(e.target.value)} formTarget="email" placeholder='email address' required /></div>
+                    <div><input className='form-item text-input' type='password' value={password}  onChange={e => setPassword(e.target.value)} formTarget="password" placeholder='password' required /></div>
+                    <div><button className='form-item form-button' type='submit' value='Submit'>Log in</button></div>
+                    </form></div>
+                    <div className='hor'></div>
+                    <div><button className=' former signup form-button' onClick={handleSignUp}>Sign up</button></div>
+                </div>
+            </div>
         </div>
     )
 }

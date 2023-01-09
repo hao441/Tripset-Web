@@ -24,7 +24,7 @@ import { sessionData } from './sessionData';
 import './index.css';
 
 //set cookies
-sessionData();
+// sessionData();
 
 const router = createBrowserRouter([
   { path: '/', element: <Counter />}, //Current working route
@@ -32,15 +32,15 @@ const router = createBrowserRouter([
   { path: 'home', element: <Home />},
   { path: 'city', element: <City /> },
   { path: 'tripcreation', element: <TripCreation /> },
-  { path: 'itinerary', element: <Itinerary /> },
+  { path: 'itinerary', element: <Itinerary />},
   { path: 'itinerarycreation', element: <ItineraryCreation /> },
-  { path: 'account', element: <Account /> },  
+  { path: 'account', element: <Account /> }, 
   { path: 'welcome', element: <Welcome /> },
   { path: 'mapslocationsearch', element: <MapsLocationSearch /> },
   //trips
   { path: 'trip', element: <Trips />},
   {path: 'trip/:trip', element: <Itinerary />},
-  // {path: 'trip/:trip/itinerary/:itinerary'}
+  {path: 'trip/:trip/itinerary/'}
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -51,13 +51,6 @@ root.render(
 	</Provider>
   </React.StrictMode>
 );
-
-
-// if (sessionAuth === '') sessionData()
-
-// store.getState().auth.loggedIn === ''
-
-
 
 
 // If you want to start measuring performance in your app, pass a function

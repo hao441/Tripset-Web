@@ -31,8 +31,6 @@ export default function TripCreation () {
     //Use Effects
     useEffect(() => {
         autocomplete(document.getElementById("myInput"), countries);
-
-        console.log(sessionUsername)
     });
 
     //Use States

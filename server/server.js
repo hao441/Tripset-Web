@@ -128,8 +128,6 @@ app.post('/loadUser', (req, res) => {
             if (err) return res.json({result: false, username: '', homeCity: '', trips: '', message: "Error in token validation."})
             if (!data) return res.json({result: false, username: '', homeCity: '', trips: '', message: "Invalid token."})
 
-            console.log(`trips: ${Object.keys(data.trips)}`)
-
             const tripNames = !data.trips || data.trips === [] ? '' : Object.keys(data.trips)
             
             res.json({result: true, username: data.email, homeCity: data.homeCity, trips: data.trips, tripNames: tripNames,  message: "Success!"})

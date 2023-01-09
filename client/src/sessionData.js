@@ -15,8 +15,8 @@ export const sessionData = () => {
     const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
     const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
 
-    const nowTime = new Date().getTime()
-    const expiryTime = new Date(sessionJWTExpiry).getTime()
+    const nowTime = new Date()
+    const expiryTime = new Date(sessionJWTExpiry)
 
     if (sessionJWT === '' || sessionJWTExpiry === '' || nowTime > expiryTime) return deleteCookies()
 

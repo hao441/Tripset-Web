@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { loadUserAsync, signinAsync, signupAsync } from './authThunk';
 import { setCityAsync, setTripAsync } from './tripThunk';
 
+console.log(document.cookie)
+
 const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
 const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
 const sessionUsername = document.cookie == '' ? '' : document.cookie.match(/username=([^;]+)/)[1]

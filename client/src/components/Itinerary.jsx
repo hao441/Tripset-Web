@@ -1,6 +1,6 @@
 //imports
 import React, {useState, useEffect} from "react";
-import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useSearchParams, Link, useNavigate, useLoaderData } from "react-router-dom";
 
 //css
 import '../App.css'
@@ -8,38 +8,55 @@ import './css/trip.css'
 
 //Other
 import { findItinerary } from "../fetchTrips";
+import { useSelector } from "react-redux";
+import { selectTrips } from "../features/auth/authSlice";
 
 export default function Trip() {
 
-    //navigate
+    //redux/router
+    const trips = useSelector(selectTrips)
     const navigate = useNavigate()
+    const tripper = useLoaderData()
 
     //useParams
     let { trip } = useParams(); 
 
-    //functions
-    const [code, setCode] = useState(null);
-
-    async function findI() {let [outcome, code] = await findItinerary(trip); setCode(code) }
-
     useEffect(() => {
-        findI()
-    }, [])
-    
-    switch (code) {
-        case 0:
-            return (<div className="page"><h1>case 0</h1></div>)
-            break;
-        case 1:
-            return (<div className="page"><h1>Trip not found</h1><Link to='/trip'>Go back to Trips.</Link></div>)
-            break;
-        case 2:
-            return (<div className="page"><h1>{trip}</h1><h5>No itinerary Found.</h5><button onClick={(() => navigate('/itinerarycreation'))}>Create Itinerary</button></div>)
-            break;
-        case null:
-            return (<div></div>)
-            break;
+        console.log(tripper)
+    })
+
+    const handleItineraryItem = () => {
+        navigate('/itinerary')
     }
+
+    // const buttonList = trips.map((button) => {
+    //     return (
+    //         <button key={button.toString()} onClick={handleItineraryItem}>
+    //             {button.toString()}
+    //         </button>
+    //     )
+    // })
+
+    if (!trips) {
+        <div>
+            <h1>You don't have any trips</h1>
+            <Link to='/trip'></Link>
+        </div>
+    }
+
+    if (!trips[`${trip}`]) return (
+        <div>
+            <h1>Trip doesn't exist</h1>
+            <Link to='/trip'>Go Back</Link>
+        </div>
+    )
+
+    if (!trips[`${trip}`]['itinerary']) return (
+        <div>
+            <h1>No Itinerary Yet.</h1>
+            <Link to='/itinerary'>Create Itinerary</Link>
+        </div>
+    )
 
     return (
         <div className="page">
