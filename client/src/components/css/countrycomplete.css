@@ -1,34 +1,39 @@
-  .input {
-    margin: auto;
+.input {
     border: 2px solid #ccc;
     border-radius: 4px;
     text-align: center;
-    width: 275px;
+    font-size: 15px;
+    width: 250px;
     height: 40px;
+    text-align: center;
+    max-width: 100%;
+    margin: auto;
   }
 
   .parent-buttons {
-    /* position: relative; */
+    display: block;
+    margin: auto;
   }
   
   .buttons-container {
+    display: flex;
+    flex-direction: column;
     position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  width: 250px;
+    transform: translate(calc(0vw - 50%));
+    max-width: 50%;
   }
   
   .button {
-    width: 275px;
+    width: 250px;
     font-size: 15px;
     padding: 10px 20px;
+    margin-top: -1.5px;
+    border-radius: 2px;
     background-color: #fff;
     border: 1px solid #ccc;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
+    max-width: 100%;
   }
 
   .button:hover {

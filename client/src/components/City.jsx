@@ -1,11 +1,11 @@
 import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { Link, Navigate, redirect, useNavigate } from 'react-router-dom';
+import { useState, useEffect, createContext, useContext } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import autocomplete from '../autoComplete.js'
 import cities from '../listOfCities2.json'
 import countryLookUp from  '../countryLookUp.json';
 import cityLookup from '../cityLookUp.json'
+import { ValueContext } from './CityComplete.jsx';
 
 //Redux
 import { selectSessionToken, selectUserName, selectHomeCity, selectMessage } from '../features/auth/authSlice';
@@ -37,22 +37,27 @@ export default function City() {
 
 
     useEffect(() => {
-        console.log(sessionHomeCity)
-        autocomplete(document.getElementById("myInput"), cities);
+        console.log(`city is: ${sessionHomeCity}`)
+        console.log(`username is : ${sessionUsername}`)
     })
     
 
     const userCity = (e) => {
         e.preventDefault();
-        let city = document.getElementById('myInput').value
+        let city = document.getElementById('cityInput').value
+        console.log(city)
 
         let cityString = city.match(/.+(?=,)/)[0]
+        console.log(cityString)
         let countryString = city.match(/(?=, ).+(?=\W\W\W\W\W)/)[0].replace(', ', '')
+        console.log(countryString)
 
         if (cityLookup[cityString] == null) return setMessage('Please select an option.')
+
+        if (sessionUsername == '') return console.log(`Not signed in.`)
         
         dispatch(setCityAsync({"email": sessionUsername, "city": cityString, "country": countryString, "lat": cityLookup[cityString].lat, "lng": cityLookup[cityString].lng}));
-        
+
         setMessage('');
         setToTrip('');
         setCount('');

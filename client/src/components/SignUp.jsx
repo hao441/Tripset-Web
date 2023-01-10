@@ -36,6 +36,12 @@ export default function SignUp() {
         }, 1000);
     };
 
+    const navLogin = () => {
+        setTimeout(() => {
+            navigate('/welcome')
+         }, 1000)
+    }
+
     // if (auth) return (
     //     <Navigate replace to='/home' />
     // )
@@ -53,6 +59,8 @@ export default function SignUp() {
                         <div><input className='form-item text-input' id='passwordConfirm' type='password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} placeholder='confirm password' required /></div>
                         <div><button className='form-item form-button-no-shadow'>Sign up</button></div>
                     </form>
+                    <div className='hor-offset'></div>
+                    <div><button className='former signup-no-shadow form-button-no-shadow' onClick={navLogin}>Back to Login</button></div>
                 </div>
             </div>
         </div>

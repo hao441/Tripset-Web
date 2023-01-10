@@ -66,7 +66,7 @@ export default function Welcome() {
                     <div><button className='form-item form-button' type='submit' value='Submit'>Log in</button></div>
                     </form></div>
                     <div className='hor'></div>
-                    <div><button className=' former signup form-button' onClick={handleSignUp}>Sign up</button></div>
+                    <div><button className='former signup form-button' onClick={handleSignUp}>Sign up</button></div>
                 </div>
             </div>
         </div>

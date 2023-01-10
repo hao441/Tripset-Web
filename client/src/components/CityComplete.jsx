@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, createContext } from 'react';
 import cities from '../listOfCities2.json';
-import './css/test.css'; // import the CSS file
+import './css/citycomplete.css';
+import {MyContext} from './City';
+
+export const ValueContext = React.createContext();
 
 const CityComplete = () => {
+
   const [inputValue, setInputValue] = useState('');
   const [showList, setShowList] = useState(true)
 
@@ -31,16 +35,19 @@ const CityComplete = () => {
     )};
 
   return (
-    <div className="container">
-      <input
-        autoComplete='off'
-        type="search"
-        value={inputValue}
-        onChange={handleChange}
-        className="input"
-      />
-      {cityLookUp()}
-    </div>
+      <div className="container">
+        <input
+          id={'cityInput'}
+          autoComplete='off'
+          type="search"
+          value={inputValue}
+          onChange={handleChange}
+          className="input"
+          placeholder='      Home City'
+        />
+        {cityLookUp()}
+      </div>
+    
   );
 };
 

@@ -1,0 +1,42 @@
+.input {
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 15px;
+  width: 250px;
+  height: 40px;
+  text-align: center;
+  max-width: 100%;
+  margin: auto;
+}
+
+  .parent-buttons {
+    display: block;
+    margin: auto;
+  }
+  
+  .buttons-container {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    transform: translate(calc(0vw - 50%));
+    max-width: 50%;
+  }
+  
+  .button {
+    width: 250px;
+    font-size: 15px;
+    padding: 10px 20px;
+    margin-top: -1.5px;
+    border-radius: 2px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    max-width: 100%;
+  }
+
+  .button:hover {
+    background-color: #bccec6;
+  }
+  

@@ -6,17 +6,14 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMessage, selectSessionToken, selectUserName } from '../features/auth/authSlice';
-
-
-import autocomplete from '../autoComplete';
 import countries from '../countriesArray.json'
-import countryLookUp from  '../countryLookUp.json';
-import cityLookup from '../cityLookUp.json'
 
 
 import '../App.css'
 import './css/tripCreation.css'
 import { setTripAsync } from "../features/auth/tripThunk";
+import CityComplete from "./CityComplete";
+import CountryComplete from "./CountryComplete";
 
 export default function TripCreation () {
 
@@ -30,7 +27,6 @@ export default function TripCreation () {
     
     //Use Effects
     useEffect(() => {
-        autocomplete(document.getElementById("myInput"), countries);
     });
 
     //Use States
@@ -46,10 +42,11 @@ export default function TripCreation () {
 
     const createTrip = (e) => {
         e.preventDefault();
+        if (sessionUsername === '') return console.log("User not logged in.")
         dispatch(setTripAsync(
             {"email": sessionUsername,
              "tripName": tripName, 
-             "location": document.getElementById('myInput').value, 
+             "location": document.getElementById('countryInput').value, 
              "startDate": startDate, 
              "endDate": endDate
             })
@@ -59,33 +56,24 @@ export default function TripCreation () {
     }
     
     return(
-        <div className="page">
-            <h1>Trip Creation</h1>
-            <b>Message: {JSON.stringify(sessionMessage)}</b> 
-            {sessionUsername}
-            <br />
-            <br />
-            <form autoComplete="off" onSubmit={createTrip}>
-                <label>Trip Name</label>
-                <br />
-                <input id='tripName' type='text' value={tripName} onChange={((e) => setTripName(e.target.value))} required />
-                <br />
-                <br />
-                <label>Where to</label>
-                <br />
-                <div className="autocomplete">
-                        <input id="myInput" type="text" name="myCountry" placeholder="Country" required/>
+        <div className="background">
+            <div className="container">
+                <div><h1 className="halftitle">Create Trip</h1></div>
+                {/* content */}
+                <div className="former top-margin">
+                    <form autoComplete="off" onSubmit={createTrip}>
+                        <h1 className="minortitle">Enter your trip details.</h1>
+                        <div><input className="form-item text-input" type='text' value={tripName} onChange={((e) => setTripName(e.target.value))} placeholder='Trip Name' required /></div>
+                        <div><CountryComplete /></div>
+                        <div className="dates">
+                        <div><label className="date-label">Start Date</label><label className="date-label">End Date</label></div>
+                        <div><input className="form-item date-input" type='date' value={startDate} onChange={((e) => setStartDate(e.target.value))} placeholder="mm/dd/yyyy" required  />
+                        <input className="form-item date-input" type='date' value={endDate} onChange={((e) => setEndDate(e.target.value))} required /></div>
+                        </div>
+                        <div><button className="form-item form-button" type='submit'>Submit</button></div>
+                    </form>
                 </div>
-                <br />
-                <br />
-                <label>Dates</label>
-                <br />
-                <input type='date' value={startDate} onChange={((e) => setStartDate(e.target.value))} required  />
-                <input type='date' value={endDate} onChange={((e) => setEndDate(e.target.value))} required />
-                <br />
-                <br />
-                <button type='submit'>Submit</button>
-            </form>
+            </div>
         </div>
     )
 }

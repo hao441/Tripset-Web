@@ -9,7 +9,7 @@ import { selectAuthentication, selectSessionToken, selectTripNames, selectTrips,
 
 //css
 import '../App.css'
-import './css/trip.css'
+import './css/trips.css'
 
 export default function Trip () {
     //redux/router
@@ -21,21 +21,33 @@ export default function Trip () {
 
     //functions
     const handleTripCreate = () => {
-        navigate('/tripcreation');
+        setTimeout(() => {        
+         navigate('/tripcreation');
+        }, 1000)
     }
 
     const handleItinerary = (button) => {
         navigate(`${button.target.id}`);
     }
 
-    
+    // if (!auth) return (
+    //     <Navigate replace to="/welcome" />
+    // );
 
-    if (!auth) return (
-        <Navigate replace to="/welcome" />
-    );
-
-    if (tripNames === '') return (
-        <div onClick={handleTripCreate}>'No trips available.'<button>Create Trip</button></div>
+    if (tripNames[0] === undefined) return (
+        <div className="background-cut">
+            <div className="container">
+            <h1 className="trip-title">Trips</h1>
+            <div className="former">
+                <div><h1 className="content">You have no trips planned</h1></div>
+                <div><button className="content form-input form-button" onClick={handleTripCreate}>Create Trip</button></div>
+                {/* <div><Link className="content form-input form-button">Account /></div> */}
+                
+                </div>
+                
+            </div>
+            <Link className="botton-link" to='/account'>account</Link>
+        </div>
         ) 
     
     const buttonList = tripNames.map((trip) => {
