@@ -203,6 +203,25 @@ app.post('/settrip', (req, res) => {
     }, {new: true});
 })
 
+//setItinerary
+app.post('/setitinerary', (req, res) => {
+
+    console.log("set itinerary route hit")
+
+    User.findOneAndUpdate({email : req.body.email },{$set: {[`trips.${req.body.tripName}.itinerary.${req.body.itineraryName}`]: req.body.itinerary}}, (err,data) => {
+
+        console.log("User findOneAndUpdate hit")
+
+        if (err) return res.json({result: false, message: err})
+
+        console.log("User error handling hit")
+        res.json({result: true, tripName: req.body.tripName, itineraryName: req.body.itineraryName, itinerary: req.body.itinerary, message: 'Trip created'});
+
+        console.log("User response sent")
+
+    }, {new: true});
+})
+
 
 //Find Itinerary
 app.post('/finditinerary', (req, res) => {

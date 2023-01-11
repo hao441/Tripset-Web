@@ -24,7 +24,34 @@ export const setTripAsync = createAsyncThunk(
         const response = await fetch('http://localhost:9000/settrip', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({email: payload.email, tripName: payload.tripName, location: payload.location, startDate: payload.startDate, endDate: payload.endDate})
+            body: JSON.stringify({
+                email: payload.email, 
+                tripName: payload.tripName, 
+                location: payload.location, 
+                startDate: payload.startDate, 
+                endDate: payload.endDate
+            })
+        })
+        const data = await response.json()
+        return data
+        } catch (error) {
+            rejectWithValue(error.response.data);
+        }
+    }
+)
+
+export const setItineraryAsync = createAsyncThunk(
+    'auth/setItinerary',
+    async (payload, { rejectWithValue }) => {
+        try {
+        const response = await fetch('http://localhost:9000/setitinerary', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                tripName: payload.tripName,
+                itineraryName: payload.itineraryName,
+                itinerary: payload.itinerary
+            })
         })
         const data = await response.json()
         return data

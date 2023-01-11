@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { sessionData } from '../../sessionData';
 import { useSelector } from 'react-redux';
 import { loadUserAsync, signinAsync, signupAsync } from './authThunk';
-import { setCityAsync, setTripAsync } from './tripThunk';
+import { setCityAsync, setTripAsync, setItineraryAsync } from './tripThunk';
 
 const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
 const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
@@ -156,6 +156,20 @@ export const authSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(setTripAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.message = action.payload.message;
+      })
+      .addCase(setItineraryAsync.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(setItineraryAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.res = action.payload.result
+        state.trips = {...state.trips, [action.payload.tripName]: {...'itinerary'}, [action.payload.itineraryName] : action.payload.itinerary}
+        state.message = action.payload.message;
+        console.log(state.trips)
+      })
+      .addCase(setItineraryAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.message = action.payload.message;
       })

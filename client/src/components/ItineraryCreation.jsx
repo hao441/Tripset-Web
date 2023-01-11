@@ -11,7 +11,7 @@ import countries from '../countriesArray.json'
 
 import '../App.css'
 import './css/itinerarycreation.css'
-import { setTripAsync } from "../features/auth/tripThunk";
+import { setItineraryAsync, setTripAsync } from "../features/auth/tripThunk";
 import CityComplete from "./CityComplete";
 import CountryComplete from "./CountryComplete";
 import MapsLocationSearch from "./MapsLocationSearch";
@@ -71,10 +71,7 @@ export default function ItineraryCreation () {
             })
             .catch((error) => {console.log(error);})
         }
-        console.log(startDateObj)
-        console.log(endDateObj)
-
-        console.log(startDate === endDate)
+        console.log(sessionTrips)
     });
     
     //functions
@@ -89,20 +86,24 @@ export default function ItineraryCreation () {
 
 
         //redux dispatch 
-        // dispatch(setItineraryAsync(
-        //     {"email": sessionUsername,
-        //      "itineraryName": itineraryName, 
-        //      "location": location,
-        //      "lat": lat,
-        //      "lng": lng,
-        //      "startDate": startDate, 
-        //      "startTime": startTime
-        //      "endDate": endDate
-        //      "endTime": endtime
-        //     })
-        // )
-        setItineraryName(''); setLocation(''); setStartDate(''); setEndDate('');
-        navigate(`/trip/${trip}`);
+        dispatch(setItineraryAsync(
+            {"tripName": trip,
+             "itineraryName": itineraryName,
+            "itinerary":
+            {"email": sessionUsername,
+             "location": location,
+             "lat": lat,
+             "lng": lng,
+             "category": category,
+             "startDate": startDate, 
+             "startTime": startTime,
+             "endDate": endDate,
+             "endTime": endTime
+            }})
+        )
+
+        // setItineraryName(''); setLocation(''); setStartDate(''); setEndDate('');
+        // navigate(`/trip/${trip}`);
     }
 
     const handleItineraryNav = () => {
@@ -118,9 +119,9 @@ export default function ItineraryCreation () {
                     <form autoComplete="off" onSubmit={createItinerary}>
                         <h1 className="minortitle">Enter your Itinerary details.</h1>
                         <div><input className="form-item text-input" type='text' value={itineraryName} onChange={((e) => setItineraryName(e.target.value))} placeholder='Itinerary Name' required /></div>
-                        <div><MapsLocationSearch     /></div>
+                        <MapsLocationSearch />
                         <div className="input-select">
-                            <select name='category' className="form-item text-input" type='select' placeholder="Select a category" required>
+                            <select name='category' value={category} onChange={((e) => setCategory(e.target.value))} className="form-item text-input" type='select' placeholder="Select a category" required>
                                 <option value="">--Please choose a category--</option>
                                 <option value="Accomodation">Accomodation</option>
                                 <option value="Transport">Transport</option>

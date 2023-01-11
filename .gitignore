@@ -1,0 +1,6 @@
+# client
+/client/.env
+/client/public/index.html
+
+#server
+/server/.env
