@@ -40,7 +40,7 @@ function App() {
     //trips
     { path: 'trip', element: <Trips />},
     {path: 'trip/:trip', element: <Itinerary />},
-    {path: 'trip/:trip/itinerary/'}
+    {path: 'trip/:trip/itinerarycreation/', element: <ItineraryCreation />}
   ])
 
   sessionData()

@@ -4,7 +4,7 @@ import { useParams, useSearchParams, Link, useNavigate, useLoaderData } from "re
 
 //css
 import '../App.css'
-import './css/trip.css'
+import './css/itinerary.css'
 
 //Other
 import { findItinerary } from "../fetchTrips";
@@ -26,7 +26,7 @@ export default function Trip() {
     })
 
     const handleItineraryItem = () => {
-        navigate('/itinerary')
+        navigate('itinerarycreation')
     }
 
     // const buttonList = trips.map((button) => {
@@ -52,9 +52,12 @@ export default function Trip() {
     )
 
     if (!trips[`${trip}`]['itinerary']) return (
-        <div>
-            <h1>No Itinerary Yet.</h1>
-            <Link to='/itinerary'>Create Itinerary</Link>
+        <div className="background-cut-invert">
+            <div className="container">
+                <h1 className="title">{trip[0].toUpperCase()+trip.slice(1,)}</h1>
+                <div><h1 className="content ">No Itinerary Yet.</h1></div>
+                <div><button className="content form-input form-button" onClick={handleItineraryItem}>Create Itinerary Item</button></div>
+            </div>
         </div>
     )
 

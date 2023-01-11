@@ -1,0 +1,49 @@
+@import url(//db.onlinewebfonts.com/c/34c01a1d7f7d514d22bc4c21189f62dd?family=LondonTwo);
+@import url('https://fonts.googleapis.com/css2?family=Lexend&display=swap');
+
+@font-face {font-family: "LondonTwo"; src: url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.eot"); src: url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.woff") format("woff"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.svg#LondonTwo") format("svg"); }
+
+
+.input {
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 15px;
+    width: 250px;
+    height: 40px;
+    text-align: center;
+    max-width: 100%;
+    margin: auto;
+    font-family: 'Lexend', sans-serif;
+  }
+
+  .parent-buttons {
+    display: block;
+    margin: auto;
+  }
+  
+  .buttons-container {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    transform: translate(calc(0vw - 50%));
+    max-width: 50%;
+  }
+  
+  .button {
+    width: 250px;
+    font-size: 15px;
+    padding: 10px 20px;
+    margin-top: -1.5px;
+    border-radius: 2px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    max-width: 100%;
+  }
+
+  .button:hover {
+    background-color: #bccec6;
+  }
+  

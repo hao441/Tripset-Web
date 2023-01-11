@@ -95,7 +95,7 @@ app.post('/signup', (req, res) => {
 
             if (hash) {
                 let newUser = new User({
-                    name: req.body.firstName,
+                    name: req.body.name,
                     email: req.body.email,
                     password: hash.toString()
                 });
@@ -109,10 +109,12 @@ app.post('/signup', (req, res) => {
                 const expiryDate = new Date(Date.now() + 3600000);
                 
                 res.json({result: true, token: newToken, username: user.email, tokenExpiry: expiryDate, message: 'Success!'})
+                console.log(`sign up is successful.`)
                })
 
             } else {
                 res.json({result: false, token: '', username: '', token: '', tokenExpiry: '', message: 'Failed to hash password.'})
+                console.log(`sign up is unsuccessful.`)
             }
         })
 
@@ -131,7 +133,7 @@ app.post('/loadUser', (req, res) => {
 
             const tripNames = !data.trips || data.trips === [] ? '' : Object.keys(data.trips)
             
-            res.json({result: true, username: data.email, homeCity: data.homeCity, trips: data.trips, tripNames: tripNames,  message: "Success!"})
+            res.json({result: true, name: data.name, username: data.email, homeCity: data.homeCity, trips: data.trips, tripNames: tripNames,  message: "Success!"})
         })
     })
 });
@@ -189,33 +191,16 @@ app.post('/findtrips', (req, res) => {
 
 //tripCreation
 app.post('/settrip', (req, res) => {
-    console.log(req.body.email)
-    console.log('setTrip started');
-    User.findOne({ email: req.body.email }, (err, data) => {
-        console.log('User.findOne started');
-        //user error handling
-        if (err) return res.json({result: false, location: '', startDate: '', endDate: '', message: err})
-        console.log('User.findOne finished');
-        if (data == null) return res.json({result: false, location: '', startDate: '', endDate: '', message: 'User not found.'})
-        console.log('User found');
 
-        //data.trips creation if necessary
-        if (data.trips == null) data.trips = {}
-        console.log('data.trips created');
-        //trip creation
-        data.trips[req.body.tripName] = {location: req.body.location, startDate: req.body.startDate, endDate: req.body.endDate};
-        console.log('data.trips[req.body.tripName] created');
-        //trip save
-        data.save((err, data) => {
-            console.log('data.save started');
-            if (err) return res.json({result: false, location: '', startDate: '', endDate: '', message: err})
-            console.log('data.save finished');
-            if (!data) return res.json({result: false, location: '', startDate: '', endDate: '', message: 'Unable to save.'})
-            console
-            res.json({result: true, tripName: req.body.tripName, location: req.body.location, startDate: req.body.startDate, endDate: req.body.endDate, message: 'Trip created'});
-            console.log('Document updated successfully');
-        });        
-    })
+    const tripper = req.body.tripName.toString()
+
+    User.findOneAndUpdate({email : req.body.email },{$set: {[`trips.${tripper}`]: {location: req.body.location, startDate: req.body.startDate, endDate: req.body.endDate}}}, (err,data) => {
+        
+        if (err) return res.json({result: false, location: '', startDate: '', endDate: '', message: err})
+
+        res.json({result: true, tripName: req.body.tripName, location: req.body.location, startDate: req.body.startDate, endDate: req.body.endDate, message: 'Trip created'});
+    
+    }, {new: true});
 })
 
 

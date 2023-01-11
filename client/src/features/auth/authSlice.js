@@ -66,11 +66,9 @@ export const authSlice = createSlice({
     builder
     //loaduser builder
       .addCase(loadUserAsync.pending, (state, action) => {
-        console.log(`action payload is: ${action.payload}`)
         state.status = 'loading';
       })
       .addCase(loadUserAsync.fulfilled, (state, action) => {
-        console.log(`action payload is: ${action.payload}`)
         state.status = 'succeeded';
         state.res = action.payload.result;
         state.username = action.payload.username;
@@ -107,11 +105,12 @@ export const authSlice = createSlice({
         state.status = 'failed';
         state.message = action.payload.message;
       })
-      //signout builder
+      //signup builder
       .addCase(signupAsync.pending, (state, action) => {
         state.status = 'loading';
       })
       .addCase(signupAsync.fulfilled, (state, action) => {
+        console.log(action.payload.result);
         state.status = 'succeeded';
         state.loggedIn = action.payload.result;
         state.sessionToken = action.payload.token;

@@ -5,12 +5,12 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { selectMessage, selectSessionToken, selectUserName } from '../features/auth/authSlice';
+import { selectMessage, selectSessionToken, selectTripNames, selectUserName } from '../features/auth/authSlice';
 import countries from '../countriesArray.json'
 
 
 import '../App.css'
-import './css/tripCreation.css'
+import './css/tripcreation.css'
 import { setTripAsync } from "../features/auth/tripThunk";
 import CityComplete from "./CityComplete";
 import CountryComplete from "./CountryComplete";
@@ -24,10 +24,9 @@ export default function TripCreation () {
     const sessionToken = useSelector(selectSessionToken);
     const sessionUsername = useSelector(selectUserName)
     const sessionMessage = useSelector(selectMessage)
+    const sessionTripNames = useSelector(selectTripNames)
     
-    //Use Effects
-    useEffect(() => {
-    });
+    
 
     //Use States
     const [loggedIn, setLoggedIn] = useState(true);
@@ -35,14 +34,29 @@ export default function TripCreation () {
     const [destination, setDestination] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [message, setMessage] = useState('');
 
     const [toTrips, setToTrips] = useState(false);
 
-    //functions
+    const start = new Date(startDate)
+    const end = new Date(endDate)
+    const now = new Date()
 
+    //Use Effects
+    useEffect(() => {
+        console.log(document.getElementById('countryInput').value);
+    });
+    
+    //functions
     const createTrip = (e) => {
         e.preventDefault();
-        if (sessionUsername === '') return console.log("User not logged in.")
+        //Error handling
+        if (sessionUsername === '' || sessionUsername === undefined) return setMessage('Not logged in.');
+        if (sessionTripNames.indexOf(tripName) !== -1) return setMessage('Trip name is taken.');
+        if (start > end ) return setMessage("Start Date must be before End Date.")
+        if (start < now) return setMessage("Cannot set start date to a date in the past.")
+
+        //redux dispatch 
         dispatch(setTripAsync(
             {"email": sessionUsername,
              "tripName": tripName, 
@@ -53,6 +67,10 @@ export default function TripCreation () {
         )
         setTripName(''); setDestination(''); setStartDate(''); setEndDate('');
         navigate('/trip');
+    }
+
+    const handleTripsNav = () => {
+        navigate('/trip')
     }
     
     return(
@@ -72,6 +90,9 @@ export default function TripCreation () {
                         </div>
                         <div><button className="form-item form-button" type='submit'>Submit</button></div>
                     </form>
+                    <hr className="hor" />
+                    <div><button className="form-item form-button signup" onClick={handleTripsNav}>Back to Trips</button></div>
+                    <p style={{'color' : 'crimson'}}>{message}</p>
                 </div>
             </div>
         </div>

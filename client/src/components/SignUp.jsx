@@ -18,7 +18,7 @@ export default function SignUp() {
     const message = useSelector(selectMessage);
 
     //login variables
-    const [firstName, setFirstName] = useState('');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -32,7 +32,7 @@ export default function SignUp() {
     const handleSignUp = (e) => {
         e.preventDefault();
         setTimeout(() => {
-            dispatch(signupAsync({firstname: firstName, email: email, password: password, passwordConfirm: passwordConfirm}))
+            dispatch(signupAsync({name: name, email: email, password: password, passwordConfirm: passwordConfirm}))
         }, 1000);
     };
 
@@ -42,9 +42,9 @@ export default function SignUp() {
          }, 1000)
     }
 
-    // if (auth) return (
-    //     <Navigate replace to='/home' />
-    // )
+    if (auth) return (
+        <Navigate to='/trip' />
+    )
 
     return (
         <div className='background-cover'>
@@ -53,7 +53,7 @@ export default function SignUp() {
                 {/* Content */}
                 <div className='former'>
                     <form onSubmit={handleSignUp}>
-                        <div><input className='form-item text-input' id='firstName' type='firstName' value={firstName} onChange={e => setFirstName(e.target.value)} placeholder='first name' required /></div>
+                        <div><input className='form-item text-input' id='firstName' type='firstName' value={name} onChange={e => setName(e.target.value)} placeholder='first name' required /></div>
                         <div><input className='form-item text-input' id='email' type='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='email address' required /></div>
                         <div><input className='form-item text-input' type='password' value={password} onChange={e => setPassword(e.target.value)} minLength='8' placeholder='password' required /></div>
                         <div><input className='form-item text-input' id='passwordConfirm' type='password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} placeholder='confirm password' required /></div>

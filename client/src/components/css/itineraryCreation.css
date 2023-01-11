@@ -1,3 +1,13 @@
+@import url(//db.onlinewebfonts.com/c/34c01a1d7f7d514d22bc4c21189f62dd?family=LondonTwo);
+@import url('https://fonts.googleapis.com/css2?family=Lexend&display=swap');
+
+@font-face {font-family: "LondonTwo"; src: url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.eot"); src: url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.woff") format("woff"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.svg#LondonTwo") format("svg"); }
+
+body {
+    margin: auto;
+    text-align: center;
+}
+
 select {
     margin: auto;
     width: 300px;
@@ -11,3 +21,62 @@ option {
    padding-left: 100px  ;
 }
 
+.start-finish {
+    font-size: 18px;
+    margin-bottom: 5px;
+    margin-top: -5px;
+}
+
+.date {
+    width: 150px;
+    text-align: center;
+    font-size: 1rem;
+    height: 30px;
+    font-family: 'Lexend', sans-serif;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 3px;
+    display: inline;
+    margin-right: 10px;
+    line-height: 30px;
+}
+
+.time {
+    width: 80px;
+    height: 30px;
+    font-size: 1rem;
+    font-family: 'Lexend', sans-serif;
+    margin: auto;
+    border-radius: 3px;
+    border-style: solid;
+    border-color: lightgray;
+    display: inline;
+    line-height: 30px;
+}
+
+.center-text {
+    width: 150px;
+    text-align: center;
+    font-size: 1rem;
+    height: 30px;
+    font-family: 'Lexend', sans-serif;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 3px;
+    display: inline;
+    margin-right: 10px;
+    line-height: 30px;
+  }
+
+  .my-row-continer {
+    flex-direction: row;
+  }
+
+  .end-time {
+    margin-bottom: 20px;
+  }
+
+  .input-select {
+    margin-top: 20px;
+    margin-bottom: -15px;
+  }

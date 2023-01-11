@@ -32,7 +32,7 @@ export default function Welcome() {
     //useEffects
     useEffect(() => {
         //navigate
-        // if (auth) navigate('/home');
+        // if (auth) navigate('/trip');
     });
 
     const handleSignIn = (e) => {
@@ -49,7 +49,7 @@ export default function Welcome() {
     }
 
     // if (auth) return (
-    //     <Navigate replace to='/home' />
+    //     <Navigate replace to='/trip' />
     // )
 
     return (

@@ -41,7 +41,7 @@ export const signupAsync = createAsyncThunk(
         const response = await fetch('http://localhost:9000/signup', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({"email": payload.email, "password": payload.password, "confirmPassword": payload.confirmPassword})
+            body: JSON.stringify({"name": payload.name, "email": payload.email, "password": payload.password, "confirmPassword": payload.confirmPassword})
         })
         const data = await response.json()
         return data
