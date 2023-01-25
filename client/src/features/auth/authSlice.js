@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { sessionData } from '../../sessionData';
 import { useSelector } from 'react-redux';
-import { loadUserAsync, signinAsync, signupAsync } from './authThunk';
-import { setCityAsync, setTripAsync, setItineraryAsync } from './tripThunk';
+import { loadUserAsync, signinAsync, signupAsync, deleteAccountAsync } from './authThunk';
+import { setCityAsync, setTripAsync, setItineraryAsync, deleteItineraryItemAsync, deleteTripAsync } from './tripThunk';
 
 const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
 const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
 const sessionUsername = document.cookie == '' ? '' : document.cookie.match(/username=([^;]+)/)[1]
+
 
 const nowTime = new Date().getTime()
 const expiryTime = new Date(sessionJWTExpiry).getTime()
@@ -27,6 +28,7 @@ const initialState = {
   sessionToken: token,
   sessionTokenExpiry: tokenExpiry,
   username: username,
+  name: '',
   message: '',
   homeCity: '',
   trips: '',
@@ -50,13 +52,23 @@ export const authSlice = createSlice({
       if (action.payload.tokenExpiry) state.sessionTokenExpiry = action.payload.tokenExpiry
       if (action.payload.email) state.email = action.payload.username
       if (action.payload.message) state.message = action.payload.message
+      
     },
     logout: (state) => {
       state.loggedIn = false;
+
+      document.cookie = `path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+      document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+      document.cookie = `username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+      document.cookie = `expires=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+
       state.sessionToken = '';
       state.sessionTokenExpiry = '';
       state.sessionUsername = '';
       state.sessionMessage = '';
+    },
+    setMessage: (state, action) => {
+      state.message = action.payload.message
     },
     setTrips: (state, action) => {
       state.tripNames = action.payload
@@ -72,6 +84,7 @@ export const authSlice = createSlice({
         state.status = 'succeeded';
         state.res = action.payload.result;
         state.username = action.payload.username;
+        state.name = action.payload.name;
         state.homeCity = action.payload.homeCity;
         state.trips = action.payload.trips;
         state.tripNames = action.payload.tripNames;
@@ -91,8 +104,11 @@ export const authSlice = createSlice({
         state.loggedIn = action.payload.result;
         state.sessionToken = action.payload.token;
         state.sessionTokenExpiry = action.payload.tokenExpiry;
-        state.username = action.payload.email;
+        state.username = action.payload.username;
+        state.name = action.payload.name;
         state.message = action.payload.message;
+        state.trips = action.payload.trips;
+        state.homeCity = action.payload.homeCity;
 
         if (action.payload.result) {
           document.cookie = `path=/;`;
@@ -115,7 +131,8 @@ export const authSlice = createSlice({
         state.loggedIn = action.payload.result;
         state.sessionToken = action.payload.token;
         state.sessionTokenExpiry = action.payload.tokenExpiry;
-        state.username = action.payload.email;
+        state.username = action.payload.username;
+        state.name = action.payload.name;
         state.message = action.payload.message;
 
         if (action.payload.result) {
@@ -126,6 +143,27 @@ export const authSlice = createSlice({
         }
       })
       .addCase(signupAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.message = action.payload.message;
+      })
+      //Delete account builder
+      .addCase(deleteAccountAsync.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteAccountAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.res = action.payload.result;
+        state.loggedIn = !action.payload.result;
+        state.message = action.payload.message;
+
+        if (action.payload.result) {
+          document.cookie = `path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+          document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+          document.cookie = `username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+          document.cookie = `expires=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+        }
+      })
+      .addCase(deleteAccountAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.message = action.payload.message;
       })
@@ -150,33 +188,61 @@ export const authSlice = createSlice({
       )
       .addCase(setTripAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.res = action.payload.result
-        state.trips = {...state.trips, [action.payload.tripName]: {location: action.payload.location, startDate: action.payload.startDate, endDate: action.payload.endDate}}
-        state.tripNames = [...state.tripNames, action.payload.tripName]
+        state.res = action.payload.result;
+        state.trips = action.payload.result ? action.payload.trips : state.trips;
         state.message = action.payload.message;
       })
       .addCase(setTripAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.message = action.payload.message;
       })
+      .addCase(deleteTripAsync.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteTripAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.res = action.payload.result;
+        state.trips = action.payload.result ? action.payload.trips : state.trips;
+        state.message = action.payload.message;
+      })
+      .addCase(deleteTripAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.message = action.payload.message;
+      })
+      //Itinerary Create Builder
       .addCase(setItineraryAsync.pending, (state, action) => {
         state.status = 'loading';
       })
       .addCase(setItineraryAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.res = action.payload.result
-        state.trips = {...state.trips, [action.payload.tripName]: {...'itinerary'}, [action.payload.itineraryName] : action.payload.itinerary}
+        state.res = action.payload.result;
+        state.trips = action.payload.result ? action.payload.trips : state.trips;
         state.message = action.payload.message;
-        console.log(state.trips)
       })
       .addCase(setItineraryAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.message = action.payload.message;
+      })
+      //Itinerary Delete Builder
+      .addCase(deleteItineraryItemAsync.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteItineraryItemAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.res = action.payload.result
+        state.trips = action.payload.result ? {...action.payload.trips} : state.trips;
+        state.message = action.payload.message;
+        state.res = action.payload.result
+        state.message = action.payload.message;
+      })
+      .addCase(deleteItineraryItemAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.message = action.payload.message;
       })
   }
 });
 
-export const { login, logout, setTrips } = authSlice.actions;
+export const { login, logout, setMessage, setTrips, setTripsTwo } = authSlice.actions;
 
 
 // The function below is called a selector and allows us to select a value from
@@ -192,6 +258,7 @@ export const selectUsername = (state) => state.auth.username;
 export const selectHomeCity = (state) => state.auth.homeCity;
 export const selectTrips = (state) => state.auth.trips;
 export const selectTripNames = (state) => state.auth.tripNames;
+export const selectName = (state) => state.auth.name;
 
 
 // We can also write thunks by hand, which may contain both sync and async logic.

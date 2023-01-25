@@ -1,4 +1,476 @@
+@import url(//db.onlinewebfonts.com/c/34c01a1d7f7d514d22bc4c21189f62dd?family=LondonTwo);
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@font-face {font-family: "LondonTwo"; src: url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.eot"); src: url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.woff") format("woff"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.svg#LondonTwo") format("svg"); }
+
+
 .content {
 	font-size: 15px;
 	transform: translate(0,20vh);
 }
+
+.add-itinerary {
+font-family: 'Lexend', sans-serif;
+font-size: 20px;
+background: none;
+border-style: none;
+color: white;
+cursor: pointer;
+}
+
+.return-to-trips {
+font-family: 'Lexend', sans-serif;
+font-size: 20px;
+position: fixed;
+left: 3%;
+top: 7%;
+background: none;
+color: #acc6b7;
+border-style: none;
+cursor: pointer;
+}
+
+.expand-div {
+	overflow: hidden;
+}
+
+
+.item {
+margin: auto;
+width: 40%;
+text-align: center;
+background-color: rgba(255, 255, 255, 0.5);
+border-style: solid;
+border-radius: 4px;
+border-width: 1.5px;
+cursor: pointer;
+margin-bottom: 5px;
+min-width: 90%;
+}
+
+.itin-grid {
+	display: grid;
+	grid-template-columns: 1fr 3fr;
+}
+
+	.itin-grid-2 {
+		grid-column-start: 2;
+		text-align: start;
+	}
+
+.itin-hr {
+	max-width: 95%;
+	margin-left: 0;
+}
+
+.itin-button-container {
+	margin: auto;
+	max-width: 90%;
+	margin-left: 20px;
+	height: 55px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
+}
+
+
+
+	.itin-button-container-1 {
+		grid-row-start: 2;
+		grid-row-end: 3;
+		grid-column-start: 1;
+		grid-column-end: 3;
+		text-align: center;
+	}
+
+	.inbetween-margin {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+
+.contain-start {
+justify-content: start;
+}
+
+.start {
+margin-left: -50px;
+flex-grow: 1;
+}
+
+.begin {
+justify-content: start;
+}
+
+.grid-div {
+display: grid;
+grid-template-columns: 2fr 1fr 8fr 2fr;
+}
+
+.grid-div-1 {
+	grid-column-start: 2;
+	grid-column-end: 3;
+	margin-top: 100%;
+}
+
+.grid-div-2 {
+	grid-column-start: 3;
+	grid-column-end: 4;
+	border-style: none;
+	scroll-behavior: auto;
+	border-radius: 2px;
+	border-color: black;
+	max-height: 79vh;
+	overflow: auto;
+}
+
+
+.side-button {
+background-color: #005550;
+border-style: hidden;
+border-radius: 4px;
+border-color: white;
+font-family: 'Lexend', sans-serif;
+font-size: 15px;
+color: white;
+width: 100px;
+height: 35px;
+box-shadow: 0px 1px 1px 0px #b4ddcb;
+cursor: pointer;
+margin-bottom: 10px;
+justify-self: end;
+}
+
+
+.scroll {
+	border-radius: 2px;
+	border-color: black;
+	border-style: solid;
+	max-height: 73vh;
+	max-width: 70%;
+	overflow:auto; /* or overflow: scroll; */
+}
+
+
+
+.hi-item {
+	justify-self: end;
+	margin-left: 100px;
+}
+
+.map {
+	margin: auto;
+	text-align: center;
+	background-color: rgba(255, 255, 255, 1);
+	border-style: double;
+	border-radius: 4px;
+	border-width: 3px;
+	cursor: pointer;
+	margin-bottom: 5px;
+	display: flex;
+	margin-left: 10px;
+	margin-top: 1%;
+  }
+
+
+#year-title {
+	font-family: 'Lexend', sans-serif;
+	font-weight: 600;
+	margin-right: 39%;
+	font-size: 45px;
+	margin-top: 10px;
+	margin-bottom: -20px;
+	color: white;
+}
+
+#date-title {
+	font-family: 'Lexend', sans-serif;
+	font-weight: 600;
+	margin-right: 39%;
+}
+
+#timeline-items {
+	text-align: left;
+	margin-left: 5%;
+	margin-bottom: -20px;
+}
+
+.hello {
+	width: 89.5%;
+	margin: auto;
+	background-color: rgba(255, 255, 255, 0.5);
+	border-style: solid;
+	border-radius: 4px;
+	border-width: 1.5px;
+	border-color: rgba(0, 0, 0, 0.1);
+	margin-bottom: 5px
+}
+
+.itin-title-button {
+	width: 100%;
+	background-color: transparent;
+	border-style: none;
+}
+
+.expander-time {
+	font-family: 'Lexend', sans-serif;
+	font-size: 23px;
+}
+
+.expander-title {
+	font-family: 'Lexend', sans-serif;
+	font-size: 23px;
+	text-align: center;
+	margin: auto;
+	font-weight: 500;
+}
+
+.expanded-grid {
+	grid-template-columns: 1fr 3fr;
+};
+
+.expanded-grid-1 {
+	grid-column-start: 1;
+}
+
+.itin-time {
+	font-family: 'Lexend', sans-serif;
+	font-size: 20px;
+	font-weight: 500;
+}
+
+.itin-item {
+	font-family: 'Lexend', sans-serif;
+	font-size: 20px;
+	font-weight: 500;
+}
+
+.itin-body-text {
+	font-family: 'Lexend', sans-serif;
+	font-weight: 500;
+	font-size: 20px;
+}
+
+.itin-button {
+	font-family: 'Lexend', sans-serif;
+    text-align: center;
+    margin-bottom: 15px;
+	margin-right: 15px;
+	margin-left: 0px;
+	background-color: #007871;
+	border-style: hidden;
+	border-radius: 4px;
+	border-color: white;
+	font-size: 15px;
+	color: white;
+	width: 220px;
+	height: 35px;
+	box-shadow: 0px 2px 1px 1px #b4ddcb;
+	cursor: pointer;
+}
+
+.trips-nav-button {
+	background-color: #007871;
+	border-style: hidden;
+	border-radius: 4px;
+	border-color: white;
+	font-family: 'Lexend', sans-serif;
+	font-size: 15px;
+	color: white;
+	width: 80px;
+	height: 35px;
+	box-shadow: 0px 2px 1px 1px #b4ddcb;
+	cursor: pointer;
+	position: fixed	;
+	top: 5%;
+	left: 3%
+}
+
+.map-style {
+	width: 63vw;
+	height: 70vh;
+}
+
+@media screen and (max-width: 800px) {
+	.itin-button {
+		width: 100px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.itin-buttons {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.grid-div {
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-rows: 1fr 10fr;
+		}
+		
+		.grid-div-1 {
+			grid-row-start: 1;
+			grid-row-end: 2;
+			grid-column-start: 1;
+			grid-column-end: 3;
+			margin-top: 0;
+		}
+		
+		.grid-div-2 {
+			grid-row-start: 2;
+			grid-row-end: 3;
+			grid-column-start: 1;
+			grid-column-end: 4;
+			border-style: none;
+			scroll-behavior: auto;
+			border-radius: 2px;
+			border-color: black;
+			margin-top: -2%;
+			margin-right: 2%;
+			max-height: 80vh;
+			overflow: auto;
+		}
+
+		.map-style {
+			width: 95vw;
+			height: 70vh;
+		}
+
+		.trips-nav-button {
+			position: absolute;
+			top: 6%;
+			width: 50px;
+			height: 50px;
+		}
+
+		.itin-buttons {
+			width: 90vw;
+			margin: auto;
+		}
+
+		.side-button {
+			font-size: 12px;
+			margin-left: 5px;
+			margin-right: 5px;
+			width: 120px;
+		}
+
+		#year-title {
+			color: gray;
+			font-size: 25px;
+		}
+
+		#date-title {
+			color: black;
+			margin-top: 20px;
+			font-size: 20px;
+		}
+
+		.item {
+			margin: auto;
+			width: 25px;
+			text-align: center;
+			background-color: rgba(255, 255, 255, 0.5);
+			border-style: solid;
+			border-radius: 4px;
+			border-width: 1.5px;
+			cursor: pointer;
+			margin-bottom: 5px;
+			}
+
+	.itin-grid {
+		width: 100%
+	}
+
+	.itin-title-button {
+		height: 30px;
+		background-color: transparent;
+		border-style: none;
+	}
+
+	.itin-time {
+		font-size: 14px;
+		margin-top: 5px;
+	}
+
+	.itin-item {
+		font-size: 14px;
+		margin-top: 5px;
+	}
+
+	.itin-body-text {
+		font-size: 12px;
+	}
+
+	.itin-button {
+		width: 90px;
+		height: 20px;
+		font-size: 12px;
+	}
+		
+  }
+
+  @media screen and (max-width: 350px) {
+
+	.title {
+		font-size: 40px;
+	}
+
+	.grid-div {
+		display: grid;
+		grid-template-columns: 1fr 2fr;
+		grid-template-rows: 1fr 8fr;
+		}
+		
+		.grid-div-2 {
+			grid-column-end: 4;
+		}
+		
+		
+		.grid-div-1 {
+			grid-row-start: 1;
+			grid-row-end: 2;
+			grid-column-start: 1;
+			grid-column-end: 3;
+			margin-top: 0;
+
+		}
+		
+		.grid-div-2 {
+			grid-row-start: 2;
+			grid-row-end: 3;
+			grid-column-start: 1;
+			grid-column-end: 4;
+			border-style: none;
+			scroll-behavior: auto;
+			border-radius: 2px;
+			border-color: black;
+			margin-top: -2%;
+			margin-right: 2%;
+			max-height: 80vh;
+			overflow: auto;
+		}
+
+	.map-style {
+		width: 95vw;
+		height: 63vh;
+	}
+	
+	.trips-nav-button {
+		position: absolute;
+		left: 7%;
+		top: 7.5%;
+		width: 50px;
+		height: 25px;
+		font-size: 12px;
+	}
+
+	.itin-button {
+		width: 70px;
+		height: 20px;
+		font-size: 12px;
+		margin-left: -10px;
+		margin-right: 20px;
+	}
+  }
+

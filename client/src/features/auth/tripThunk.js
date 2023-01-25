@@ -26,10 +26,28 @@ export const setTripAsync = createAsyncThunk(
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
                 email: payload.email, 
-                tripName: payload.tripName, 
-                location: payload.location, 
-                startDate: payload.startDate, 
-                endDate: payload.endDate
+                tripName: payload.tripName,
+                trip: payload.trip
+            })
+        })
+        const data = await response.json()
+        return data
+        } catch (error) {
+            rejectWithValue(error.response.data);
+        }
+    }
+)
+
+export const deleteTripAsync = createAsyncThunk(
+    'auth/deleteTrip',
+    async (payload, { rejectWithValue }) => {
+        try {
+        const response = await fetch('http://localhost:9000/deletetrip', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                email: payload.email,
+                tripName: payload.tripName
             })
         })
         const data = await response.json()
@@ -48,12 +66,34 @@ export const setItineraryAsync = createAsyncThunk(
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
+                email: payload.email,
                 tripName: payload.tripName,
                 itineraryName: payload.itineraryName,
                 itinerary: payload.itinerary
             })
         })
         const data = await response.json()
+        return data
+        } catch (error) {
+            rejectWithValue(error.response.data);
+        }
+    }
+)
+
+export const deleteItineraryItemAsync = createAsyncThunk(
+    'auth/deleteItineraryItem',
+    async (payload, { rejectWithValue }) => {
+        try {
+        const response = await fetch('http://localhost:9000/deleteitineraryitem', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                email: payload.email,
+                tripName: payload.tripName,
+                itineraryName: payload.itineraryName
+            })
+        })
+        const data = await response.json();
         return data
         } catch (error) {
             rejectWithValue(error.response.data);

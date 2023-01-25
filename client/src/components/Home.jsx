@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { Link, useNavigate, Navigate } from 'react-router-dom';
+import React from 'react';
+import { Link, Navigate } from 'react-router-dom';
 
 //Redux
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectAuthentication, selectSessionToken, selectSessionTokenExpiry, selectMessage, selectRes, selectUserName, selectHomeCity, selectTrips } from '../features/auth/authSlice';
 
 import '../App.css'
@@ -22,7 +22,7 @@ export default function Home () {
         
 
         if (!auth) return (
-            <Navigate replace to="/welcome" />
+            <Navigate to="/welcome" />
         );
 
         return (

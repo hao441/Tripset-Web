@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import Home from './Home.jsx';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { login, selectAuthentication, selectMessage, selectSessionToken, selectSessionTokenExpiry, selectUserName } from '../features/auth/authSlice';
+import { login, selectAuthentication, selectHomeCity, selectMessage, selectSessionToken, selectSessionTokenExpiry, selectUserName } from '../features/auth/authSlice';
 
 import '../App.css'
 import { signupAsync } from '../features/auth/authThunk.js';
@@ -15,35 +14,32 @@ export default function SignUp() {
     const dispatch = useDispatch()
     const navigate = useNavigate();
     const auth = useSelector(selectAuthentication);
-    const message = useSelector(selectMessage);
+    const sessionMessage = useSelector(selectMessage);
+    const homeCity = useSelector(selectHomeCity);
 
     //login variables
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [message, setMessage] = useState(sessionMessage);
 
     //useEffects
     useEffect(() => {
-        //navigate
-        if (auth) navigate('/trip');
     });
 
     const handleSignUp = (e) => {
         e.preventDefault();
-        setTimeout(() => {
-            dispatch(signupAsync({name: name, email: email, password: password, passwordConfirm: passwordConfirm}))
-        }, 1000);
-    };
+        if (password !== passwordConfirm) return setMessage('Passwords do not match.');
+        dispatch(signupAsync({name: name, email: email, password: password, passwordConfirm: passwordConfirm}));
+    }
 
     const navLogin = () => {
-        setTimeout(() => {
-            navigate('/welcome')
-         }, 1000)
+            navigate('/welcome');
     }
 
     if (auth) return (
-        <Navigate to='/trip' />
+        <Navigate to='/city' />
     )
 
     return (
@@ -62,6 +58,7 @@ export default function SignUp() {
                     <div className='hor-offset'></div>
                     <div><button className='former signup-no-shadow form-button-no-shadow' onClick={navLogin}>Back to Login</button></div>
                 </div>
+                <div className='message'>{message}</div>
             </div>
         </div>
     )

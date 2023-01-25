@@ -1,14 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 //Redux
-import { store } from '../app/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectAuthentication, selectSessionToken, selectMessage, selectSessionTokenExpiry } from '../features/auth/authSlice';
+import { selectAuthentication, selectSessionToken, selectMessage, selectSessionTokenExpiry, selectHomeCity } from '../features/auth/authSlice';
 import { signinAsync } from '../features/auth/authThunk';
-
-//Other
-import { sessionData, sessionJWT } from '../sessionData';
 
 import '../App.css'
 import './css/welcome.css'
@@ -20,6 +16,7 @@ export default function Welcome() {
     const tokenExpiry = useSelector(selectSessionTokenExpiry);
     const auth = useSelector(selectAuthentication);
     const message = useSelector(selectMessage);
+    const homeCity = useSelector(selectHomeCity);
 
     //react-router-dom
     const navigate = useNavigate();
@@ -29,28 +26,18 @@ export default function Welcome() {
     const [password, setPassword] = useState('');
 
 
-    //useEffects
-    useEffect(() => {
-        //navigate
-        // if (auth) navigate('/trip');
-    });
-
     const handleSignIn = (e) => {
         e.preventDefault();
-        setTimeout(() => {
         dispatch(signinAsync({email, password}))
-        }, 1000);
     }
 
     const handleSignUp = () => {
-        setTimeout(() => {
             navigate('/signup')
-        }, 1000)
     }
 
-    // if (auth) return (
-    //     <Navigate replace to='/trip' />
-    // )
+    if (auth) return (
+        homeCity === '' ? <Navigate to='/city' /> : <Navigate to='/trip' />
+    )
 
     return (
         <div className='background'>
@@ -68,6 +55,8 @@ export default function Welcome() {
                     <div className='hor'></div>
                     <div><button className='former signup form-button' onClick={handleSignUp}>Sign up</button></div>
                 </div>
+                <br />
+                {message}
             </div>
         </div>
     )

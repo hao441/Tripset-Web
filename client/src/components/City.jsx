@@ -1,27 +1,19 @@
 import React from 'react';
-import { useState, useEffect, createContext, useContext } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import autocomplete from '../autoComplete.js'
-import cities from '../listOfCities2.json'
-import countryLookUp from  '../countryLookUp.json';
-import cityLookup from '../cityLookUp.json'
-import { ValueContext } from './CityComplete.jsx';
+import { useState, useEffect} from 'react';
+import { Navigate } from 'react-router-dom';
+import cityLookup from '../data/cityLookUp.json'
 
 //Redux
-import { selectSessionToken, selectUserName, selectHomeCity, selectMessage } from '../features/auth/authSlice';
+import { selectSessionToken, selectUserName, selectHomeCity, selectMessage, selectAuthentication } from '../features/auth/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 //css
 import '../App.css'
 import './css/city.css';
 import { setCityAsync } from '../features/auth/tripThunk.js';
-import CityComplete from './CityComplete.jsx';
+import CityComplete from './sub-components/CityComplete.jsx';
 
 export default function City() {
-
-    //react router
-    const navigate = useNavigate()
-    
     //redux
     const dispatch = useDispatch();
 
@@ -29,6 +21,8 @@ export default function City() {
     const sessionUsername = useSelector(selectUserName);
     const sessionHomeCity = useSelector(selectHomeCity);
     const sessionMessage = useSelector(selectMessage);
+    const auth = useSelector(selectAuthentication);
+
 
     //use states
     const [message, setMessage] = useState('');
@@ -54,16 +48,23 @@ export default function City() {
 
         if (cityLookup[cityString] == null) return setMessage('Please select an option.')
 
-        if (sessionUsername == '') return console.log(`Not signed in.`)
+        if (sessionUsername === '') return console.log(`Not signed in.`)
         
         dispatch(setCityAsync({"email": sessionUsername, "city": cityString, "country": countryString, "lat": cityLookup[cityString].lat, "lng": cityLookup[cityString].lng}));
+
+        console.log(sessionUsername, cityString, countryString, auth, cityLookup[cityString].lat, cityLookup[cityString].lng)
 
         setMessage('');
         setToTrip('');
         setCount('');
     }
 
-    if (sessionHomeCity === '' || sessionHomeCity === undefined) return (
+
+    if (!auth) return (
+        <Navigate to="/welcome" />
+    )
+
+    if (!sessionHomeCity) return (
         <div className="background">
             <div className='container'>
                 <h1 className='lessertitle'>Welcome</h1>
@@ -75,7 +76,7 @@ export default function City() {
                         <CityComplete />
                         <br />
                         <br />
-                        <div><button className='form-item form-button submit'>Submit</button></div>
+                        <div><button type="submit" className='form-item form-button submit'>Submit</button></div>
                         </form>
                         <h5>{message}</h5>
                     </div>
@@ -84,7 +85,7 @@ export default function City() {
         </div>
     )
 
-    if (sessionHomeCity !== '' && sessionHomeCity !== undefined) return (
+    if (sessionHomeCity) return (
         <Navigate replace to='/trip' />
     )
 

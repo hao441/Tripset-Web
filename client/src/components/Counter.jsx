@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import logo from '../logo.svg';
+import logo from '../assets/logo.svg';
 import { Auth } from '../features/auth/Auth';
-import { useDispatch, useSelector } from 'react-redux';
-import { store } from '../app/store';
-import { login, selectAuthentication } from '../features/auth/authSlice';
+import { useSelector } from 'react-redux';
+import { selectAuthentication } from '../features/auth/authSlice';
 import { sessionData } from '../sessionData';
 import '../App.css';
 import { Navigate, useNavigate } from 'react-router-dom';
-import Welcome from './Welcome';
 
 
 function App() {

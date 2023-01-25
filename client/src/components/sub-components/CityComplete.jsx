@@ -1,19 +1,11 @@
 import React, { useState, createContext } from 'react';
-import cities from '../listOfCities2.json';
-import './css/citycomplete.css';
-import {MyContext} from './City';
-
-export const ValueContext = React.createContext();
+import cities from '../../data/listOfCities2.json';
+import '../css/citycomplete.css';
 
 const CityComplete = () => {
 
   const [inputValue, setInputValue] = useState('');
   const [showList, setShowList] = useState(true)
-
-  const handleChange = event => {
-    setShowList(true)
-    setInputValue(event.target.value);
-  };
 
   const citiesNoDuplicates = [...new Set(cities)]
 
@@ -26,7 +18,7 @@ const CityComplete = () => {
       <div className='parent-buttons'>
         <div className="buttons-container">
             {filteredCities.map((city, index) => (
-            <button key={index.toString()} onClick={() => {setInputValue(city); return setShowList(false)}} hidden={!showList} className="button">
+            <button key={index.toString()} onClick={(e) => {e.preventDefault(); setInputValue(city); return setShowList(false)}} hidden={!showList} className="button">
                 {city}
             </button>
             ))}
@@ -41,7 +33,7 @@ const CityComplete = () => {
           autoComplete='off'
           type="search"
           value={inputValue}
-          onChange={handleChange}
+          onChange={((e) => {setShowList(true); return setInputValue(e.target.value)})}
           className="input"
           placeholder='      Home City'
         />

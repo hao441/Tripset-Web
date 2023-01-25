@@ -1,33 +1,39 @@
 //React
-import React, { useState, useEffect} from "react";
-import { Link, Navigate, redirect, useNavigate } from 'react-router-dom';
-import CreateTrip from "./sub-components/CreateTrip";
+import React, { useState} from "react";
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 //Redux
-import { useSelector, useDispatch } from 'react-redux';
-import { selectAuthentication, selectSessionToken, selectTripNames, selectTrips, selectUserName, setTrips } from '../features/auth/authSlice';
+import { useSelector } from 'react-redux';
+import { selectAuthentication, selectHomeCity, selectTrips, selectUserName } from '../features/auth/authSlice';
 
 //css
 import '../App.css'
 import './css/trips.css'
+import { useEffect } from "react";
 
 export default function Trip () {
+
+    
     //redux/router
     const navigate = useNavigate();
 
     const auth = useSelector(selectAuthentication);
     const username = useSelector(selectUserName);
     const trips = useSelector(selectTrips);
-    const tripNames = useSelector(selectTripNames);
+    const homeCity = useSelector(selectHomeCity)
 
     const [timeline, setTimeLine] = useState('current');
 
+    const tripNames = !trips ? '' : Object.keys(trips);
+
+
     useEffect(() => {
-        console.log(username)
+        console.log(homeCity)
     })
 
     //functions
     const handleTripCreate = () => {
+        !auth && navigate('/welcome');
         setTimeout(() => {        
          navigate('/tripcreation');
         }, 1000)
@@ -37,9 +43,9 @@ export default function Trip () {
         navigate(`${e.target.id}`);
     }
 
-    // if (!auth) return (
-    //     <Navigate replace to="/welcome" />
-    // )
+    if (!auth) return (
+        <Navigate to="/welcome" />
+    )
 
     const buttonList = () => tripNames
             .slice()
@@ -56,8 +62,8 @@ export default function Trip () {
                 const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
                 if (timeline === 'current' && endDate > now) return (
-                        <div key={trip.toString()}><button className="trip">
-                            <div id={trip} onClick={(e) => handleItinerary(e)} className="trip-name">{trip.toString()}</div>
+                        <div key={trip}><button className="trip">
+                            <div id={trip} onClick={(e) => handleItinerary(e)} className="trip-name">{trip}</div>
                             <div  className="row-container">
                                 <div className="row-items"><p className="row-label">from</p>
                                 <p className="p-text">{startDate.toLocaleDateString("en-US", options)}</p></div>
@@ -68,8 +74,8 @@ export default function Trip () {
                 )
 
                 if (timeline === 'past' && endDate < now) return (
-                    <div key={trip.toString()}><button className="trip">
-                        <div id={trip} onClick={(e) => handleItinerary(e)} className="trip-name">{trip.toString()}</div>
+                    <div key={trip}><button className="trip">
+                        <div id={trip} onClick={(e) => handleItinerary(e)} className="trip-name">{trip}</div>
                         <div  className="row-container">
                             <div className="row-items"><p className="row-label">from</p>
                             <p className="p-text">{startDate.toLocaleDateString("en-US", options)}</p></div>
@@ -78,7 +84,7 @@ export default function Trip () {
                         </div>
                     </button></div>
             )
-        })
+        }) 
 
     const checkTrips = () => {
         if (tripNames[0] === undefined) return (
@@ -92,9 +98,7 @@ export default function Trip () {
                 <div className="interval-div">
                     <div><button style={timeline === 'current' ? {'color': 'black'} : {'color' : 'gray'}} className="interval-button" onClick={(() => setTimeLine('current'))}>Current</button>
                     <button style={timeline === 'past' ? {'color': 'black'} : {'color' : 'gray'}}  className="interval-button past" onClick={(() => setTimeLine('past'))}>Past</button></div>
-                    <div>
-                        <button className="interval-button add-trip" onClick={handleTripCreate}>Add Trip +</button>
-                    </div>
+                    <div><button className="interval-button add-trip" onClick={handleTripCreate}>Add Trip +</button></div>
                 </div>
                     <div className="scroll-container">{buttonList()}</div>
             </div>
@@ -103,7 +107,7 @@ export default function Trip () {
 
     return (
         <div className="background-cut">
-            <div>
+            <div className="min-width">
             <h1 className="trip-title">Trips</h1>
             {checkTrips()}
             </div>

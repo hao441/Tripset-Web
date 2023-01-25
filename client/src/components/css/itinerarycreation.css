@@ -22,7 +22,7 @@ option {
 }
 
 .start-finish {
-    font-size: 18px;
+    font-size: 15px;
     margin-bottom: 5px;
     margin-top: -5px;
 }
@@ -42,7 +42,6 @@ option {
 }
 
 .time {
-    width: 80px;
     height: 30px;
     font-size: 1rem;
     font-family: 'Lexend', sans-serif;
@@ -73,10 +72,80 @@ option {
   }
 
   .end-time {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 
   .input-select {
     margin-top: 20px;
     margin-bottom: -15px;
   }
+
+  .it-input {
+    text-align: center;
+    font-family: 'Lexend', sans-serif;
+    font-size: 15px;
+    background-color: white;
+    border-style: solid;
+    border-color: #ccc;
+    border-radius: 4px;
+    border-width: 2px;
+    width: 280px;
+    height: 35px;
+    margin-bottom: 15px;
+  }
+
+  #itinerary-name {
+    height: 30px;
+  }
+
+  .form-text-input {
+    font-family: 'Lexend', sans-serif;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 15px;
+    background-color: white;
+    border-style: solid;
+    border-color: #ccc;
+    border-radius: 4px;
+    border-width: 2px;
+    width: 290px;
+    height: 35px;
+}
+
+ 
+
+.form-submit-button {
+  font-family: 'Lexend', sans-serif;
+  text-align: center;
+  margin-bottom: 15px;
+  background-color: #007871;
+  border-style: hidden;
+  border-radius: 4px;
+  border-color: white;
+  font-size: 15px;
+  color: white;
+  width: 290px;
+  height: 35px;
+  box-shadow: 0px 2px 1px 1px #b4ddcb;
+  cursor: pointer;
+}
+ 
+.form-navigation-button {
+  font-family: 'Lexend', sans-serif;
+  text-align: center;
+  margin-bottom: 15px;
+  border-style: hidden;
+  border-radius: 4px;
+  border-color: white;
+  font-size: 15px;
+  color: white;
+  width: 290px;
+  height: 35px;
+  cursor: pointer;
+  background-color: #005550;
+  box-shadow: 0px 2px 1px 1px #ccc;
+}
+
+.minortitle {
+  margin-top: 0;
+}

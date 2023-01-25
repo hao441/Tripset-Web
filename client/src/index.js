@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
 import reportWebVitals from './reportWebVitals';
-import App from './components/App.js';
+import App from './components/App.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,7 +13,6 @@ root.render(
     <Provider store={store}>
       <App />
     </Provider>
-	
   </React.StrictMode>
 );
 

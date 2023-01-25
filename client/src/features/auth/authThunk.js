@@ -4,7 +4,7 @@ export const loadUserAsync = createAsyncThunk(
     'auth/loadUser',
     async (payload, { rejectWithValue }) => {
       try {
-      const response = await fetch('http://localhost:9000/loadUser', {
+      const response = await fetch('http://localhost:9000/loaduser', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({"token": payload})
@@ -42,6 +42,23 @@ export const signupAsync = createAsyncThunk(
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({"name": payload.name, "email": payload.email, "password": payload.password, "confirmPassword": payload.confirmPassword})
+        })
+        const data = await response.json()
+        return data
+        } catch (error) {
+            rejectWithValue(error.response.data);
+        }
+    }
+)
+
+export const deleteAccountAsync = createAsyncThunk(
+    'auth/deleteAccount',
+    async (payload, { rejectWithValue }) => {
+        try {
+        const response = await fetch('http://localhost:9000/deleteaccount', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({"email": payload})
         })
         const data = await response.json()
         return data

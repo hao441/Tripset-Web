@@ -10,18 +10,25 @@ import { selectMessage, selectSessionToken, selectTripNames, selectUserName, sel
 
 import '../App.css'
 import './css/itinerarycreation.css'
-import { setItineraryAsync, setTripAsync } from "../features/auth/tripThunk";
+import { deleteItineraryItemAsync, setItineraryAsync } from "../features/auth/tripThunk";
 import MapsLocationSearch from "./sub-components/MapsLocationSearch";
 
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
-export default function ItineraryCreation () {
+const ItineraryEdit = () => {
+    
+    
 
-    let { trip } = useParams()
+    let { trip, item } = useParams()
 
     //redux/react-router
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log(`sessionTrips: ${sessionTrips}`)
+    })
+
     
     const sessionToken = useSelector(selectSessionToken);
     const sessionUsername = useSelector(selectUserName)
@@ -30,22 +37,31 @@ export default function ItineraryCreation () {
     const sessionTrips = useSelector(selectTrips)
     const auth = useSelector(selectAuthentication);
 
-    
-    
+
+
+    let itineraryLocation = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].location : ''
+    let itineraryLat = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lat : ''
+    let itineraryLng = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lng : ''
+    let itineraryCategory = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].category : ''
+    let itineraryStartDate = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startDate : ''
+    let itineraryEndDate = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endDate : ''
+    let itineraryStartTime = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startTime : ''
+    let itineraryEndTime = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endTime : ''
+
 
     //Use States
-    const [itineraryName, setItineraryName] = useState('');
+    const [itineraryName, setItineraryName] = useState(item);
 
-    const [location, setLocation] = useState('');
-    const [lat, setLat] = useState('');
-    const [lng, setLng] = useState('');
+    const [location, setLocation] = useState(itineraryLocation);
+    const [lat, setLat] = useState(itineraryLat);
+    const [lng, setLng] = useState(itineraryLng);
 
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState(itineraryCategory);
 
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
+    const [startDate, setStartDate] = useState(itineraryStartDate);
+    const [endDate, setEndDate] = useState(itineraryEndDate);
+    const [startTime, setStartTime] = useState(itineraryStartTime);
+    const [endTime, setEndTime] = useState(itineraryEndTime);
 
     const [message, setMessage] = useState('');
 
@@ -58,7 +74,21 @@ export default function ItineraryCreation () {
 
     //Use Effects
     useEffect(() => {
-        const mapsInput = document.getElementById('mapsInput').value
+
+        itineraryLocation = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].location : ''
+        itineraryLat = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lat : ''
+        itineraryLng = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lng : ''
+        itineraryCategory = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].category : ''
+        itineraryStartDate = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startDate : ''
+        itineraryEndDate = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endDate : ''
+        itineraryStartTime = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startTime : ''
+        itineraryEndTime = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endTime : ''
+
+        let mapsInput = document.getElementById('mapsInput').value
+
+        console.log(itineraryLocation)
+
+        mapsInput = itineraryLocation
 
         if (mapsInput !== '') {
             geocodeByAddress(mapsInput)
@@ -77,13 +107,13 @@ export default function ItineraryCreation () {
         e.preventDefault();
         //Error handling
         if (sessionUsername === '' || sessionUsername === undefined) return setMessage('Not logged in.');
-        if (sessionTripNames.indexOf(itineraryName) !== -1) return setMessage('Itinerary name is taken.');
         if (startDate > endDate || startDate === endDate && startTime >= endTime ) return setMessage("Start time must be before end time.");
         if (startDateObj < nowObj) return setMessage("Cannot set start date to a date in the past.");
         if (lat === '' || lng === '') return setMessage('Please select a location from the list.');
 
 
         //redux dispatch 
+        dispatch(deleteItineraryItemAsync({"email": sessionUsername, "tripName": trip, "itineraryName": item}));
         dispatch(setItineraryAsync(
             {"email": sessionUsername,
              "tripName": trip,
@@ -115,7 +145,7 @@ export default function ItineraryCreation () {
     return(
         <div className="background">
             <div className="grid">
-                <div><h1 className="halftitle">Create Itinerary</h1></div>
+                <div><h1 className="halftitle">Edit Itinerary</h1></div>
                 {/* content */}
                 <div className="former top-margin">
                     <form autoComplete="off" onSubmit={createItinerary}>
@@ -123,7 +153,7 @@ export default function ItineraryCreation () {
                         <div><input id="itinerary-name" className="it-input" type='text' value={itineraryName} onChange={((e) => setItineraryName(e.target.value))} placeholder='Itinerary Name' required /></div>
                         <MapsLocationSearch />
                         <div className="input-select">
-                        <select id="categorySelect" name='category' value={category} onChange={((e) => setCategory(e.target.value))} className="it-input" type='select' placeholder="Select a category" required>
+                            <select id="categorySelect" name='category' value={category} onChange={((e) => setCategory(e.target.value))} className="it-input" type='select' placeholder="Select a category" required>
                                 <option value="">--Please choose a category--</option>
                                 <option value="Accomodation">Accomodation</option>
                                 <option value="Transportation">Transportation</option>
@@ -145,24 +175,26 @@ export default function ItineraryCreation () {
                         <div className="dates">
                             <div className="start-finish"><label>Start</label></div>
                             <div>
-                                <input className=" center-text" type='date' placeholder='Start Date' value={startDate} onChange={((e) => setStartDate(e.target.value))} required/>
-                                <input className="time"  type='time' placeholder='Start Time' value={startTime} onChange={((e) => setStartTime(e.target.value))} required/>
+                                <input id="itineraryStartDate" className=" center-text" type='date' placeholder='Start Date' value={startDate} onChange={((e) => setStartDate(e.target.value))} required/>
+                                <input id="itineraryStartTime" className="time"  type='time' placeholder='Start Time' value={startTime} onChange={((e) => setStartTime(e.target.value))} required/>
                             </div>
                         </div>
                         <div className="dates">
                             <div className="start-finish"><label>End</label></div>
-                            <div className="end-time">
-                                <input className="date" type='date' placeholder='Start Date' value={endDate} onChange={((e) => setEndDate(e.target.value))} required/>
-                                <input className="time"  type='time' placeholder='Start Time' value={endTime} onChange={((e) => setEndTime(e.target.value))} required/>
+                            <div>
+                                <input id="itineraryEndDate" className="date" type='date' placeholder='Start Date' value={endDate} onChange={((e) => setEndDate(e.target.value))} required/>
+                                <input id="itineraryEndTime" className="time end-time"  type='time' placeholder='Start Time' value={endTime} onChange={((e) => setEndTime(e.target.value))} required/>
                             </div>
                         </div>
                         <div><button className="form-item form-button" type='submit'>Submit</button></div>
                     </form>
                     <hr className="hor" />
                     <div><button className="form-item form-button signup" onClick={handleItineraryNav}>Back to {trip}</button></div>
-                    <p style={{'color' : 'crimson', "margin-top" : "0"}}>{message}</p>
+                    <p style={{'color' : 'crimson'}}>{message}</p>
                 </div>
             </div>
         </div>
     )
 }
+
+export default ItineraryEdit;

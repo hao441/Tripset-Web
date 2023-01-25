@@ -1,19 +1,21 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthentication, selectMessage, selectSessionToken, selectTripNames, selectTrips, selectUserName } from '../features/auth/authSlice';
 
 
-import '../App.css';
-import './css/tripcreation.css';
-import { setTripAsync } from "../features/auth/tripThunk";
+import '../App.css'
+import './css/tripcreation.css'
+import { deleteTripAsync, setTripAsync } from "../features/auth/tripThunk";
 import CountryComplete from "./sub-components/CountryComplete";
 
-export default function TripCreation () {
+const TripEdit = () => {
+
+    const {trip} = useParams();
 
     //redux/react-router
     const dispatch = useDispatch();
@@ -22,18 +24,29 @@ export default function TripCreation () {
     const sessionToken = useSelector(selectSessionToken);
     const sessionUsername = useSelector(selectUserName);
     const sessionMessage = useSelector(selectMessage);
+    const sessionTripNames = useSelector(selectTripNames);
     const sessionTrips = useSelector(selectTrips);
+    const trips = useSelector(selectTrips);
     const auth = useSelector(selectAuthentication);
 
+    let tripStartDate;
+    let tripEndDate;
+
+    useEffect(() => {
+        tripStartDate = sessionTrips === '' ? '' :  trips[trip].startDate
+        tripEndDate = sessionTrips === '' ? '' :  trips[trip].endDate
+
+        console.log(tripStartDate)
+    })
+
     
-    let tripNames;
 
     //Use States
     const [loggedIn, setLoggedIn] = useState(true);
-    const [tripName, setTripName] = useState('');
-    const [destination, setDestination] = useState('');
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    const [tripName, setTripName] = useState(trip);
+    const [destination, setDestination] = useState(trip)
+    const [startDate, setStartDate] = useState(tripStartDate);
+    const [endDate, setEndDate] = useState(tripEndDate);
     const [message, setMessage] = useState('');
 
     const [toTrips, setToTrips] = useState(false);
@@ -41,29 +54,25 @@ export default function TripCreation () {
     const start = new Date(startDate)
     const end = new Date(endDate)
     const now = new Date()
-
-    //Use Effects
-    useEffect(() => {
-        tripNames = sessionTrips ? Object.keys(sessionTrips) : '';
-    });
     
     //functions
     const createTrip = (e) => {
         e.preventDefault();
         //Error handling
         if (sessionUsername === '' || sessionUsername === undefined) return setMessage('Not logged in.');
-        if (tripNames.indexOf(tripName) !== -1) return setMessage('Trip name is taken.');
         if (start > end ) return setMessage("Start Date must be before End Date.")
         if (start < now) return setMessage("Cannot set start date to a date in the past.")
 
-        //redux dispatch 
+        //redux dispatch
+        dispatch(deleteTripAsync({"email": sessionUsername, "tripName": trip}));
         dispatch(setTripAsync(
             {"email": sessionUsername,
             "tripName": tripName,
             "trip":
             {"location": document.getElementById('countryInput').value, 
              "startDate": startDate,
-             "endDate": endDate
+             "endDate": endDate,
+             "itinerary": !trips[trip].itinerary ? '' : trips[trip].itinerary
             }})
         )
         setTripName(''); setDestination(''); setStartDate(''); setEndDate('');
@@ -71,7 +80,7 @@ export default function TripCreation () {
     }
 
     const handleTripsNav = () => {
-        navigate('/trip')
+        navigate(`/trip/${trip}`)
     }
 
     if (!auth) return (
@@ -81,25 +90,27 @@ export default function TripCreation () {
     return(
         <div className="background">
             <div className="container">
-                <div><h1 className="halftitle">Create Trip</h1></div>
+                <div><h1 className="halftitle">Edit Trip</h1></div>
                 {/* content */}
                 <div className="former top-margin">
                     <form autoComplete="off" onSubmit={createTrip}>
                         <h1 className="minortitle">Enter your trip details.</h1>
-                        <div><input className="trip-text-input" type='text' value={tripName} onChange={((e) => setTripName(e.target.value))} placeholder='Trip Name' required /></div>
+                        <div><input className="form-item text-input edit-title" type='text' value={tripName} onChange={((e) => setTripName(e.target.value))} placeholder={trip} required /></div>
                         <div><CountryComplete /></div>
                         <div className="dates">
-                        <div><label className="trip-date-label">Start Date</label><label className="date-label">End Date</label></div>
-                        <div><input className="trip-date-input" type='date' value={startDate} onChange={((e) => setStartDate(e.target.value))} placeholder="mm/dd/yyyy" required  />
-                        <input className="trip-date-input" type='date' value={endDate} onChange={((e) => setEndDate(e.target.value))} required /></div>
+                            <div><label className="date-label">Start Date</label><label className="date-label">End Date</label></div>
+                            <div><input className="form-item date-input" type='date' value={startDate} onChange={((e) => setStartDate(e.target.value))} placeholder="mm/dd/yyyy" required  />
+                        <input className="form-item date-input" type='date' value={endDate} onChange={((e) => setEndDate(e.target.value))} required /></div>
                         </div>
-                        <div><button className="trip-submit-button" type='submit'>Submit</button></div>
+                        <div><button className="form-item form-button" type='submit'>Submit</button></div>
                     </form>
-                    <hr className="trip-hor" />
-                    <div><button className="trip-navigation-button" onClick={handleTripsNav}>Back to Trips</button></div>
+                    <hr className="hor" />
+                    <div><button className="form-item form-button signup" onClick={handleTripsNav}>Back to Trips</button></div>
                     <p style={{'color' : 'crimson'}}>{message}</p>
                 </div>
             </div>
         </div>
     )
 }
+
+export default TripEdit;

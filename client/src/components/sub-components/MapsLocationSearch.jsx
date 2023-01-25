@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
-import '../App.css'
-import './css/mapsautocomplete.css'
+import '../../App.css'
+import '../css/mapsautocomplete.css'
 
 
 

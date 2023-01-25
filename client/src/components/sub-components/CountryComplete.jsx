@@ -1,6 +1,6 @@
 import React, { useState, createContext } from 'react';
-import countries from '../country-emoji.json';
-import './css/countrycomplete.css';
+import countries from '../../data/country-emoji.json';
+import '../css/countrycomplete.css';
 
 const CountryComplete = () => {
 
@@ -23,7 +23,7 @@ const CountryComplete = () => {
       <div className='parent-buttons'>
         <div className="buttons-container">
             {filteredCountries.map((country, index) => (
-            <button key={index.toString()} onClick={() => {setInputValue(country); return setShowList(false)}} hidden={!showList} className="button">
+            <button key={index.toString()} onClick={(e) => {e.preventDefault(); setInputValue(country); return setShowList(false)}} hidden={!showList} className="button">
                 {country}
             </button>
             ))}
@@ -39,7 +39,7 @@ const CountryComplete = () => {
           type="search"
           value={inputValue}
           onChange={handleChange}
-          className="input"
+          className="country-input"
           placeholder='      Country'
         />
         {countryLookUp()}

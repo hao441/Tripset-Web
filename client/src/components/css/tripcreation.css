@@ -1,4 +1,100 @@
 #tripName {
-    width: 300px;
-    height: 40px;
+    width: 100px;
+    height: 20px;
+}
+
+.form-trip-name {
+    width: 290px;
+}
+
+.trip-text-input {
+    font-family: 'Lexend', sans-serif;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 15px;
+    background-color: white;
+    border-style: solid;
+    border-color: #ccc;
+    border-radius: 4px;
+    border-width: 2px;
+    width: 290px;
+    height: 35px;
+}
+
+.trip-date-label {
+    margin-left: 30px;
+    margin-right: 5px;
+}
+
+.trip-date-input {
+    font-family: 'Lexend', sans-serif;
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 15px;
+      background-color: white;
+      border-style: solid;
+      border-color: #ccc;
+      border-radius: 4px;
+      border-width: 2px;
+      height: 35px;
+      margin-left: 5px;
+      margin-right: 5px;
+  } 
+
+.trip-text-input {
+    font-family: 'Lexend', sans-serif;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 15px;
+    background-color: white;
+    border-style: solid;
+    border-color: #ccc;
+    border-radius: 4px;
+    border-width: 2px;
+    width: 220px;
+    height: 35px;
+}
+
+ 
+
+.trip-submit-button {
+  font-family: 'Lexend', sans-serif;
+  text-align: center;
+  margin-bottom: 15px;
+  background-color: #007871;
+  border-style: hidden;
+  border-radius: 4px;
+  border-color: white;
+  font-size: 15px;
+  color: white;
+  width: 220px;
+  height: 35px;
+  box-shadow: 0px 2px 1px 1px #b4ddcb;
+  cursor: pointer;
+}
+ 
+.trip-navigation-button {
+  font-family: 'Lexend', sans-serif;
+  text-align: center;
+  margin-bottom: 15px;
+  border-style: hidden;
+  border-radius: 4px;
+  border-color: white;
+  font-size: 15px;
+  color: white;
+  width: 220px;
+  height: 35px;
+  cursor: pointer;
+  background-color: #005550;
+  box-shadow: 0px 2px 1px 1px #ccc;
+}
+
+.trip-hor {
+    margin: auto;
+    width: 220px;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    height: 1px;
+    border-style: none;
+    background-color: rgb(6, 123, 74);
 }

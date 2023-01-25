@@ -112,4 +112,51 @@ body {
 	overflow: auto; /* or overflow: scroll; */
 }
 
+@media screen and (max-width: 600px) {
+	.trip-title {
+		font-size: 30px;
+	}
+
+	.interval-div {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content:center;
+		width: 100%;
+	}
+
+	.interval-button {
+		font-size: 15px;
+	}
+
+	.scroll-container {
+		width: 100%;
+		overflow:unset;
+	}
+
+	.add-trip {
+		width: 90px
+	}
+
+	.trip {
+		z-index: -1;
+		margin: auto;
+		width: 80%;
+		height: 100px;
+		text-align: center;
+		background-color: rgba(255, 255, 255, 0.5);
+		border-style: solid;
+		border-radius: 4px;
+		border-width: 1.5px;
+		cursor: pointer;
+		margin-bottom: 5px;
+	}
+
+	.link {
+		margin-bottom: -5px;
+		font-size: 25px;
+	}
+
+  }
+
 

@@ -1,11 +1,13 @@
 import { store } from './app/store'
+import { setMessage } from './features/auth/authSlice'
 import { loadUserAsync } from './features/auth/authThunk'
 
 export const sessionData = () => {
-    console.log('sessionData() started')
 
-    if (store.getState().auth.username !== '' && store.getState().auth.username !== 'undefined') return
+    console.log("sessionData running...")
 
+    if (store.getState().auth.username !== '' && store.getState().auth.username !== 'undefined') return ''
+    
     const deleteCookies = () => {
         document.cookie = `path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
         document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
