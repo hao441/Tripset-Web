@@ -4,3 +4,6 @@
 
 #server
 /server/.env
+
+# Local Netlify folder
+.netlify
