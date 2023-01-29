@@ -8,7 +8,7 @@ require('dotenv').config();
 
 //Express
 let app = express();
-const port = 9000;
+const port = process.env.PORT || 9000;
 
 //Mongoose connection
 mongoose.set('strictQuery', true);
