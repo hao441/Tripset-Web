@@ -12,6 +12,7 @@ import '../App.css'
 import './css/city.css';
 import { setCityAsync } from '../features/auth/tripThunk.js';
 import CityComplete from './sub-components/CityComplete.jsx';
+import { useEffect } from 'react';
 
 export default function City() {
     //redux
@@ -21,7 +22,10 @@ export default function City() {
     const sessionHomeCity = useSelector(selectHomeCity);
     const auth = useSelector(selectAuthentication);
 
-
+    useEffect(() => {
+        console.log(sessionHomeCity)
+        console.log(typeof sessionHomeCity)
+    })
     //use states
     const [message, setMessage] = useState('');
     // const [toTrip, setToTrip] = useState(false);

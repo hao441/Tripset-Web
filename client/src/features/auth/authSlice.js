@@ -85,7 +85,6 @@ export const authSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(loadUserAsync.rejected, (state, action) => {
-        console.log(`action payload is: ${action.payload}`)
         state.status = 'failed';
         state.message = action.payload.message;
       })
@@ -120,7 +119,6 @@ export const authSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(signupAsync.fulfilled, (state, action) => {
-        console.log(action.payload.result);
         state.status = 'succeeded';
         state.loggedIn = action.payload.result;
         state.sessionToken = action.payload.token;
@@ -128,6 +126,7 @@ export const authSlice = createSlice({
         state.username = action.payload.username;
         state.name = action.payload.name;
         state.message = action.payload.message;
+        state.homeCity = undefined;
 
         if (action.payload.result) {
           document.cookie = `path=/;`;
