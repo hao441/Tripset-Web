@@ -3,6 +3,8 @@ Tripset is a trip planning application that allows users to manage trips and the
 
 Tripset-Web is built on mongodb, express, react and node. State control is predominately done through redux and react-router is used for routing.
 
+Demo: https://tripset.harrisonoates.io
+
 ## Get Started ##
 1. cd into both the client and server folders and run `npm install`
 2. Set up a Mongodb Atlas Database, then copy the URI/Connection String into the 'MONGODB_URI' variable in .env which is located at ./server/.env.
