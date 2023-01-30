@@ -25,11 +25,14 @@ export default function SignUp() {
 
     //useEffects
     useEffect(() => {
+       console.log(sessionMessage);
     });
 
     const handleSignUp = (e) => {
         e.preventDefault();
         if (password !== passwordConfirm) return setMessage('Passwords do not match.');
+        if (sessionMessage) return setMessage(sessionMessage);
+        setMessage('')
         dispatch(signupAsync({name: name, email: email, password: password, passwordConfirm: passwordConfirm}));
     }
 
@@ -58,7 +61,7 @@ export default function SignUp() {
                     <div><button className='former signup-no-shadow form-button-no-shadow' onClick={navLogin}>Back to Login</button></div>
                 </div>
                 <br/>
-                <div className='message'>{message !== 'User not found' && message}</div>
+                <div className='message'>{message !== 'User doesn\'t exist.' && message}</div>
             </div>
         </div>
     )
