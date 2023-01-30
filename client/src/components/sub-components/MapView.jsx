@@ -34,7 +34,7 @@ const Mapper = () => {
         // check if the script has already been loaded
         if (!window.google) {
             const googleMapsScript = document.createElement('script');
-            googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=libraries=places`;
+            googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API_KEY}&libraries=places`;
             window.document.body.appendChild(googleMapsScript);
             googleMapsScript.addEventListener('load', () => {
                 initializeMap();
