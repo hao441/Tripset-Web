@@ -23,13 +23,9 @@ export default function ItineraryCreation () {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     
-
     const sessionUsername = useSelector(selectUserName)
     const sessionTripNames = useSelector(selectTripNames)
     const auth = useSelector(selectAuthentication);
-
-    
-    
 
     //Use States
     const [itineraryName, setItineraryName] = useState('');
@@ -75,7 +71,7 @@ export default function ItineraryCreation () {
         //Error handling
         if (sessionUsername === '' || sessionUsername === undefined) return setMessage('Not logged in.');
         if (sessionTripNames.indexOf(itineraryName) !== -1) return setMessage('Itinerary name is taken.');
-        if (startDate > endDate || startDate === endDate && startTime >= endTime ) return setMessage("Start time must be before end time.");
+        if (startDate > endDate || (startDate === endDate && startTime >= endTime) ) return setMessage("Start time must be before end time.");
         if (startDateObj < nowObj) return setMessage("Cannot set start date to a date in the past.");
         if (lat === '' || lng === '') return setMessage('Please select a location from the list.');
 

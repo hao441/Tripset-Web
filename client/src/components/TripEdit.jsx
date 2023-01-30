@@ -12,6 +12,7 @@ import '../App.css'
 import './css/tripcreation.css'
 import { deleteTripAsync, setTripAsync } from "../features/auth/tripThunk";
 import CountryComplete from "./sub-components/CountryComplete";
+import { useRef } from "react";
 
 const TripEdit = () => {
 
@@ -26,12 +27,12 @@ const TripEdit = () => {
     const trips = useSelector(selectTrips);
     const auth = useSelector(selectAuthentication);
 
-    let tripStartDate;
-    let tripEndDate;
+    const tripStartDate = useRef(null) ;
+    const tripEndDate = useRef(null);
 
     useEffect(() => {
-        tripStartDate = sessionTrips === '' ? '' :  trips[trip].startDate
-        tripEndDate = sessionTrips === '' ? '' :  trips[trip].endDate
+        tripStartDate.current = sessionTrips === '' ? '' :  trips[trip].startDate
+        tripEndDate.current = sessionTrips === '' ? '' :  trips[trip].endDate
 
         console.log(tripStartDate)
     })

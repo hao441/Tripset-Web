@@ -14,10 +14,18 @@ import { deleteItineraryItemAsync, setItineraryAsync } from "../features/auth/tr
 import MapsLocationSearch from "./sub-components/MapsLocationSearch";
 
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import { useRef } from "react";
 
 const ItineraryEdit = () => {
     
-    
+    const itineraryLocation = useRef()
+    const itineraryLat = useRef()
+    const itineraryLng = useRef()
+    const itineraryCategory = useRef()
+    const itineraryStartDate = useRef()
+    const itineraryEndDate = useRef()
+    const itineraryStartTime = useRef()
+    const itineraryEndTime = useRef()
 
     let { trip, item } = useParams()
 
@@ -30,35 +38,37 @@ const ItineraryEdit = () => {
     })
 
     
+
+    
     const sessionUsername = useSelector(selectUserName)
     const sessionTrips = useSelector(selectTrips)
     const auth = useSelector(selectAuthentication);
 
 
 
-    let itineraryLocation = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].location : ''
-    let itineraryLat = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lat : ''
-    let itineraryLng = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lng : ''
-    let itineraryCategory = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].category : ''
-    let itineraryStartDate = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startDate : ''
-    let itineraryEndDate = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endDate : ''
-    let itineraryStartTime = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startTime : ''
-    let itineraryEndTime = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endTime : ''
+    itineraryLocation.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].location : ''
+    itineraryLat.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lat : ''
+    itineraryLng.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lng : ''
+    itineraryCategory.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].category : ''
+    itineraryStartDate.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startDate : ''
+    itineraryEndDate.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endDate : ''
+    itineraryStartTime.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startTime : ''
+    itineraryEndTime.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endTime : ''
 
 
     //Use States
     const [itineraryName, setItineraryName] = useState(item);
 
-    const [location, setLocation] = useState(itineraryLocation);
-    const [lat, setLat] = useState(itineraryLat);
-    const [lng, setLng] = useState(itineraryLng);
+    const [location, setLocation] = useState(itineraryLocation.current);
+    const [lat, setLat] = useState(itineraryLat.current);
+    const [lng, setLng] = useState(itineraryLng.current);
 
-    const [category, setCategory] = useState(itineraryCategory);
+    const [category, setCategory] = useState(itineraryCategory.current);
 
-    const [startDate, setStartDate] = useState(itineraryStartDate);
-    const [endDate, setEndDate] = useState(itineraryEndDate);
-    const [startTime, setStartTime] = useState(itineraryStartTime);
-    const [endTime, setEndTime] = useState(itineraryEndTime);
+    const [startDate, setStartDate] = useState(itineraryStartDate.current);
+    const [endDate, setEndDate] = useState(itineraryEndDate.current);
+    const [startTime, setStartTime] = useState(itineraryStartTime.current);
+    const [endTime, setEndTime] = useState(itineraryEndTime.current);
 
     const [message, setMessage] = useState('');
 
@@ -71,14 +81,14 @@ const ItineraryEdit = () => {
     //Use Effects
     useEffect(() => {
 
-        itineraryLocation = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].location : ''
-        itineraryLat = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lat : ''
-        itineraryLng = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lng : ''
-        itineraryCategory = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].category : ''
-        itineraryStartDate = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startDate : ''
-        itineraryEndDate = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endDate : ''
-        itineraryStartTime = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startTime : ''
-        itineraryEndTime = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endTime : ''
+        itineraryLocation.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].location : ''
+        itineraryLat.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lat : ''
+        itineraryLng.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lng : ''
+        itineraryCategory.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].category : ''
+        itineraryStartDate.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startDate : ''
+        itineraryEndDate.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endDate : ''
+        itineraryStartTime.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startTime : ''
+        itineraryEndTime.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endTime : ''
 
         let mapsInput = document.getElementById('mapsInput').value
 
@@ -103,7 +113,7 @@ const ItineraryEdit = () => {
         e.preventDefault();
         //Error handling
         if (sessionUsername === '' || sessionUsername === undefined) return setMessage('Not logged in.');
-        if (startDate > endDate || startDate === endDate && startTime >= endTime ) return setMessage("Start time must be before end time.");
+        if (startDate > endDate || (startDate === endDate && startTime >= endTime) ) return setMessage("Start time must be before end time.");
         if (startDateObj < nowObj) return setMessage("Cannot set start date to a date in the past.");
         if (lat === '' || lng === '') return setMessage('Please select a location from the list.');
 

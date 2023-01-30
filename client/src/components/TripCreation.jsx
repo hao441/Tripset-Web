@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -24,7 +24,7 @@ export default function TripCreation () {
     const auth = useSelector(selectAuthentication);
 
     
-    let tripNames;
+    const tripNames = useRef(null);
 
     //Use States
     const [tripName, setTripName] = useState('');
@@ -39,7 +39,7 @@ export default function TripCreation () {
 
     //Use Effects
     useEffect(() => {
-        tripNames = sessionTrips ? Object.keys(sessionTrips) : '';
+        tripNames.current = sessionTrips ? Object.keys(sessionTrips) : '';
     });
     
     //functions
@@ -47,7 +47,7 @@ export default function TripCreation () {
         e.preventDefault();
         //Error handling
         if (sessionUsername === '' || sessionUsername === undefined) return setMessage('Not logged in.');
-        if (tripNames.indexOf(tripName) !== -1) return setMessage('Trip name is taken.');
+        if (tripNames.current.indexOf(tripName) !== -1) return setMessage('Trip name is taken.');
         if (start > end ) return setMessage("Start Date must be before End Date.")
         if (start < now) return setMessage("Cannot set start date to a date in the past.")
 

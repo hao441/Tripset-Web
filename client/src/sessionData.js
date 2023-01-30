@@ -1,5 +1,4 @@
 import { store } from './app/store'
-import { setMessage } from './features/auth/authSlice'
 import { loadUserAsync } from './features/auth/authThunk'
 
 export const sessionData = () => {
@@ -15,8 +14,8 @@ export const sessionData = () => {
         document.cookie = `expires=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
     }
 
-    const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
-    const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
+    const sessionJWT = document.cookie === '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
+    const sessionJWTExpiry = document.cookie === '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
 
     const nowTime = new Date()
     const expiryTime = new Date(sessionJWTExpiry)

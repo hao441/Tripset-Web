@@ -59,7 +59,7 @@ export default function Trip () {
                 const startDate = new Date(trips[trip]['startDate'])
                 const endDate = new Date(trips[trip]['endDate'])
                 const options = { year: 'numeric', month: 'long', day: 'numeric' };
-
+                
                 if (timeline === 'current' && endDate > now) return (
                         <div key={trip}><button className="trip">
                             <div id={trip} onClick={(e) => handleItinerary(e)} className="trip-name">{trip}</div>
@@ -83,6 +83,7 @@ export default function Trip () {
                         </div>
                     </button></div>
             )
+            return true
         }) 
 
     const checkTrips = () => {

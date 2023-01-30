@@ -1,16 +1,10 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { sessionData } from '../../sessionData';
-import { useSelector } from 'react-redux';
+import { createSlice } from '@reduxjs/toolkit';
 import { loadUserAsync, signinAsync, signupAsync, deleteAccountAsync } from './authThunk';
 import { setCityAsync, setTripAsync, setItineraryAsync, deleteItineraryItemAsync, deleteTripAsync } from './tripThunk';
 
-const sessionJWT = document.cookie == '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
-const sessionJWTExpiry = document.cookie == '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
-const sessionUsername = document.cookie == '' ? '' : document.cookie.match(/username=([^;]+)/)[1]
-
-
-const nowTime = new Date().getTime()
-const expiryTime = new Date(sessionJWTExpiry).getTime()
+const sessionJWT = document.cookie === '' ? '' : document.cookie.match(/token=([^;]+)/)[1]
+const sessionJWTExpiry = document.cookie === '' ? '' : document.cookie.match(/expires=([^;]+)/)[1]
+const sessionUsername = document.cookie === '' ? '' : document.cookie.match(/username=([^;]+)/)[1]
 
 let loginStatus;
 let token;
