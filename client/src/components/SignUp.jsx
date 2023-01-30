@@ -57,7 +57,8 @@ export default function SignUp() {
                     <div className='hor-offset'></div>
                     <div><button className='former signup-no-shadow form-button-no-shadow' onClick={navLogin}>Back to Login</button></div>
                 </div>
-                <div className='message'>{message}</div>
+                <br/>
+                <div className='message'>{message !== 'User not found' && message}</div>
             </div>
         </div>
     )

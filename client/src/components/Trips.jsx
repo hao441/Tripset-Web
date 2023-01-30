@@ -4,12 +4,11 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 //Redux
 import { useSelector } from 'react-redux';
-import { selectAuthentication, selectHomeCity, selectTrips } from '../features/auth/authSlice';
+import { selectAuthentication, selectTrips } from '../features/auth/authSlice';
 
 //css
 import '../App.css'
 import './css/trips.css'
-import { useEffect } from "react";
 
 export default function Trip () {
 
@@ -19,16 +18,10 @@ export default function Trip () {
 
     const auth = useSelector(selectAuthentication);
     const trips = useSelector(selectTrips);
-    const homeCity = useSelector(selectHomeCity)
 
     const [timeline, setTimeLine] = useState('current');
 
     const tripNames = !trips ? '' : Object.keys(trips);
-
-
-    useEffect(() => {
-        console.log(homeCity)
-    })
 
     //functions
     const handleTripCreate = () => {
@@ -87,7 +80,13 @@ export default function Trip () {
         }) 
 
     const checkTrips = () => {
-        if (tripNames[0] === undefined) return (
+        if (typeof trips === 'string') return (
+            <div>
+                <h2>Loading Trips..</h2>
+            </div>
+        )
+
+        if (typeof trips === 'undefined') return (
             <div>
                     <div><h1 className="content">You have no trips planned</h1></div>
                     <div><button className="content form-input form-button" onClick={handleTripCreate}>Create Trip</button></div>

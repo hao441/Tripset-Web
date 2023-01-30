@@ -42,7 +42,6 @@ export default function Trip () {
         dispatch(deleteItineraryItemAsync({"email": username, "tripName": trip, "itineraryName": selectedItem}));
     }
 
-
     if (!auth) return (
         <Navigate to="/welcome" />
     )
@@ -137,7 +136,13 @@ export default function Trip () {
                 })
 
     const checkItinerary = () => {
-        if (!trips[trip]) return (
+        if (typeof trips === 'string') return (
+            <div>
+                <br/>
+                <h2>Loading Itinerary...</h2>
+            </div>
+        )
+        if (typeof trips === 'object' && !trips[trip]) return (
             <div className="container top-margin">
                 <div className="subtitle">Trip not found</div>
                 <br />

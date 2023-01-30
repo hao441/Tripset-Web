@@ -33,10 +33,6 @@ const ItineraryEdit = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        console.log(`sessionTrips: ${sessionTrips}`)
-    })
-
     
 
     
@@ -91,8 +87,6 @@ const ItineraryEdit = () => {
         itineraryEndTime.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endTime : ''
 
         let mapsInput = document.getElementById('mapsInput').value
-
-        console.log(itineraryLocation)
 
         mapsInput = itineraryLocation
 

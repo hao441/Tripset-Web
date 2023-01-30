@@ -33,8 +33,6 @@ const TripEdit = () => {
     useEffect(() => {
         tripStartDate.current = sessionTrips === '' ? '' :  trips[trip].startDate
         tripEndDate.current = sessionTrips === '' ? '' :  trips[trip].endDate
-
-        console.log(tripStartDate)
     })
 
     

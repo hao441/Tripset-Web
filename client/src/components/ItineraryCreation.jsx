@@ -153,7 +153,7 @@ export default function ItineraryCreation () {
                     </form>
                     <hr className="hor" />
                     <div><button className="form-item form-button signup" onClick={handleItineraryNav}>Back to {trip}</button></div>
-                    <p style={{'color' : 'crimson', "margin-top" : "0"}}>{message}</p>
+                    <p style={{'color' : 'crimson', "marginTop" : "0"}}>{message}</p>
                 </div>
             </div>
         </div>

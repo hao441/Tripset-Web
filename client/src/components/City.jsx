@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect} from 'react';
+import { useState} from 'react';
 import { Navigate } from 'react-router-dom';
 import cityLookup from '../data/cityLookUp.json'
 
@@ -26,31 +26,20 @@ export default function City() {
     const [message, setMessage] = useState('');
     // const [toTrip, setToTrip] = useState(false);
     // const [count, setCount] = useState(0);
-
-
-    useEffect(() => {
-        console.log(`city is: ${sessionHomeCity}`)
-        console.log(`username is : ${sessionUsername}`)
-    })
     
 
     const userCity = (e) => {
         e.preventDefault();
         let city = document.getElementById('cityInput').value
-        console.log(city)
 
         let cityString = city.match(/.+(?=,)/)[0]
-        console.log(cityString)
         let countryString = city.match(/(?=, ).+(?=\W\W\W\W\W)/)[0].replace(', ', '')
-        console.log(countryString)
 
         if (cityLookup[cityString] == null) return setMessage('Please select an option.')
 
         if (sessionUsername === '') return console.log(`Not signed in.`)
         
         dispatch(setCityAsync({"email": sessionUsername, "city": cityString, "country": countryString, "lat": cityLookup[cityString].lat, "lng": cityLookup[cityString].lng}));
-
-        console.log(sessionUsername, cityString, countryString, auth, cityLookup[cityString].lat, cityLookup[cityString].lng)
 
         setMessage('');
         // setToTrip('');
@@ -59,10 +48,28 @@ export default function City() {
 
 
     if (!auth) return (
-        <Navigate to="/welcome" />
+        
+                <Navigate to="/welcome" />
     )
 
-    if (!sessionHomeCity) return (
+    if (auth && sessionHomeCity === '') return (
+        <div className="background">
+            <div className='container'>
+                <h1 className='lessertitle'>Welcome</h1>
+                <div className='former'>
+                    <br/>
+                    <br/>
+                    <h2>Loading...</h2>
+                </div>
+            </div>
+        </div>
+    )
+
+    if (auth && sessionHomeCity) return (
+        <Navigate replace to='/trip' />
+    )
+
+    if ((auth) && (typeof sessionHomeCity === 'undefined')) return (
         <div className="background">
             <div className='container'>
                 <h1 className='lessertitle'>Welcome</h1>
@@ -80,15 +87,6 @@ export default function City() {
                     </div>
                 </div>
             </div>
-        </div>
-    )
-
-    if (sessionHomeCity) return (
-        <Navigate replace to='/trip' />
-    )
-
-    return (
-        <div>
         </div>
     )
 } 

@@ -21,20 +21,18 @@ const Mapper = () => {
     const itineraryKeys = Object.keys(trips[trip]['itinerary'])
 
     useEffect(() => {
-        
-        console.log(`homeCity is: ${homeCity}`)
         homeCountry.current = homeCity ? homeCity['country'] : '';
         homeLat.current = homeCity ? homeCity['lat'] : '';
         homeLng.current = homeCity ? homeCity['lng'] : '';
             
-        console.log(itineraryKeys.map((key) => {
-            return {position: {lat: trips[trip]['itinerary'][key]['lat'], lng: trips[trip]['itinerary'][key]['lng']},
-            stopover: true}}))
+        // console.log(itineraryKeys.map((key) => {
+        //     return {position: {lat: trips[trip]['itinerary'][key]['lat'], lng: trips[trip]['itinerary'][key]['lng']},
+        //     stopover: true}}))
             
         // check if the script has already been loaded
         if (!window.google) {
             const googleMapsScript = document.createElement('script');
-            googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API_KEY}&libraries=places`;
+            googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBDw5vB4ycoD2S4zpUM_mHcCXA3s97hmIE&libraries=places`;
             window.document.body.appendChild(googleMapsScript);
             googleMapsScript.addEventListener('load', () => {
                 initializeMap();
@@ -47,7 +45,7 @@ const Mapper = () => {
         const initializeMap = () => {
             // Create map
             const map = new window.google.maps.Map(document.getElementById('map'), {
-                center: { lat: Number(homeLat), lng: Number(homeLng) },
+                center: { lat: Number(homeLat.current), lng: Number(homeLng.current) },
                 zoom: 5,
                 mapTypeControl: false,
                 streetViewControl: false,

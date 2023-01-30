@@ -3,8 +3,6 @@ import { loadUserAsync } from './features/auth/authThunk'
 
 export const sessionData = () => {
 
-    console.log("sessionData running...")
-
     if (store.getState().auth.username !== '' && store.getState().auth.username !== 'undefined') return ''
     
     const deleteCookies = () => {

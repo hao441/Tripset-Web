@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import { selectAuthentication, selectSessionToken, selectSessionTokenExpiry, selectMessage, selectRes, selectUserName, selectHomeCity, selectTrips } from '../features/auth/authSlice';
 
 import '../App.css'
-import { store } from '../app/store';
 
 export default function Home () {
         const auth = useSelector(selectAuthentication);
@@ -17,8 +16,6 @@ export default function Home () {
         const username = useSelector(selectUserName);
         const homeCity = useSelector(selectHomeCity);
         const trips = useSelector(selectTrips);
-        
-        console.log(store.getState().auth)
         
 
         if (!auth) return (

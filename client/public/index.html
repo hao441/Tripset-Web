@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDw5vB4ycoD2S4zpUM_mHcCXA3s97hmIE&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDw5vB4ycoD2S4zpUM_mHcCXA3s97hmIE&libraries=places&callback=isinit">
+      const isinit = () => {
+        return true
+      }
+    </script>
     <meta charset="utf-8" />
     <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
