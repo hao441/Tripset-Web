@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectHomeCity, selectTrips } from "../../features/auth/authSlice";
 import '../css/itinerary.css'
-
-const { DirectionsService, DirectionsRenderer } = window.google.maps;
 
 
 const Mapper = () => {
@@ -12,24 +11,21 @@ const Mapper = () => {
 
     const homeCity = useSelector(selectHomeCity);
 
-    let homeCountry;
-    let homeLat;
-    let homeLng;
+    const homeCountry = useRef(null)
+    const homeLat = useRef(null)
+    const homeLng = useRef(null)
 
     const {trip} = useParams();
-
-    const [map, setMap] = useState(null);
-    const [maps, setMaps] = useState(null);
 
     const trips = useSelector(selectTrips);
     const itineraryKeys = Object.keys(trips[trip]['itinerary'])
 
     useEffect(() => {
-
+        
         console.log(`homeCity is: ${homeCity}`)
-        homeCountry = homeCity ? homeCity['country'] : '';
-        homeLat = homeCity ? homeCity['lat'] : '';
-        homeLng = homeCity ? homeCity['lng'] : '';
+        homeCountry.current = homeCity ? homeCity['country'] : '';
+        homeLat.current = homeCity ? homeCity['lat'] : '';
+        homeLng.current = homeCity ? homeCity['lng'] : '';
             
         console.log(itineraryKeys.map((key) => {
             return {position: {lat: trips[trip]['itinerary'][key]['lat'], lng: trips[trip]['itinerary'][key]['lng']},

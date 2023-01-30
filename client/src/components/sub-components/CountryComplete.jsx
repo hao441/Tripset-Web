@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState } from 'react';
 import countries from '../../data/country-emoji.json';
 import '../css/countrycomplete.css';
 
