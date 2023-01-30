@@ -1,7 +1,9 @@
 # Tripset-Web #
-Tripset is a trip planning application that allows users to manage trips and their itineraries
+Tripset helps with keeping track and keeping up to date with trip itineraries. Once a user signs up, they will be able to create a trip and then itinerary items for that trip.
 
-Tripset-Web is built on mongodb, express, react and node. State control is predominately done through redux and react-router is used for routing.
+On the home screen, the user can access all their trips. Upon clicking on a trip, they will see their itinerary in list format where they can expand an item to see the it in more detail or to edit it.
+
+The user can switch to map view, where each itinerary item is placed on a map with a line drawn through all items based on their dates and times.
 
 Demo: https://tripset.harrisonoates.io
 
