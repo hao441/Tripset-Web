@@ -1,8 +1,11 @@
-@import url(//db.onlinewebfonts.com/c/34c01a1d7f7d514d22bc4c21189f62dd?family=LondonTwo);
 @import url('https://fonts.googleapis.com/css2?family=Lexend&display=swap');
 
-@font-face {font-family: "LondonTwo"; src: url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.eot"); src: url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.woff") format("woff"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/34c01a1d7f7d514d22bc4c21189f62dd.svg#LondonTwo") format("svg"); }
-
+@font-face {font-family: "LondonTwo"; src: url("../../assets/fonts/LondonTwo/LondonTwo.eot"); 
+  src: url("../../assets/fonts/LondonTwo/LondonTwo.woff2") format("woff2"); 
+  src: url("../../assets/fonts/LondonTwo/LondonTwo.woff") format("woff"); 
+  src: url("../../assets/fonts/LondonTwo/LondonTwo.ttf") format("truetype");
+  src: url("../../assets/fonts/LondonTwo/LondonTwo.svg") format("svg"); 
+}
 
 .input {
     border: 2px solid #ccc;
