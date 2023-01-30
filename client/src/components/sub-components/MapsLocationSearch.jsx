@@ -4,8 +4,6 @@ import PlacesAutocomplete from 'react-places-autocomplete';
 import '../../App.css'
 import '../css/mapsautocomplete.css'
 
-
-
 export default function MapsLocationSearch() {
   const [address, setAddress] = useState('');
     
