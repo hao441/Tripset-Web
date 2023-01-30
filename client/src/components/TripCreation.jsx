@@ -5,7 +5,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAuthentication, selectMessage, selectSessionToken, selectTripNames, selectTrips, selectUserName } from '../features/auth/authSlice';
+import { selectAuthentication, selectTrips, selectUserName } from '../features/auth/authSlice';
 
 
 import '../App.css';
@@ -19,9 +19,7 @@ export default function TripCreation () {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     
-    const sessionToken = useSelector(selectSessionToken);
     const sessionUsername = useSelector(selectUserName);
-    const sessionMessage = useSelector(selectMessage);
     const sessionTrips = useSelector(selectTrips);
     const auth = useSelector(selectAuthentication);
 
@@ -29,14 +27,11 @@ export default function TripCreation () {
     let tripNames;
 
     //Use States
-    const [loggedIn, setLoggedIn] = useState(true);
     const [tripName, setTripName] = useState('');
-    const [destination, setDestination] = useState('');
+    // const [destination, setDestination] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [message, setMessage] = useState('');
-
-    const [toTrips, setToTrips] = useState(false);
 
     const start = new Date(startDate)
     const end = new Date(endDate)
@@ -66,7 +61,7 @@ export default function TripCreation () {
              "endDate": endDate
             }})
         )
-        setTripName(''); setDestination(''); setStartDate(''); setEndDate('');
+        setTripName(''); setStartDate(''); setEndDate('');
         navigate('/trip');
     }
 

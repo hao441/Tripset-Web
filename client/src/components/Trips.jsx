@@ -4,7 +4,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 //Redux
 import { useSelector } from 'react-redux';
-import { selectAuthentication, selectHomeCity, selectTrips, selectUserName } from '../features/auth/authSlice';
+import { selectAuthentication, selectHomeCity, selectTrips } from '../features/auth/authSlice';
 
 //css
 import '../App.css'
@@ -18,7 +18,6 @@ export default function Trip () {
     const navigate = useNavigate();
 
     const auth = useSelector(selectAuthentication);
-    const username = useSelector(selectUserName);
     const trips = useSelector(selectTrips);
     const homeCity = useSelector(selectHomeCity)
 

@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { login, selectAuthentication, selectHomeCity, selectMessage, selectSessionToken, selectSessionTokenExpiry, selectUserName } from '../features/auth/authSlice';
+import { selectAuthentication, selectMessage } from '../features/auth/authSlice';
 
 import '../App.css'
 import { signupAsync } from '../features/auth/authThunk.js';
@@ -15,7 +15,6 @@ export default function SignUp() {
     const navigate = useNavigate();
     const auth = useSelector(selectAuthentication);
     const sessionMessage = useSelector(selectMessage);
-    const homeCity = useSelector(selectHomeCity);
 
     //login variables
     const [name, setName] = useState('');

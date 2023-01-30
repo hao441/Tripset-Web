@@ -5,7 +5,7 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
  
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { selectAuthentication, selectTripNames, selectTrips, selectUserName, } from '../features/auth/authSlice';
+import { selectAuthentication, selectTrips, selectUserName, } from '../features/auth/authSlice';
 
 //css
 import '../App.css'
@@ -23,13 +23,10 @@ export default function Trip () {
     const auth = useSelector(selectAuthentication);
     const username = useSelector(selectUserName);
     const trips = useSelector(selectTrips);
-    const tripNames = useSelector(selectTripNames);
 
-    const [timeline, setTimeLine] = useState('current');
     const [isExpanded, setIsExpanded] = useState(false);
 
     const [showMap, setShowMap] = useState(false);
-    const [localTrips, setLocalTrips] = useState(trips)
 
     //Navigation
     const handleItineraryCreate = () => {navigate('itinerarycreation');}
@@ -56,18 +53,14 @@ export default function Trip () {
                 const dateA = new Date(trips[trip]['itinerary'][a]['startDate'])
                 const dateB = new Date(trips[trip]['itinerary'][b]['startDate'])
 
-                const parseA = Date.parse(dateA.toDateString() + " " + trips[trip]['itinerary'][a]['startTime'] + ":00" + " GMT")
-                const parseB = Date.parse(dateB.toDateString() + " " + trips[trip]['itinerary'][b]['startTime'] + ":00" + " GMT")
+                const parseA = Date.parse(`${dateA.toDateString()} ${trips[trip]['itinerary'][a]['startTime']}:00 GMT`)
+                const parseB = Date.parse(`${dateB.toDateString()} ${trips[trip]['itinerary'][b]['startTime']}:00 GMT`)
 
                 return parseA - parseB
             })
             .map((item, index, array) => {
-                const formatDate = new Date(trips[trip]['itinerary'][item]['startDate']);
 
-                const now = new Date()
                 const startDate = new Date(trips[trip]['itinerary'][item]['startDate'])
-                const endDate = new Date(trips[trip]['itinerary'][item]['endDate'])
-                const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
                 const currentStart = new Date(trips[trip]['itinerary'][item]['startDate'])
                 const lastStart = index !== 0 && new Date(trips[trip]['itinerary'][array[index-1]]['startDate'])

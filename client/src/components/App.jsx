@@ -1,6 +1,6 @@
 //React/Router/Redux
-import { createBrowserRouter, RouterProvider, Switch, useLocation} from 'react-router-dom';
-import React, { useRef, useEffect } from 'react';
+import { createBrowserRouter, RouterProvider} from 'react-router-dom';
+import React from 'react';
 
 //Components
 import SignUp from './SignUp';

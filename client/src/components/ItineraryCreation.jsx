@@ -5,12 +5,12 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { selectMessage, selectSessionToken, selectTripNames, selectUserName, selectTrips, selectAuthentication } from '../features/auth/authSlice';
+import { selectTripNames, selectUserName, selectAuthentication } from '../features/auth/authSlice';
 
 
 import '../App.css'
 import './css/itinerarycreation.css'
-import { setItineraryAsync, setTripAsync } from "../features/auth/tripThunk";
+import { setItineraryAsync } from "../features/auth/tripThunk";
 import MapsLocationSearch from "./sub-components/MapsLocationSearch";
 
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
@@ -23,11 +23,9 @@ export default function ItineraryCreation () {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     
-    const sessionToken = useSelector(selectSessionToken);
+
     const sessionUsername = useSelector(selectUserName)
-    const sessionMessage = useSelector(selectMessage)
     const sessionTripNames = useSelector(selectTripNames)
-    const sessionTrips = useSelector(selectTrips)
     const auth = useSelector(selectAuthentication);
 
     
@@ -53,7 +51,6 @@ export default function ItineraryCreation () {
     
 
     const startDateObj = new Date(startDate)
-    const endDateObj = new Date(endDate)
     const nowObj = new Date()
 
     //Use Effects

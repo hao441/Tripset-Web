@@ -5,7 +5,7 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { selectMessage, selectSessionToken, selectTripNames, selectUserName, selectTrips, selectAuthentication } from '../features/auth/authSlice';
+import { selectUserName, selectTrips, selectAuthentication } from '../features/auth/authSlice';
 
 
 import '../App.css'
@@ -30,10 +30,7 @@ const ItineraryEdit = () => {
     })
 
     
-    const sessionToken = useSelector(selectSessionToken);
     const sessionUsername = useSelector(selectUserName)
-    const sessionMessage = useSelector(selectMessage)
-    const sessionTripNames = useSelector(selectTripNames)
     const sessionTrips = useSelector(selectTrips)
     const auth = useSelector(selectAuthentication);
 
@@ -69,7 +66,6 @@ const ItineraryEdit = () => {
     
 
     const startDateObj = new Date(startDate)
-    const endDateObj = new Date(endDate)
     const nowObj = new Date()
 
     //Use Effects

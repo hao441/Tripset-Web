@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom';
 import cityLookup from '../data/cityLookUp.json'
 
 //Redux
-import { selectSessionToken, selectUserName, selectHomeCity, selectMessage, selectAuthentication } from '../features/auth/authSlice';
+import { selectUserName, selectHomeCity, selectAuthentication } from '../features/auth/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 //css
@@ -17,17 +17,15 @@ export default function City() {
     //redux
     const dispatch = useDispatch();
 
-    const sessionToken = useSelector(selectSessionToken);
     const sessionUsername = useSelector(selectUserName);
     const sessionHomeCity = useSelector(selectHomeCity);
-    const sessionMessage = useSelector(selectMessage);
     const auth = useSelector(selectAuthentication);
 
 
     //use states
     const [message, setMessage] = useState('');
-    const [toTrip, setToTrip] = useState(false);
-    const [count, setCount] = useState(0);
+    // const [toTrip, setToTrip] = useState(false);
+    // const [count, setCount] = useState(0);
 
 
     useEffect(() => {
@@ -55,8 +53,8 @@ export default function City() {
         console.log(sessionUsername, cityString, countryString, auth, cityLookup[cityString].lat, cityLookup[cityString].lng)
 
         setMessage('');
-        setToTrip('');
-        setCount('');
+        // setToTrip('');
+        // setCount('');
     }
 
 

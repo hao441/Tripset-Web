@@ -1,27 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import logo from '../assets/logo.svg';
 import { Auth } from '../features/auth/Auth';
-import { useSelector } from 'react-redux';
-import { selectAuthentication } from '../features/auth/authSlice';
-import { sessionData } from '../sessionData';
+// import { useSelector } from 'react-redux';
+// import { selectAuthentication } from '../features/auth/authSlice';
+// import { sessionData } from '../sessionData';
 import '../App.css';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 
 function App() {
 
-  let auth = useSelector(selectAuthentication)
+  // let auth = useSelector(selectAuthentication)
 
-  //react router
-  const navigate = useNavigate()
-  
   //react
-  const [logged, setLogged] = useState(null);
+  const [logged] = useState(null);
 
-  useEffect(() => {
-    if (auth === '') sessionData()
-    setLogged(auth)
-  }, [])
+  // useEffect(() => {
+  //   if (auth === '') sessionData()
+  //   setLogged(auth)
+  // }, [])
   
   //testing
 

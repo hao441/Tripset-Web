@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { selectAuthentication, selectSessionToken, selectMessage, selectSessionTokenExpiry, selectHomeCity } from '../features/auth/authSlice';
+import { selectAuthentication, selectMessage, selectHomeCity } from '../features/auth/authSlice';
 import { signinAsync } from '../features/auth/authThunk';
 
 import '../App.css'
@@ -12,8 +12,6 @@ import './css/welcome.css'
 export default function Welcome() {
     //redux
     const dispatch = useDispatch();
-    const token = useSelector(selectSessionToken);
-    const tokenExpiry = useSelector(selectSessionTokenExpiry);
     const auth = useSelector(selectAuthentication);
     const message = useSelector(selectMessage);
     const homeCity = useSelector(selectHomeCity);
