@@ -21,6 +21,9 @@ const Mapper = () => {
     const itineraryKeys = Object.keys(trips[trip]['itinerary'])
 
     useEffect(() => {
+        console.log(Number(homeLat.current))
+
+
         homeCountry.current = homeCity ? homeCity['country'] : '';
         homeLat.current = homeCity ? homeCity['lat'] : '';
         homeLng.current = homeCity ? homeCity['lng'] : '';
@@ -40,13 +43,15 @@ const Mapper = () => {
         } else {
             initializeMap();
         }
-    })
+    });
+
+        const initialItineraryItem = Object.keys(trips[trip]['itinerary'])[0]
 
         const initializeMap = () => {
             // Create map
             const map = new window.google.maps.Map(document.getElementById('map'), {
-                center: { lat: Number(homeLat.current), lng: Number(homeLng.current) },
-                zoom: 5,
+                center: { lat: trips[trip]['itinerary'][initialItineraryItem]['lat'], lng: trips[trip]['itinerary'][initialItineraryItem]['lng'] },
+                zoom: 3,
                 mapTypeControl: false,
                 streetViewControl: false,
                 zoomControl: false,
@@ -149,6 +154,30 @@ const Mapper = () => {
                 }
             ]
         });
+
+
+            // const homeMarker = new window.google.maps.Marker({
+            //     position: { lat: Number(homeLat.current), lng: Number(homeLng.current) },
+            //     map: map,
+            //     title: 'hello world'
+            // });
+
+            // const homeInfoWindow = new window.google.maps.InfoWindow({
+            //     content: `<div class="info-window">
+            //                 <p><b>Home</b></p>
+            //                 <p><b>Location: </b> ${homeCity}</p>
+            //               </div>
+            //              `
+            // });
+
+            // homeMarker.addListener("click", () => {
+            //     homeInfoWindow.open({
+            //         anchor: homeMarker,
+            //         map
+            //     });
+            // });
+
+
         
             const markers = itineraryKeys.map((key) => {
                 const marker = new window.google.maps.Marker({

@@ -5,15 +5,15 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTripNames, selectUserName, selectAuthentication } from '../features/auth/authSlice';
+import { selectTripNames, selectUserName, selectAuthentication, selectTrips, selectMessage, selectRes } from '../features/auth/authSlice';
 
-
-import '../App.css'
-import './css/itinerarycreation.css'
+//Other
 import { setItineraryAsync } from "../features/auth/tripThunk";
 import MapsLocationSearch from "./sub-components/MapsLocationSearch";
-
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import { ReactComponent as Loader } from '../assets/loader.svg';
+import '../App.css'
+import './css/itinerarycreation.css'
 
 export default function ItineraryCreation () {
 
@@ -24,7 +24,10 @@ export default function ItineraryCreation () {
     const navigate = useNavigate();
     
     const sessionUsername = useSelector(selectUserName)
+    const sessionTrips = useSelector(selectTrips);
     const sessionTripNames = useSelector(selectTripNames)
+    const sessionMessage = useSelector(selectMessage);
+    const sessionRes = useSelector(selectRes);
     const auth = useSelector(selectAuthentication);
 
     //Use States
@@ -42,6 +45,7 @@ export default function ItineraryCreation () {
     const [endTime, setEndTime] = useState('');
 
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     //Other variables
     
@@ -50,31 +54,40 @@ export default function ItineraryCreation () {
     const nowObj = new Date()
 
     //Use Effects
+
     useEffect(() => {
+
         const mapsInput = document.getElementById('mapsInput').value
 
-        if (mapsInput !== '') {
-            geocodeByAddress(mapsInput)
-            .then(results => getLatLng(results[0]))
-            .then(({ lat, lng }) => {
-                setLat(lat);
-                setLng(lng);
-                setLocation(mapsInput);
-            })
-            .catch((error) => {console.log(error);})
-        }
+        setTimeout(() => {
+            if (mapsInput !== '') {
+                geocodeByAddress(mapsInput)
+                .then(results => getLatLng(results[0]))
+                .then(({ lat, lng }) => {
+                    setLat(lat);
+                    setLng(lng);
+                    setLocation(mapsInput);
+                })
+                .catch((error) => {console.log(error);})
+            }
+        }, 500);
+        
     });
     
     //functions
     const createItinerary = (e) => {
         e.preventDefault();
-        //Error handling
-        if (sessionUsername === '' || sessionUsername === undefined) return setMessage('Not logged in.');
-        if (sessionTripNames.indexOf(itineraryName) !== -1) return setMessage('Itinerary name is taken.');
-        if (startDate > endDate || (startDate === endDate && startTime >= endTime) ) return setMessage("Start time must be before end time.");
-        if (startDateObj < nowObj) return setMessage("Cannot set start date to a date in the past.");
-        if (lat === '' || lng === '') return setMessage('Please select a location from the list.');
+        setLoading(true);
+        setMessage('')
 
+        //Error handling
+        if (sessionUsername === '' || sessionUsername === undefined) {setMessage('Not logged in.'); return setLoading(false);};
+        if (sessionTripNames.indexOf(itineraryName) !== -1) {setMessage('Itinerary name is taken.'); return setLoading(false);}; 
+        if (startDate > endDate || (startDate === endDate && startTime >= endTime) ) {setMessage("Start time must be before end time."); return setLoading(false);};
+        if (startDateObj < nowObj) {setMessage("Cannot set start date to a date in the past."); return setLoading(false);}; 
+        if (sessionTrips[trip]['startDate'] > startDate) {setMessage("Start date must be on or after the trip start date."); return setLoading(false);}; 
+        if (sessionTrips[trip]['endDate'] < endDate) {setMessage("End date must be on or before the trip end date."); return setLoading(false);}; 
+        if (lat === '' || lng === '') {setMessage('Please select a location from the list.'); return setLoading(false);}; 
 
         //redux dispatch 
         dispatch(setItineraryAsync(
@@ -93,8 +106,15 @@ export default function ItineraryCreation () {
             }})
         )
 
-        setItineraryName(''); setLocation(''); setStartDate(''); setEndDate('');
-        navigate(`/trip/${trip}`);
+        console.log(sessionRes)
+        if (sessionRes) {
+            return navigate(`/trip/${trip}`)
+        } else {
+            setItineraryName('');
+            setLoading(false);
+            return setMessage(sessionMessage);
+        }
+        // navigate(`/trip/${trip}`);
     }
 
     const handleItineraryNav = () => {
@@ -149,7 +169,7 @@ export default function ItineraryCreation () {
                                 <input className="time"  type='time' placeholder='Start Time' value={endTime} onChange={((e) => setEndTime(e.target.value))} required/>
                             </div>
                         </div>
-                        <div><button className="form-item form-button" type='submit'>Submit</button></div>
+                        <div><button className="form-item form-button" type='submit'>{loading ? <Loader className="spinner" /> : "Submit"}</button></div>
                     </form>
                     <hr className="hor" />
                     <div><button className="form-item form-button signup" onClick={handleItineraryNav}>Back to {trip}</button></div>

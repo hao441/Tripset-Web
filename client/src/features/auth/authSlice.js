@@ -58,10 +58,16 @@ export const authSlice = createSlice({
 
       state.sessionToken = '';
       state.sessionTokenExpiry = '';
-      state.sessionUsername = '';
-      state.sessionMessage = '';
+      state.message = '';
+      state.username = '';
+      state.name = '';
+      state.homeCity = '';
+      state.trips = '';
+      state.tripNames = [];
+      state.res = '';
+
     },
-    setMessage: (state, action) => {
+    setReduxMessage: (state, action) => {
       state.message = action.payload.message
     },
     setTrips: (state, action) => {
@@ -126,7 +132,9 @@ export const authSlice = createSlice({
         state.username = action.payload.username;
         state.name = action.payload.name;
         state.message = action.payload.message;
+        state.trips = undefined;
         state.homeCity = undefined;
+        state.tripNames = ""
 
         if (action.payload.result) {
           document.cookie = `path=/;`;
@@ -137,17 +145,25 @@ export const authSlice = createSlice({
       })
       .addCase(signupAsync.rejected, (state, action) => {
         state.status = 'failed';
-        state.message = action.payload.message;
       })
-      //Delete account builder
+      //delete account builder
       .addCase(deleteAccountAsync.pending, (state, action) => {
         state.status = 'loading';
       })
       .addCase(deleteAccountAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.res = action.payload.result;
-        state.loggedIn = !action.payload.result;
+        state.loggedIn = false;
         state.message = action.payload.message;
+        state.loggedIn = loginStatus;
+        state.sessionToken = token;
+        state.sessionTokenExpiry = tokenExpiry;
+        state.username = '';
+        state.name = '';
+        state.homeCity = '';
+        state.trips = '';
+        state.tripNames = [];
+        state.res = '';
 
         if (action.payload.result) {
           document.cookie = `path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
@@ -235,7 +251,7 @@ export const authSlice = createSlice({
   }
 });
 
-export const { login, logout, setMessage, setTrips, setTripsTwo } = authSlice.actions;
+export const { login, logout, setReduxMessage, setTrips, setTripsTwo } = authSlice.actions;
 
 
 // The function below is called a selector and allows us to select a value from

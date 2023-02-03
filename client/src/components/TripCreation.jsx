@@ -7,11 +7,12 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthentication, selectTrips, selectUserName } from '../features/auth/authSlice';
 
-
-import '../App.css';
-import './css/tripcreation.css';
+//Other
 import { setTripAsync } from "../features/auth/tripThunk";
 import CountryComplete from "./sub-components/CountryComplete";
+import { ReactComponent as Loader } from '../assets/loader.svg';
+import '../App.css';
+import './css/tripcreation.css';
 
 export default function TripCreation () {
 
@@ -28,10 +29,10 @@ export default function TripCreation () {
 
     //Use States
     const [tripName, setTripName] = useState('');
-    // const [destination, setDestination] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const start = new Date(startDate)
     const end = new Date(endDate)
@@ -45,11 +46,12 @@ export default function TripCreation () {
     //functions
     const createTrip = (e) => {
         e.preventDefault();
+        setLoading(true)
         //Error handling
-        if (sessionUsername === '' || sessionUsername === undefined) return setMessage('Not logged in.');
-        if (tripNames.current.indexOf(tripName) !== -1) return setMessage('Trip name is taken.');
-        if (start > end ) return setMessage("Start Date must be before End Date.")
-        if (start < now) return setMessage("Cannot set start date to a date in the past.")
+        if (sessionUsername === '' || sessionUsername === undefined) { setMessage('Not logged in.'); return setLoading(false)}
+        if (tripNames.current.indexOf(tripName) !== -1) { setMessage('Trip name is taken.'); return setLoading(false)}
+        if (start > end ) { setMessage('Start date must be before end date.'); return setLoading(false)}
+        if (start < now) { setMessage('Cannot set start date to a date in the past.'); return setLoading(false)}
 
         //redux dispatch 
         dispatch(setTripAsync(
@@ -58,9 +60,12 @@ export default function TripCreation () {
             "trip":
             {"location": document.getElementById('countryInput').value, 
              "startDate": startDate,
-             "endDate": endDate
+             "endDate": endDate,
+             "itinerary": {}
             }})
         )
+        setLoading(false);
+        setLoading(false);
         setTripName(''); setStartDate(''); setEndDate('');
         navigate('/trip');
     }
@@ -88,7 +93,7 @@ export default function TripCreation () {
                         <div><input className="trip-date-input" type='date' value={startDate} onChange={((e) => setStartDate(e.target.value))} placeholder="mm/dd/yyyy" required  />
                         <input className="trip-date-input" type='date' value={endDate} onChange={((e) => setEndDate(e.target.value))} required /></div>
                         </div>
-                        <div><button className="trip-submit-button" type='submit'>Submit</button></div>
+                        <div><button className="trip-submit-button" type='submit'>{loading ? <Loader className="spinner" /> : "Submit"}</button></div>
                     </form>
                     <hr className="trip-hor" />
                     <div><button className="trip-navigation-button" onClick={handleTripsNav}>Back to Trips</button></div>

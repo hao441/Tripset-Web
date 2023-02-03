@@ -7,11 +7,11 @@ import { useSelector } from 'react-redux';
 import { selectAuthentication, selectTrips } from '../features/auth/authSlice';
 
 //css
+import { ReactComponent as Loader } from '../assets/loader.svg';
 import '../App.css'
 import './css/trips.css'
 
 export default function Trip () {
-
     
     //redux/router
     const navigate = useNavigate();
@@ -20,12 +20,14 @@ export default function Trip () {
     const trips = useSelector(selectTrips);
 
     const [timeline, setTimeLine] = useState('current');
+    const [loading, setLoading] = useState(false);
 
     const tripNames = !trips ? '' : Object.keys(trips);
 
     //functions
     const handleTripCreate = () => {
         !auth && navigate('/welcome');
+        setLoading(true);
         setTimeout(() => {        
          navigate('/tripcreation');
         }, 1000)
@@ -89,7 +91,7 @@ export default function Trip () {
         if (typeof trips === 'undefined') return (
             <div>
                     <div><h1 className="content">You have no trips planned</h1></div>
-                    <div><button className="content form-input form-button" onClick={handleTripCreate}>Create Trip</button></div>
+                    <div><button className="content form-input form-button" onClick={handleTripCreate}>{loading ? <Loader className="spinner" /> : "Create Trip"}</button></div>
             </div>
         )
         return (

@@ -86,22 +86,23 @@ app.post('/signin', (req, res) => {
 
 //Sign up
 app.post('/signup', (req, res) => {
-
+    console.log('0');
     User.find({email: req.body.email}, (err,data) => {
         if (err) return res.json({result: false, token: '', tokenExpiry: '', username: '', message: err})
-
+        console.log('1')
         if (data[0] != null) return res.json({result: false, token: '', tokenExpiry: '', username: '', message: 'A user account with that email address already exists.'})
-
+        console.log('2')
         bcrypt.hash(req.body.password, 10, (err,hash) => {
+            console.log('3')
             if (err) return res.json({result: false, token: '', tokenExpiry: '', username: '', message: err})
-
+            console.log('4')
             if (hash) {
                 let newUser = new User({
                     name: req.body.name,
                     email: req.body.email,
                     password: hash.toString()
                 });
-                
+                console.log('5')
                newUser.save((err,user) => {
                 if (err) return res.json({result: false, token: '', tokenExpiry: '', username: '', message: err});
 
@@ -110,7 +111,7 @@ app.post('/signup', (req, res) => {
                 let newToken = jwt.sign({email : req.body.email}, process.env.JWT_PRIVATE_KEY, {expiresIn: '1hr'})
                 const expiryDate = new Date(Date.now() + 3600000);
                 
-                return res.json({result: true, token: newToken, tokenExpiry: expiryDate, username: user.email, name: req.body.name,  message: 'Success!'})
+                return res.json({result: true, token: newToken, tokenExpiry: expiryDate, username: user.email, name: req.body.name,  message: ''})
                })
 
             } else {
@@ -133,7 +134,7 @@ app.post('/loaduser', (req, res) => {
 
             const tripNames = !data.trips || data.trips === [] ? '' : Object.keys(data.trips)
             
-            return res.json({result: true, name: data.name, username: data.email, name: data.name, homeCity: data.homeCity, trips: data.trips, tripNames: tripNames,  message: ""})
+            return res.json({result: true, name: data.name, username: data.email, name: data.name, homeCity: data.homeCity, trips: data.trips, tripNames: tripNames,  message: ''})
         })
     })
 });
@@ -191,13 +192,25 @@ app.post('/findtrips', (req, res) => {
 
 //tripCreation
 app.post('/settrip', (req, res) => {
-    console.log(req.body.trip, req.body.tripName, req.body.email)
+
+    let complete = false;
+    
+    User.findOne({email: req.body.email}, (err,data) => {
+        if (err) {res.json({result: false, message: err}); return complete = true};
+        if (!data.trips) return
+        if (Object.keys(data.trips).indexOf([req.body.tripName]) !== -1) { res.json({reuslt: false, message: 'trip name taken.'}); return complete = true};
+    })
 
     User.findOneAndUpdate({email : req.body.email },{$set: {[`trips.${req.body.tripName}`]: req.body.trip}},  {new: true}, (err,data) => {
+        
+        if (complete) return
+
         console.log("User findOneAndUpdate hit")
+        
         if (err) return res.json({result: false, message: err})
+        
         console.log("User error handling hit")
-        console.log(data.trips)
+        
         return res.json({result: true, trips: data.trips, message: 'Trip created'});
     
     });
@@ -222,14 +235,27 @@ app.post('/deletetrip', (req, res) => {
 
 //setItinerary
 app.post('/setitinerary', (req, res) => {
+    let complete = false
+
+    User.findOne({email : req.body.email}, (err,data) => {
+        if (err) { res.json({result: false, message: err}); return complete = true}
+        if (!data.trips[req.body.tripName]['itinerary']) return
+        if (Object.keys(data.trips[req.body.tripName]['itinerary']).indexOf(req.body.itineraryName) !== -1)  {res.json({result: false, message: "Itinerary name is taken"}); return complete = true };
+    })
 
     User.findOneAndUpdate({email : req.body.email },{$set: {[`trips.${req.body.tripName}.itinerary.${req.body.itineraryName}`]: req.body.itinerary}}, {new: true}, (err,data) => {
 
+        if (complete) return
+
         console.log("User findOneAndUpdate hit")
 
-        if (err) return res.json({result: false, message: err})
+        if (err) return res.json({result: false, message: err}) && console.log(err)
 
         console.log("User error handling hit")
+
+        console.log(`itineraryName: ${req.body.itineraryName}`)
+        console.log(`itineraries: ${Object.keys(data.trips[req.body.tripName]['itinerary'])}`)
+
         return res.json({result: true, trips: data.trips, message: 'Trip created'});
 
     });

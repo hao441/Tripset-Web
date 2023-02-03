@@ -4,7 +4,7 @@ export const loadUserAsync = createAsyncThunk(
     'auth/loadUser',
     async (payload, { rejectWithValue }) => {
       try {
-      const response = await fetch('https://tripset.herokuapp.com/loaduser', {
+      const response = await fetch(/*'https://tripset.herokuapp.com/loaduser'*/ 'http://localhost:9000/loaduser', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({"token": payload})
@@ -21,7 +21,7 @@ export const signinAsync = createAsyncThunk(
     'auth/signin',
     async (payload, { rejectWithValue }) => {
       try {
-      const response = await fetch('https://tripset.herokuapp.com/signin', {
+      const response = await fetch(/*'https://tripset.herokuapp.com/signin'*/ 'http://localhost:9000/signin', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({"email": payload.email, "password": payload.password})
@@ -38,7 +38,7 @@ export const signupAsync = createAsyncThunk(
     'auth/signup',
     async (payload, { rejectWithValue }) => {
         try {
-        const response = await fetch('https://tripset.herokuapp.com/signup', {
+        const response = await fetch(/*'https://tripset.herokuapp.com/signup'*/ 'http://localhost:9000/signup', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({"name": payload.name, "email": payload.email, "password": payload.password, "confirmPassword": payload.confirmPassword})
@@ -55,7 +55,7 @@ export const deleteAccountAsync = createAsyncThunk(
     'auth/deleteAccount',
     async (payload, { rejectWithValue }) => {
         try {
-        const response = await fetch('https://tripset.herokuapp.com/deleteaccount', {
+        const response = await fetch(/*'https://tripset.herokuapp.com/deleteaccount'*/ 'http://localhost:9000/deleteaccount', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({"email": payload})

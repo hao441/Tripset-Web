@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { ReactComponent as Loader } from '../assets/loader.svg';
 
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { selectAuthentication, selectMessage } from '../features/auth/authSlice';
+import { selectAuthentication, selectMessage, setReduxMessage } from '../features/auth/authSlice';
 
 import '../App.css'
+import './css/signup.css'
 import { signupAsync } from '../features/auth/authThunk.js';
 
 export default function SignUp() {
@@ -21,27 +23,25 @@ export default function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
-    const [message, setMessage] = useState(sessionMessage);
+    const [loading, setLoading] = useState(false);
 
-    //useEffects
-    useEffect(() => {
-       console.log(sessionMessage);
-    });
-
-    const handleSignUp = (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault();
-        if (password !== passwordConfirm) return setMessage('Passwords do not match.');
-        if (sessionMessage) return setMessage(sessionMessage);
-        setMessage('')
+        if (password !== passwordConfirm) return dispatch(setReduxMessage({message: 'Passwords do not match.'})); 
+        setLoading(true)
         dispatch(signupAsync({name: name, email: email, password: password, passwordConfirm: passwordConfirm}));
+        setLoading(false)
     }
 
     const navLogin = () => {
-            navigate('/welcome');
+        dispatch(setReduxMessage(""))
+        navigate('/welcome');
     }
 
     if (auth) return (
-        <Navigate to='/city' />
+        <>
+            <Navigate to='/city' />
+        </>
     )
 
     return (
@@ -55,13 +55,13 @@ export default function SignUp() {
                         <div><input className='form-item text-input' id='email' type='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='email address' required /></div>
                         <div><input className='form-item text-input' type='password' value={password} onChange={e => setPassword(e.target.value)} minLength='8' placeholder='password' required /></div>
                         <div><input className='form-item text-input' id='passwordConfirm' type='password' value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} placeholder='confirm password' required /></div>
-                        <div><button className='form-item form-button-no-shadow'>Sign up</button></div>
+                        <div><button className='form-item form-button-no-shadow'>{loading ? <Loader className="spinner" /> : "Sign Up"}</button></div>
                     </form>
                     <div className='hor-offset'></div>
                     <div><button className='former signup-no-shadow form-button-no-shadow' onClick={navLogin}>Back to Login</button></div>
                 </div>
                 <br/>
-                <div className='message'>{message !== 'User doesn\'t exist.' && message}</div>
+                {sessionMessage}
             </div>
         </div>
     )

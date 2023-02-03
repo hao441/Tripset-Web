@@ -150,7 +150,7 @@ export default function Trip () {
                 
             </div>
         )
-        if (!trips[trip]['itinerary']) return (
+        if (!trips[trip]['itinerary'] || !Object.keys(trips[trip]['itinerary'])[0]) return (
             <div>
                     <div><h1 className="content">You have no Itinerary Items.</h1></div>
                     <div>

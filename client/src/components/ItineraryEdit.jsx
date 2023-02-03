@@ -1,31 +1,19 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, {useState, useEffect, useRef} from "react";
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUserName, selectTrips, selectAuthentication } from '../features/auth/authSlice';
+import { selectUserName, selectTrips, selectAuthentication, selectRes } from '../features/auth/authSlice';
 
-
-import '../App.css'
-import './css/itinerarycreation.css'
+//Other
 import { deleteItineraryItemAsync, setItineraryAsync } from "../features/auth/tripThunk";
 import MapsLocationSearch from "./sub-components/MapsLocationSearch";
-
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-import { useRef } from "react";
+import { ReactComponent as Loader } from '../assets/loader.svg';
+import '../App.css'
+import './css/itinerarycreation.css'
 
 const ItineraryEdit = () => {
-    
-    const itineraryLocation = useRef()
-    const itineraryLat = useRef()
-    const itineraryLng = useRef()
-    const itineraryCategory = useRef()
-    const itineraryStartDate = useRef()
-    const itineraryEndDate = useRef()
-    const itineraryStartTime = useRef()
-    const itineraryEndTime = useRef()
 
     let { trip, item } = useParams()
 
@@ -33,23 +21,19 @@ const ItineraryEdit = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    
-
-    
-    const sessionUsername = useSelector(selectUserName)
-    const sessionTrips = useSelector(selectTrips)
+    const sessionUsername = useSelector(selectUserName);
+    const sessionTrips = useSelector(selectTrips);
+    const sessionResult = useSelector(selectRes);
     const auth = useSelector(selectAuthentication);
 
-
-
-    itineraryLocation.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].location : ''
-    itineraryLat.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lat : ''
-    itineraryLng.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lng : ''
-    itineraryCategory.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].category : ''
-    itineraryStartDate.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startDate : ''
-    itineraryEndDate.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endDate : ''
-    itineraryStartTime.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startTime : ''
-    itineraryEndTime.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endTime : ''
+    const itineraryLocation = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].location : '')
+    const itineraryLat = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lat : '')
+    const itineraryLng = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lng : '')
+    const itineraryCategory = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].category : '')
+    const itineraryStartDate = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startDate : '')
+    const itineraryEndDate = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endDate : '')
+    const itineraryStartTime = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startTime : '')
+    const itineraryEndTime = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endTime : '')
 
 
     //Use States
@@ -67,49 +51,52 @@ const ItineraryEdit = () => {
     const [endTime, setEndTime] = useState(itineraryEndTime.current);
 
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     //Other variables
-    
-
     const startDateObj = new Date(startDate)
     const nowObj = new Date()
 
-    //Use Effects
+    document.getElementById('mapsInput').value = sessionTrips[trip].itinerary[item].location;
+
     useEffect(() => {
 
-        itineraryLocation.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].location : ''
-        itineraryLat.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lat : ''
-        itineraryLng.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lng : ''
-        itineraryCategory.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].category : ''
-        itineraryStartDate.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startDate : ''
-        itineraryEndDate.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endDate : ''
-        itineraryStartTime.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startTime : ''
-        itineraryEndTime.current = sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endTime : ''
-
-        let mapsInput = document.getElementById('mapsInput').value
-
-        mapsInput = itineraryLocation
-
-        if (mapsInput !== '') {
-            geocodeByAddress(mapsInput)
-            .then(results => getLatLng(results[0]))
-            .then(({ lat, lng }) => {
-                setLat(lat);
-                setLng(lng);
-                setLocation(mapsInput);
-            })
-            .catch((error) => {console.log(error);})
-        }
+        setTimeout(() => {
+            if (document.getElementById('mapsInput').value !== '') {
+                geocodeByAddress(document.getElementById('mapsInput').value)
+                .then(results => getLatLng(results[0]))
+                .then(({ lat, lng }) => {
+                    setLat(lat);
+                    setLng(lng);
+                    setLocation(document.getElementById('mapsInput').value);
+                })
+                .catch((error) => {console.log(error);})
+            }
+        }, 500)
+        
     });
     
     //functions
     const createItinerary = (e) => {
         e.preventDefault();
+        setLoading(true);
         //Error handling
         if (sessionUsername === '' || sessionUsername === undefined) return setMessage('Not logged in.');
         if (startDate > endDate || (startDate === endDate && startTime >= endTime) ) return setMessage("Start time must be before end time.");
         if (startDateObj < nowObj) return setMessage("Cannot set start date to a date in the past.");
         if (lat === '' || lng === '') return setMessage('Please select a location from the list.');
+
+        if (
+            itineraryName === item &&
+            location === sessionTrips[trip]['itinerary'][item].location &&
+            lat === sessionTrips[trip]['itinerary'][item].lat &&
+            lng === sessionTrips[trip]['itinerary'][item].lng &&
+            category === sessionTrips[trip]['itinerary'][item].category &&
+            startDate === sessionTrips[trip]['itinerary'][item].startDate &&
+            endDate === sessionTrips[trip]['itinerary'][item].endDate &&
+            startTime === sessionTrips[trip]['itinerary'][item].startTime &&
+            endTime === sessionTrips[trip]['itinerary'][item].endTime
+        ) return navigate(`/trip/${trip}`);
 
 
         //redux dispatch 
@@ -129,8 +116,10 @@ const ItineraryEdit = () => {
              "endTime": endTime
             }})
         )
-
+        
+            console.log(sessionResult)
         setItineraryName(''); setLocation(''); setStartDate(''); setEndDate('');
+        setLoading(false);
         navigate(`/trip/${trip}`);
     }
 
@@ -186,7 +175,7 @@ const ItineraryEdit = () => {
                                 <input id="itineraryEndTime" className="time end-time"  type='time' placeholder='Start Time' value={endTime} onChange={((e) => setEndTime(e.target.value))} required/>
                             </div>
                         </div>
-                        <div><button className="form-item form-button" type='submit'>Submit</button></div>
+                        <div><button className="form-item form-button" type='submit'>{loading ? <Loader className="spinner" /> : "Submit"}</button></div>
                     </form>
                     <hr className="hor" />
                     <div><button className="form-item form-button signup" onClick={handleItineraryNav}>Back to {trip}</button></div>
