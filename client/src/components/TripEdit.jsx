@@ -11,6 +11,7 @@ import CountryComplete from "./sub-components/CountryComplete";
 import { ReactComponent as Loader } from '../assets/loader.svg';
 import '../App.css'
 import './css/tripcreation.css'
+import { useEffect } from "react";
 
 const TripEdit = () => {
 
@@ -28,7 +29,10 @@ const TripEdit = () => {
     const tripEndDate = useRef(trips[trip]['endDate']);
     const location = useRef(trips[trip]['location'])
 
-    document.getElementById('countryInput').value = location.current
+    useEffect(() => {
+        document.getElementById('countryInput').value = location.current
+    }, [])
+
 
     //Use States
     const [tripName, setTripName] = useState(trip);

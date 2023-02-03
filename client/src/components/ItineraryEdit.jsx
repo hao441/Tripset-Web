@@ -57,7 +57,10 @@ const ItineraryEdit = () => {
     const startDateObj = new Date(startDate)
     const nowObj = new Date()
 
-    document.getElementById('mapsInput').value = sessionTrips[trip].itinerary[item].location;
+    useEffect(() => {
+        document.getElementById('mapsInput').value = sessionTrips[trip].itinerary[item].location;
+    }, [])
+
 
     useEffect(() => {
 
