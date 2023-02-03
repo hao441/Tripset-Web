@@ -10,6 +10,7 @@ export default function MapsLocationSearch() {
   return (
     <div className='page'>
     <PlacesAutocomplete
+      id={'mapsInput'}
       value={address}
       onChange={(e) => {setAddress(e)}}
       onSelect={(e) => {setAddress(e)}}
