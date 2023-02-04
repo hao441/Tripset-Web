@@ -52,7 +52,7 @@ const TripEdit = () => {
                         <div><button className="form-item form-button" onClick={() => handleTripsNav()}>Back to Trips</button></div>
                     <hr className="hor" />
                     <div><button className="form-item form-button signup" onClick={() => {dispatch(logout()); return navigate('/')}}>Logout</button></div>
-                    <div><button className="form-item form-button signup" style={{'backgroundColor':'darkred'}} onClick={() => {dispatch(deleteAccountAsync(sessionUsername)); return navigate('/')}}>Delete Account</button></div>
+                    <div><button className="form-item form-button signup" style={{'backgroundColor':'darkred'}} onClick={() => {dispatch(deleteAccountAsync(sessionUsername)); dispatch(logout()); return navigate('/')}}>Delete Account</button></div>
                     <p style={{'color' : 'crimson'}}>{sessionMessage}</p>
                 </div>
             </div>

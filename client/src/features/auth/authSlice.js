@@ -49,12 +49,14 @@ export const authSlice = createSlice({
       
     },
     logout: (state) => {
-      state.loggedIn = false;
+      
 
       document.cookie = `path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
       document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
       document.cookie = `username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
       document.cookie = `expires=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+
+      state.loggedIn = false;
 
       state.sessionToken = '';
       state.sessionTokenExpiry = '';

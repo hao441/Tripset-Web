@@ -24,8 +24,7 @@ export default function City() {
     const auth = useSelector(selectAuthentication);
 
     useEffect(() => {
-        console.log(sessionHomeCity)
-        console.log(typeof sessionHomeCity)
+        console.log(auth)
     })
     //use states
     const [message, setMessage] = useState('');

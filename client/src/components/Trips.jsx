@@ -10,6 +10,7 @@ import { selectAuthentication, selectTrips } from '../features/auth/authSlice';
 import { ReactComponent as Loader } from '../assets/loader.svg';
 import '../App.css'
 import './css/trips.css'
+import { useEffect } from "react";
 
 export default function Trip () {
     
@@ -23,6 +24,11 @@ export default function Trip () {
     const [loading, setLoading] = useState(false);
 
     const tripNames = !trips ? '' : Object.keys(trips);
+
+    useEffect(() => {
+        console.log(typeof trips)
+        console.log(auth)
+    })
 
     //functions
     const handleTripCreate = () => {
@@ -82,7 +88,7 @@ export default function Trip () {
         }) 
 
     const checkTrips = () => {
-        if (typeof trips === 'string') return (
+        if (typeof trips === 'string' && auth) return (
             <div>
                 <h2>Loading Trips..</h2>
             </div>
