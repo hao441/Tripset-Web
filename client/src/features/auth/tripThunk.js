@@ -4,7 +4,7 @@ export const setCityAsync = createAsyncThunk(
     'auth/setCity',
     async (payload, { rejectWithValue }) => {
         try {
-        const response = await fetch('http://localhost:9000/setcity', {
+        const response = await fetch('https://tripset.herokuapp.com/setcity', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({"email": payload.email, "city": payload.city, "country": payload.country, "lat": payload.lat, "lng": payload.lng})
@@ -21,7 +21,7 @@ export const setTripAsync = createAsyncThunk(
     'auth/setTrip',
     async (payload, { rejectWithValue }) => {
         try {
-        const response = await fetch('http://localhost:9000/settrip', {
+        const response = await fetch('https://tripset.herokuapp.com/settrip', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
@@ -42,7 +42,7 @@ export const deleteTripAsync = createAsyncThunk(
     'auth/deleteTrip',
     async (payload, { rejectWithValue }) => {
         try {
-        const response = await fetch('http://localhost:9000/deletetrip', {
+        const response = await fetch('https://tripset.herokuapp.com/deletetrip', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
@@ -62,7 +62,7 @@ export const setItineraryAsync = createAsyncThunk(
     'auth/setItinerary',
     async (payload, { rejectWithValue }) => {
         try {
-        const response = await fetch('http://localhost:9000/setitinerary', {
+        const response = await fetch('https://tripset.herokuapp.com/setitinerary', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
@@ -84,7 +84,7 @@ export const updateItineraryItemAsync = createAsyncThunk(
     'auth/updateItineraryItem',
     async (payload, { rejectWithValue }) => {
         try {
-        const response = await fetch('http://localhost:9000/updateItineraryItem', {
+        const response = await fetch('https://tripset.herokuapp.com/updateItineraryItem', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
@@ -107,7 +107,7 @@ export const deleteItineraryItemAsync = createAsyncThunk(
     'auth/deleteItineraryItem',
     async (payload, { rejectWithValue }) => {
         try {
-        const response = await fetch('http://localhost:9000/deleteitineraryitem', {
+        const response = await fetch('https://tripset.herokuapp.com/deleteitineraryitem', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
