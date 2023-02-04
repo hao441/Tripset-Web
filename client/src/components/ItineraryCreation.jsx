@@ -106,7 +106,6 @@ export default function ItineraryCreation () {
             }})
         )
 
-        console.log(sessionRes)
         if (sessionRes) {
             return navigate(`/trip/${trip}`)
         } else {

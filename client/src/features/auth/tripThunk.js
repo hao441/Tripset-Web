@@ -80,6 +80,29 @@ export const setItineraryAsync = createAsyncThunk(
     }
 )
 
+export const updateItineraryItemAsync = createAsyncThunk(
+    'auth/updateItineraryItem',
+    async (payload, { rejectWithValue }) => {
+        try {
+        const response = await fetch('https://tripset.herokuapp.com/updateItineraryItem', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                email: payload.email,
+                tripName: payload.tripName,
+                currentItineraryName: payload.currentItineraryName,
+                newItineraryName: payload.newItineraryName,
+                itinerary: payload.itinerary
+            })
+        })
+        const data = await response.json();
+        return data
+        } catch (error) {
+            rejectWithValue(error.response.data);
+        }
+    }
+)
+
 export const deleteItineraryItemAsync = createAsyncThunk(
     'auth/deleteItineraryItem',
     async (payload, { rejectWithValue }) => {

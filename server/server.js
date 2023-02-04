@@ -124,6 +124,7 @@ app.post('/signup', (req, res) => {
 
 //verify user
 app.post('/loaduser', (req, res) => {
+    console.log("working")
     jwt.verify(req.body.token, process.env.JWT_PRIVATE_KEY, (err, result) => {
         if (err) return res.json({result: false, username: '', homeCity: '', trips: '', message: "Error in token validation."})
         if (!result) return json({result: false, username: '', homeCity: '', trips: '', message: "Invalid token."})
@@ -259,6 +260,27 @@ app.post('/setitinerary', (req, res) => {
         return res.json({result: true, trips: data.trips, message: 'Trip created'});
 
     });
+})
+
+app.post('/updateItineraryItem', (req,res) => {
+    console.log(req.body.currentItineraryName)
+    console.log(`trips.${req.body.tripName}.itinerary.${req.body.currentItineraryName}`)
+    User.findOneAndUpdate({ email: req.body.email },
+                          {$unset: {[`trips.${req.body.tripName}.itinerary.${req.body.currentItineraryName}`]: ''}},
+                          {new: true},
+                          (err,data) => {
+                            if (err) return res.json({result: false, message: err})
+                          });
+
+    User.findOneAndUpdate({ email: req.body.email },
+                          {$set: {[`trips.${req.body.tripName}.itinerary.${req.body.newItineraryName}`]: req.body.itinerary}},
+                          {new: true},
+                          (err,data) => {
+                            if (err) return res.json({result: false, message: err})
+                            return res.json({result: true, trips: data.trips, message: ''});
+                          });
+
+
 })
 
 app.post('/deleteitineraryitem', (req, res) => {

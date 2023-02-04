@@ -12,6 +12,7 @@ import '../App.css'
 import './css/itinerary.css'
 import Mapper from "./sub-components/MapView";
 import { deleteItineraryItemAsync, deleteTripAsync } from "../features/auth/tripThunk";
+import { useEffect } from "react";
 
 export default function Trip () {
     //redux/router
@@ -27,6 +28,11 @@ export default function Trip () {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const [showMap, setShowMap] = useState(false);
+    
+    useEffect(() => {
+        // console.log(trips[trip])
+        // console.log(Object.keys(trips[trip]))
+    })
 
     //Navigation
     const handleItineraryCreate = () => {navigate('itinerarycreation');}

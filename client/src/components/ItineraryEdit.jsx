@@ -3,10 +3,10 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUserName, selectTrips, selectAuthentication, selectRes } from '../features/auth/authSlice';
+import { selectUserName, selectTrips, selectAuthentication } from '../features/auth/authSlice';
 
 //Other
-import { deleteItineraryItemAsync, setItineraryAsync } from "../features/auth/tripThunk";
+import { updateItineraryItemAsync } from "../features/auth/tripThunk";
 import MapsLocationSearch from "./sub-components/MapsLocationSearch";
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import { ReactComponent as Loader } from '../assets/loader.svg';
@@ -23,12 +23,11 @@ const ItineraryEdit = () => {
 
     const sessionUsername = useSelector(selectUserName);
     const sessionTrips = useSelector(selectTrips);
-    const sessionResult = useSelector(selectRes);
     const auth = useSelector(selectAuthentication);
 
-    const itineraryLocation = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].location : '')
-    const itineraryLat = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lat : '')
-    const itineraryLng = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lng : '')
+    // const itineraryLocation = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].location : '')
+    // const itineraryLat = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lat : '')
+    // const itineraryLng = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].lng : '')
     const itineraryCategory = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].category : '')
     const itineraryStartDate = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].startDate : '')
     const itineraryEndDate = useRef(sessionTrips !== '' ? sessionTrips[trip].itinerary[item].endDate : '')
@@ -38,10 +37,6 @@ const ItineraryEdit = () => {
 
     //Use States
     const [itineraryName, setItineraryName] = useState(item);
-
-    const [location, setLocation] = useState(itineraryLocation.current);
-    const [lat, setLat] = useState(itineraryLat.current);
-    const [lng, setLng] = useState(itineraryLng.current);
 
     const [category, setCategory] = useState(itineraryCategory.current);
 
@@ -62,38 +57,61 @@ const ItineraryEdit = () => {
     }, [])
 
 
-    useEffect(() => {
 
-        setTimeout(() => {
-            if (document.getElementById('mapsInput').value !== '') {
-                geocodeByAddress(document.getElementById('mapsInput').value)
-                .then(results => getLatLng(results[0]))
-                .then(({ lat, lng }) => {
-                    setLat(lat);
-                    setLng(lng);
-                    setLocation(document.getElementById('mapsInput').value);
-                })
-                .catch((error) => {console.log(error);})
-            }
-        }, 500)
+    const geoLocate = async () => {
+        let result = false;
+        let coordinates = {}
+
+        if (document.getElementById('mapsInput').value === '') return false;
+
+        const mapsInput = await document.getElementById('mapsInput').value
+
+        await geocodeByAddress(mapsInput)
+        .then(results => getLatLng(results[0]))
+        .then(({ lat, lng }) => {
+            coordinates = {location: mapsInput, lat: lat, lng: lng}
+
+        })
+        .catch((error) => {console.log(error); return result})
+
+        return coordinates
+    }
+
+
+    // useEffect(() => {
         
-    });
+    //     if (document.getElementById('mapsInput').value !== '') {
+    //         geocodeByAddress(document.getElementById('mapsInput').value)
+    //         .then(results => getLatLng(results[0]))
+    //         .then(({ lat, lng }) => {
+    //             setLat(lat);
+    //             setLng(lng);
+    //             setLocation(document.getElementById('mapsInput').value);
+    //         })
+    //         .catch((error) => {console.log(error);})
+    //     }
+        
+    // });
     
     //functions
-    const createItinerary = (e) => {
+    const createItinerary = async (e) => {
         e.preventDefault();
+
         setLoading(true);
+
+        let geoLocation = await geoLocate();
+        
         //Error handling
         if (sessionUsername === '' || sessionUsername === undefined) return setMessage('Not logged in.');
         if (startDate > endDate || (startDate === endDate && startTime >= endTime) ) return setMessage("Start time must be before end time.");
         if (startDateObj < nowObj) return setMessage("Cannot set start date to a date in the past.");
-        if (lat === '' || lng === '') return setMessage('Please select a location from the list.');
+        if (geoLocation.lat === '' || geoLocation.lng === '') return setMessage('Please select a location from the list.');
 
         if (
             itineraryName === item &&
-            location === sessionTrips[trip]['itinerary'][item].location &&
-            lat === sessionTrips[trip]['itinerary'][item].lat &&
-            lng === sessionTrips[trip]['itinerary'][item].lng &&
+            geoLocation.location === sessionTrips[trip]['itinerary'][item].location &&
+            geoLocation.lat === sessionTrips[trip]['itinerary'][item].lat &&
+            geoLocation.lng === sessionTrips[trip]['itinerary'][item].lng &&
             category === sessionTrips[trip]['itinerary'][item].category &&
             startDate === sessionTrips[trip]['itinerary'][item].startDate &&
             endDate === sessionTrips[trip]['itinerary'][item].endDate &&
@@ -103,15 +121,16 @@ const ItineraryEdit = () => {
 
 
         //redux dispatch 
-        dispatch(deleteItineraryItemAsync({"email": sessionUsername, "tripName": trip, "itineraryName": item}));
-        dispatch(setItineraryAsync(
+        // dispatch(deleteItineraryItemAsync({"email": sessionUsername, "tripName": trip, "itineraryName": item}));
+        dispatch(updateItineraryItemAsync(
             {"email": sessionUsername,
              "tripName": trip,
-             "itineraryName": itineraryName,
+             "currentItineraryName": item,
+             "newItineraryName": itineraryName,
              "itinerary":
-            {"location": location,
-             "lat": lat,
-             "lng": lng,
+            {"location": geoLocation.location,
+             "lat": geoLocation.lat,
+             "lng": geoLocation.lng,
              "category": category,
              "startDate": startDate, 
              "startTime": startTime,
@@ -120,10 +139,12 @@ const ItineraryEdit = () => {
             }})
         )
         
-            console.log(sessionResult)
-        setItineraryName(''); setLocation(''); setStartDate(''); setEndDate('');
-        setLoading(false);
+        setItineraryName('');  setStartDate(''); setEndDate('');
+        
         navigate(`/trip/${trip}`);
+        setLoading(false);
+        
+        
     }
 
     const handleItineraryNav = () => {
