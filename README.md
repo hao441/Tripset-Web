@@ -1,4 +1,7 @@
 # Tripset-Web #
+
+*Please note: much of this application's functionality is unavailable as I have disconnected the server infrastructure.
+
 Tripset helps with keeping track and keeping up to date with trip itineraries. Once a user signs up, they will be able to create a trip and then itinerary items for that trip.
 
 On the home screen, the user can access all their trips. Upon clicking on a trip, they will see their itinerary in list format where they can expand an item to see the it in more detail or to edit it.
