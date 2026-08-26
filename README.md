@@ -8,7 +8,8 @@ On the home screen, the user can access all their trips. Upon clicking on a trip
 
 The user can switch to map view, where each itinerary item is placed on a map with a line drawn through all items based on their dates and times.
 
-Demo: https://tripset.harrisonoates.io
+Demo: https://tripsetproject.netlify.app  
+(Please note: much of this application's functionality is unavailable as I have disconnected the server infrastructure.)
 
 ## Get Started ##
 1. cd into both the client and server folders and run `npm install`
